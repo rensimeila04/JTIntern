@@ -130,7 +130,7 @@
 
             <div class="grid grid-cols-3 gap-4">
                 @foreach ($secondRow as $item)
-                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6">
+                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end">
                         <p class="font-medium text-2xl text-neutral-900">{{ $item['title'] }}</p>
                         <p class="font-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
                     </div>
