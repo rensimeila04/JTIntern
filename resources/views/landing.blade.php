@@ -29,14 +29,8 @@
         </ul>
         {{-- button --}}
         <div class="flex space-x-4">
-            <a href="#"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-500 text-gray-500 hover:border-gray-800 hover:text-gray-800 focus:outline-hidden focus:border-gray-800 focus:text-gray-800 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-400 dark:text-neutral-400 dark:hover:text-neutral-300 dark:hover:border-neutral-300">
-                Masuk
-            </a>
-            <a href="#"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                Mulai Sekarang
-            </a>
+            <a href="#" class="btn-secondary">Masuk</a>
+            <a href="#" class="btn-primary">Mulai Sekarang</a>
         </div>
     </nav>
 
@@ -52,8 +46,7 @@
             dipersonalisasi berdasarkan minat, keahlian,<br>dan rencana kariermu untuk membantumu berkembang di
             jalur
             yang tepat.</p>
-        <a href="#"
-            class="mt-6 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none transition duration-700 ease-in-out hover:scale-105 animate-fade-in-up delay-300">
+        <a href="#" class="mt-6 btn-primary-animated">
             Mulai Sekarang
         </a>
         <div class="mt-15 p-3 outline-1 rounded-3xl outline-primary-200 animate-fade-in-up delay-500">
@@ -196,26 +189,30 @@
                 <p class="text-normal text-base text-neutral-500 text-end">Jelajahi peluang magang terbaik sesuai
                     minat dan keahlianmu,<br>ajukan lamaran dengan mudah, dan
                     pantau perkembanganmu<br>dalam satu sistem terintegrasi.</p>
-                <a href="#"
-                    class="mt-6 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none transition duration-700 ease-in-out hover:scale-105 animate-fade-in-up delay-300">
-                    Mulai Sekarang
-                    <span><i class="ph ph-caret-double-right"></i></span>
-                </a>
+                    <a href="#" class="btn-primary-animated">
+                        Mulai Sekarang
+                        <span><i class="ph ph-caret-double-right"></i></span>
+                    </a>
             </div>
         </div>
         <hr class="border-neutral-300">
         <div class="flex justify-between">
             <ul class="flex space-x-6 text-base">
                 <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Beranda</a></li>
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Beranda</a>
+                </li>
                 <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Tentang</a></li>
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Tentang</a>
+                </li>
                 <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Fitur</a></li>
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Fitur</a>
+                </li>
                 <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Panduan</a></li>
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Panduan</a>
+                </li>
             </ul>
-            <p class="text-neutral-500 text-base font-normal">© Copyright 2025 . Kelompok 3 TI-2E . All right reserved</p>
+            <p class="text-neutral-500 text-base font-normal">© Copyright 2025 . Kelompok 3 TI-2E . All right reserved
+            </p>
         </div>
     </footer>
 
