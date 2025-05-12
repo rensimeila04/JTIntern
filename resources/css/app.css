@@ -172,4 +172,25 @@
   .delay-500 {
     animation-delay: 500ms;
   }
+  
+  /* Hover animations */
+  .hover-scale {
+    @apply transition-transform duration-300 ease-in-out hover:scale-105;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-200 ease-in-out hover:-translate-y-1;
+  }
+  
+  .hover-shadow {
+    @apply transition-shadow duration-300 ease-in-out hover:shadow-md;
+  }
+  
+  .hover-bright {
+    @apply transition-all duration-300 ease-in-out hover:brightness-105;
+  }
+  
+  .hover-pulse {
+    @apply hover:animate-pulse;
+  }
 }

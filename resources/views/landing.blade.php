@@ -115,7 +115,7 @@
         <div class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
                 @foreach ($firstRow as $item)
-                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll"
+                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow"
                         data-animation="animate-zoom-in">
                         <p class="font-medium text-2xl text-neutral-900">{{ $item['title'] }}</p>
                         <p class="font-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
@@ -125,7 +125,7 @@
 
             <div class="grid grid-cols-3 gap-4">
                 @foreach ($secondRow as $item)
-                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll"
+                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow"
                         data-animation="animate-zoom-in">
                         <p class="font-medium text-2xl text-neutral-900">{{ $item['title'] }}</p>
                         <p class="font-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
@@ -334,9 +334,79 @@
                 }
             };
 
+            // Add hover micro-interactions
+            const addHoverInteractions = function() {
+                // Feature cards hover effect
+                const featureCards = document.querySelectorAll('#fitur .grid > div');
+                featureCards.forEach(card => {
+                    card.addEventListener('mouseenter', function() {
+                        this.classList.add('hover:transform', 'hover:scale-105', 'transition-transform', 'duration-300');
+                    });
+                    card.addEventListener('mouseleave', function() {
+                        setTimeout(() => {
+                            this.classList.remove('hover:transform', 'hover:scale-105');
+                        }, 300);
+                    });
+                });
+                
+                // Guide steps hover effect
+                const guideSteps = document.querySelectorAll('#panduan .grid > div');
+                guideSteps.forEach(step => {
+                    step.addEventListener('mouseenter', function() {
+                        this.classList.add('shadow-md', 'transform', 'scale-105', 'transition-all', 'duration-300');
+                    });
+                    step.addEventListener('mouseleave', function() {
+                        this.classList.remove('shadow-md', 'transform', 'scale-105');
+                    });
+                });
+                
+                // Navbar links hover effect
+                navLinks.forEach(link => {
+                    link.addEventListener('mouseenter', function() {
+                        if (!this.classList.contains('text-primary-500')) {
+                            this.classList.add('transform', 'translate-y-[-2px]', 'transition-transform', 'duration-200');
+                        }
+                    });
+                    link.addEventListener('mouseleave', function() {
+                        this.classList.remove('transform', 'translate-y-[-2px]');
+                    });
+                });
+                
+                // Buttons hover effect
+                const buttons = document.querySelectorAll('.btn-primary, .btn-secondary');
+                buttons.forEach(button => {
+                    button.addEventListener('mouseenter', function() {
+                        this.classList.add('shadow-md', 'transition-all', 'duration-300');
+                    });
+                    button.addEventListener('mouseleave', function() {
+                        this.classList.remove('shadow-md');
+                    });
+                });
+                
+                // Hero image hover effect
+                const heroImage = document.querySelector('.bg-gradient-to-b img');
+                if (heroImage) {
+                    heroImage.addEventListener('mouseenter', function() {
+                        this.classList.add('filter', 'brightness-105', 'transition-all', 'duration-300');
+                    });
+                    heroImage.addEventListener('mouseleave', function() {
+                        this.classList.remove('filter', 'brightness-105');
+                    });
+                }
+                
+                // Back to top button enhanced hover
+                backToTopButton.addEventListener('mouseenter', function() {
+                    this.classList.add('animate-pulse', 'shadow-lg');
+                });
+                backToTopButton.addEventListener('mouseleave', function() {
+                    this.classList.remove('animate-pulse', 'shadow-lg');
+                });
+            };
+
             // Check on load
             handleNavbarPosition();
             animateOnScroll();
+            addHoverInteractions(); // Add this line to initialize hover effects
 
             // Check on scroll for both animations and navbar
             window.addEventListener('scroll', function() {
