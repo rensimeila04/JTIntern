@@ -19,13 +19,10 @@
         <img src="{{ asset('Images/logo.svg') }}" alt="Logo" class="h-8">
         {{-- menu --}}
         <ul class="flex space-x-8 text-base">
-            <li><a href="#" class="text-primary-500 font-semibold">Beranda</a></li>
-            <li><a href="#"
-                    class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold">Tentang</a></li>
-            <li><a href="#"
-                    class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold">Fitur</a></li>
-            <li><a href="#"
-                    class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold">Panduan</a></li>
+            <li><a href="#beranda" class="text-primary-500 font-semibold nav-link">Beranda</a></li>
+            <li><a href="#tentang" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Tentang</a></li>
+            <li><a href="#fitur" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Fitur</a></li>
+            <li><a href="#panduan" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Panduan</a></li>
         </ul>
         {{-- button --}}
         <div class="flex space-x-4">
@@ -38,7 +35,7 @@
     <div id="navbar-placeholder" class="hidden h-0"></div>
 
     {{-- Hero --}}
-    <div
+    <div id="beranda"
         class="bg-gradient-to-b from-[#DEECE200] to-[#BEDCC6] h-screen w-full flex flex-col items-center mt-24 overflow-hidden">
         <p class="text-4xl font-semibold text-center text-neutral-900 animate-fade-in-up delay-100">
             Temukan <span class="text-primary-500">Rekomendasi Magang</span> yang Paling Sesuai dengan<br>Minat,
@@ -59,7 +56,7 @@
     </div>
 
     {{-- Tentang --}}
-    <div class="bg-white h-screen w-full flex justify-between items-center px-20">
+    <div id="tentang" class="bg-white h-screen w-full flex justify-between items-center px-20">
         <div class="space-y-6 w-[521px] animate-on-scroll" data-animation="animate-fade-in-right">
             <p class="font-semibold text-4xl text-neutral-900"><span class="text-primary-500">Temukan, Lamar, dan
                     Mulai</span>
@@ -75,7 +72,7 @@
     </div>
 
     {{-- Fitur --}}
-    <div class="bg-white h-fit w-full px-20 py-24 space-y-22">
+    <div id="fitur" class="bg-white h-fit w-full px-20 py-24 space-y-22">
         <div class="space-y-4 flex flex-col items-center animate-on-scroll" data-animation="animate-fade-in-up">
             <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200 px-6 py-2">
                 <i class="ph-fill ph-lightning text-primary-500 text-xl"></i>
@@ -139,7 +136,7 @@
     </div>
 
     {{-- Panduan --}}
-    <div class="bg-white h-fit w-full px-20 py-24 space-y-22">
+    <div id="panduan" class="bg-white h-fit w-full px-20 py-24 space-y-22">
         <div class="space-y-4 flex flex-col items-center animate-on-scroll" data-animation="animate-fade-in-up">
             <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200 px-6 py-2">
                 <i class="ph-fill ph-book-open text-primary-500 text-xl"></i>
@@ -207,21 +204,12 @@
         <hr class="border-neutral-300">
         <div class="flex justify-between animate-on-scroll" data-animation="animate-fade-in">
             <ul class="flex space-x-6 text-base">
-                <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Beranda</a>
-                </li>
-                <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Tentang</a>
-                </li>
-                <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Fitur</a>
-                </li>
-                <li><a href="#"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Panduan</a>
-                </li>
+                <li><a href="#beranda" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Beranda</a></li>
+                <li><a href="#tentang" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Tentang</a></li>
+                <li><a href="#fitur" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Fitur</a></li>
+                <li><a href="#panduan" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Panduan</a></li>
             </ul>
-            <p class="text-neutral-500 text-base font-normal">© Copyright 2025 . Kelompok 3 TI-2E . All right reserved
-            </p>
+            <p class="text-neutral-500 text-base font-normal">© Copyright 2025 . Kelompok 3 TI-2E . All right reserved</p>
         </div>
     </footer>
 
@@ -229,8 +217,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Animation on scroll
             const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('div[id]');
 
             const animateOnScroll = function() {
+                // Your existing animation code
                 animatedElements.forEach(element => {
                     const elementPosition = element.getBoundingClientRect().top;
                     const windowHeight = window.innerHeight;
@@ -242,10 +233,59 @@
                         element.classList.add(animationClass);
                     }
                 });
+                
+                // Highlight active section in navbar
+                let currentSection = '';
+                
+                // If at the top of the page, set Beranda as active
+                if (window.scrollY < 100) {
+                    currentSection = 'beranda';
+                } else {
+                    // Otherwise determine based on scroll position
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        const sectionHeight = section.clientHeight;
+                        if (window.scrollY >= (sectionTop - 150)) {
+                            currentSection = section.getAttribute('id');
+                        }
+                    });
+                }
+
+                navLinks.forEach(link => {
+                    link.classList.remove('text-primary-500', 'font-semibold');
+                    link.classList.add('text-neutral-500', 'font-normal');
+                    
+                    if(link.getAttribute('href') === `#${currentSection}`) {
+                        link.classList.remove('text-neutral-500', 'font-normal');
+                        link.classList.add('text-primary-500', 'font-semibold');
+                    }
+                });
             };
 
-            // Initial check on page load
-            animateOnScroll();
+            // Smooth scrolling for navbar links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetId === 'beranda') {
+                        // For beranda, scroll to the very top of the page
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        // For other sections, apply the offset for fixed navbar
+                        const offset = 80; // Offset for fixed navbar height
+                        window.scrollTo({
+                            top: targetSection.offsetTop - offset,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
 
             // Fixed navbar on scroll
             const navbar = document.getElementById('navbar');
@@ -271,6 +311,7 @@
 
             // Check on load
             handleNavbarPosition();
+            animateOnScroll();
 
             // Check on scroll for both animations and navbar
             window.addEventListener('scroll', function() {
