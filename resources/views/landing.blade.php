@@ -213,12 +213,28 @@
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button id="back-to-top" 
+        class="w-12 h-12 fixed bottom-8 right-8 bg-white border border-neutral-200 hover:bg-primary-50 text-primary-500 rounded-full p-3 shadow-lg opacity-0 transition-all duration-300 transform translate-y-10" 
+        aria-label="Back to top">
+        <i class="ph ph-arrow-line-up text-xl"></i>
+    </button>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Animation on scroll
             const animatedElements = document.querySelectorAll('.animate-on-scroll');
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('div[id]');
+            const backToTopButton = document.getElementById('back-to-top');
+
+            // Back to top button functionality
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
 
             const animateOnScroll = function() {
                 // Your existing animation code
@@ -233,6 +249,15 @@
                         element.classList.add(animationClass);
                     }
                 });
+                
+                // Show/hide back to top button
+                if (window.scrollY > 500) {
+                    backToTopButton.classList.remove('opacity-0', 'translate-y-10');
+                    backToTopButton.classList.add('opacity-100', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'translate-y-10');
+                    backToTopButton.classList.remove('opacity-100', 'translate-y-0');
+                }
                 
                 // Highlight active section in navbar
                 let currentSection = '';
