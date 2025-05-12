@@ -14,7 +14,7 @@
 
 <body>
     {{-- Navbar --}}
-    <nav class="flex items-center justify-between bg-white px-20 py-6">
+    <nav id="navbar" class="flex items-center justify-between bg-white px-20 py-6 w-full z-50 transition-all duration-300">
         {{-- logo --}}
         <img src="{{ asset('Images/logo.svg') }}" alt="Logo" class="h-8">
         {{-- menu --}}
@@ -33,6 +33,9 @@
             <a href="#" class="btn-primary">Mulai Sekarang</a>
         </div>
     </nav>
+
+    {{-- Empty div as placeholder when navbar becomes fixed --}}
+    <div id="navbar-placeholder" class="hidden h-0"></div>
 
     {{-- Hero --}}
     <div
@@ -224,6 +227,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Animation on scroll
             const animatedElements = document.querySelectorAll('.animate-on-scroll');
 
             const animateOnScroll = function() {
@@ -243,8 +247,42 @@
             // Initial check on page load
             animateOnScroll();
 
-            // Check on scroll
-            window.addEventListener('scroll', animateOnScroll);
+            // Fixed navbar on scroll
+            const navbar = document.getElementById('navbar');
+            const navbarPlaceholder = document.getElementById('navbar-placeholder');
+            const heroSection = document.querySelector('.bg-gradient-to-b');
+            let navbarHeight = navbar.offsetHeight;
+            
+            const handleNavbarPosition = function() {
+                const heroBottom = heroSection.getBoundingClientRect().bottom;
+                
+                if (heroBottom <= 0) {
+                    // Fix navbar to top
+                    navbar.classList.add('fixed', 'top-0', 'shadow-md');
+                    navbarPlaceholder.classList.remove('hidden');
+                    navbarPlaceholder.style.height = `${navbarHeight}px`;
+                } else {
+                    // Return navbar to normal
+                    navbar.classList.remove('fixed', 'top-0', 'shadow-md');
+                    navbarPlaceholder.classList.add('hidden');
+                    navbarPlaceholder.style.height = '0';
+                }
+            };
+
+            // Check on load
+            handleNavbarPosition();
+
+            // Check on scroll for both animations and navbar
+            window.addEventListener('scroll', function() {
+                animateOnScroll();
+                handleNavbarPosition();
+            });
+
+            // Update navbar height on window resize
+            window.addEventListener('resize', function() {
+                navbarHeight = navbar.offsetHeight;
+                handleNavbarPosition();
+            });
         });
     </script>
 </body>
