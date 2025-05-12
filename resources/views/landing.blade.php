@@ -46,7 +46,7 @@
             dipersonalisasi berdasarkan minat, keahlian,<br>dan rencana kariermu untuk membantumu berkembang di
             jalur
             yang tepat.</p>
-        <a href="#" class="mt-6 btn-primary-animated">
+        <a href="#" class="mt-6 btn-primary-animated animate-fade-in-up delay-300">
             Mulai Sekarang
         </a>
         <div class="mt-15 p-3 outline-1 rounded-3xl outline-primary-200 animate-fade-in-up delay-500">
@@ -57,7 +57,7 @@
 
     {{-- Tentang --}}
     <div class="bg-white h-screen w-full flex justify-between items-center px-20">
-        <div class="space-y-6 w-[521px]">
+        <div class="space-y-6 w-[521px] animate-on-scroll" data-animation="animate-fade-in-right">
             <p class="font-semibold text-4xl text-neutral-900"><span class="text-primary-500">Temukan, Lamar, dan
                     Mulai</span>
                 <br>Magangmu dengan Lebih<br>Mudah
@@ -67,13 +67,14 @@
                 profilmu. Pantau setiap langkah perjalananmu, dapatkan insight untuk berkembang, dan siapkan diri
                 menyambut dunia kerja dengan lebih percaya diri.</p>
         </div>
-        <div class="w-[627px] h-[627px] bg-neutral-50 rounded-2xl"></div>
+        <div class="w-[627px] h-[627px] bg-neutral-50 rounded-2xl animate-on-scroll"
+            data-animation="animate-fade-in-left"></div>
     </div>
 
     {{-- Fitur --}}
     <div class="bg-white h-fit w-full px-20 py-24 space-y-22">
-        <div class="space-y-4 flex flex-col items-center">
-            <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200  px-6 py-2">
+        <div class="space-y-4 flex flex-col items-center animate-on-scroll" data-animation="animate-fade-in-up">
+            <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200 px-6 py-2">
                 <i class="ph-fill ph-lightning text-primary-500 text-xl"></i>
                 <p class="text-base text-neutral-900">Fitur Unggulan</p>
             </div>
@@ -114,7 +115,8 @@
         <div class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
                 @foreach ($firstRow as $item)
-                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6">
+                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll"
+                        data-animation="animate-zoom-in">
                         <p class="font-medium text-2xl text-neutral-900">{{ $item['title'] }}</p>
                         <p class="font-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
                     </div>
@@ -123,7 +125,8 @@
 
             <div class="grid grid-cols-3 gap-4">
                 @foreach ($secondRow as $item)
-                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end">
+                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll"
+                        data-animation="animate-zoom-in">
                         <p class="font-medium text-2xl text-neutral-900">{{ $item['title'] }}</p>
                         <p class="font-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
                     </div>
@@ -134,8 +137,8 @@
 
     {{-- Panduan --}}
     <div class="bg-white h-fit w-full px-20 py-24 space-y-22">
-        <div class="space-y-4 flex flex-col items-center">
-            <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200  px-6 py-2">
+        <div class="space-y-4 flex flex-col items-center animate-on-scroll" data-animation="animate-fade-in-up">
+            <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200 px-6 py-2">
                 <i class="ph-fill ph-book-open text-primary-500 text-xl"></i>
                 <p class="text-base text-neutral-900">Panduan Singkat</p>
             </div>
@@ -167,8 +170,9 @@
         @endphp
         <div class="grid grid-cols-4 gap-4">
             @foreach ($steps as $item)
-                <div
-                    class="w-full h-fit bg-white outline-1 outline-neutral-200 rounded-2xl py-6 px-6 hover:bg-primary-50 hover:outline-primary-500 space-y-6">
+                <div class="w-full h-fit bg-white outline-1 outline-neutral-200 rounded-2xl py-6 px-6 
+                          hover:bg-primary-50 hover:outline-primary-500 space-y-6 animate-on-scroll"
+                    data-animation="animate-scale-up" style="animation-delay: {{ 100 * $loop->index }}ms">
                     <div
                         class="w-12 h-12 bg-white border-1 rounded-lg border-neutral-200 p-2 flex flex-col justify-center hover:!outline-none">
                         <p class="text-xl font-semibold text-primary-500 text-center">{{ $loop->index + 1 }}</p>
@@ -184,19 +188,21 @@
 
     <footer class="bg-white py-24 px-20 space-y-14">
         <div class="flex justify-between items-center">
-            <p class="text-4xl font-semibold text-neutral-900">Mulai Magangmu<br>dan Raih Kesempatan<br>Terbaik!</p>
-            <div class="flex flex-col justify-start items-end space-y-4">
+            <p class="text-4xl font-semibold text-neutral-900 animate-on-scroll" data-animation="animate-fade-in-right">
+                Mulai Magangmu<br>dan Raih Kesempatan<br>Terbaik!</p>
+            <div class="flex flex-col justify-start items-end space-y-4 animate-on-scroll"
+                data-animation="animate-fade-in-left">
                 <p class="text-normal text-base text-neutral-500 text-end">Jelajahi peluang magang terbaik sesuai
                     minat dan keahlianmu,<br>ajukan lamaran dengan mudah, dan
                     pantau perkembanganmu<br>dalam satu sistem terintegrasi.</p>
-                    <a href="#" class="btn-primary-animated">
-                        Mulai Sekarang
-                        <span><i class="ph ph-caret-double-right"></i></span>
-                    </a>
+                <a href="#" class="btn-primary-animated">
+                    Mulai Sekarang
+                    <span><i class="ph ph-caret-double-right"></i></span>
+                </a>
             </div>
         </div>
         <hr class="border-neutral-300">
-        <div class="flex justify-between">
+        <div class="flex justify-between animate-on-scroll" data-animation="animate-fade-in">
             <ul class="flex space-x-6 text-base">
                 <li><a href="#"
                         class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold">Beranda</a>
@@ -216,6 +222,31 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
+            const animateOnScroll = function() {
+                animatedElements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+
+                    // When element is in viewport (with a small offset)
+                    if (elementPosition < windowHeight - 100) {
+                        // Get the animation class from data attribute
+                        const animationClass = element.dataset.animation || 'animate-fade-in-up';
+                        element.classList.add(animationClass);
+                    }
+                });
+            };
+
+            // Initial check on page load
+            animateOnScroll();
+
+            // Check on scroll
+            window.addEventListener('scroll', animateOnScroll);
+        });
+    </script>
 </body>
 
 </html>

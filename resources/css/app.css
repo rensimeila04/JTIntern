@@ -22,6 +22,11 @@
   --color-primary-50: #F1F8F3;
 
   --animate-fade-in-up: fade-in-up 0.8s ease-out both;
+  --animate-fade-in: fade-in 0.8s ease-out both;
+  --animate-fade-in-right: fade-in-right 0.8s ease-out both;
+  --animate-fade-in-left: fade-in-left 0.8s ease-out both;
+  --animate-zoom-in: zoom-in 0.8s ease-out both;
+  --animate-scale-up: scale-up 0.8s ease-out both;
 
   @keyframes fade-in-up {
     0% {
@@ -34,35 +39,137 @@
       transform: translateY(0);
     }
   }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fade-in-right {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fade-in-left {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes zoom-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes scale-up {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }
 
-/* Custom Button Styles */
 @layer components {
-  /* Primary Button - Green */
   .btn-primary {
     @apply py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent 
            bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 
            disabled:opacity-50 disabled:pointer-events-none transition-all duration-300;
   }
   
-  /* Primary Button - Large */
   .btn-primary-lg {
     @apply py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent 
            bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 
            disabled:opacity-50 disabled:pointer-events-none transition-all duration-300;
   }
   
-  /* Primary Button with Hover Effect */
   .btn-primary-animated {
     @apply py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent 
            bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 
            disabled:opacity-50 disabled:pointer-events-none transition duration-700 ease-in-out hover:scale-105;
   }
   
-  /* Secondary Button - Outline */
   .btn-secondary {
     @apply py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-500 
            text-gray-500 hover:border-gray-800 hover:text-gray-800 focus:outline-hidden focus:border-gray-800 
            focus:text-gray-800 disabled:opacity-50 disabled:pointer-events-none transition-all duration-300;
+  }
+  
+  .animate-on-scroll {
+    @apply opacity-0;
+  }
+  
+  .animate-fade-in {
+    @apply animate-[fade-in_0.8s_ease-out_forwards];
+  }
+  
+  .animate-fade-in-up {
+    @apply animate-[fade-in-up_0.8s_ease-out_forwards];
+  }
+  
+  .animate-fade-in-right {
+    @apply animate-[fade-in-right_0.8s_ease-out_forwards];
+  }
+  
+  .animate-fade-in-left {
+    @apply animate-[fade-in-left_0.8s_ease-out_forwards];
+  }
+  
+  .animate-zoom-in {
+    @apply animate-[zoom-in_0.8s_ease-out_forwards];
+  }
+  
+  .animate-scale-up {
+    @apply animate-[scale-up_0.8s_ease-out_forwards];
+  }
+  
+  /* Animation delays */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .delay-500 {
+    animation-delay: 500ms;
   }
 }
