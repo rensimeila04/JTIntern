@@ -98,13 +98,13 @@
                 </div>
             </div>
 
-            <div class="w-[834.97px] p-2.5 left-[116px] top-[453px] absolute opacity-90 rounded-3xl outline outline-1 outline-offset-[-0.90px] outline-neutral-300">
+            <div class="w-[834.97px] p-2.5 left-[116px] top-[453px] absolute opacity-90 rounded-3xl outline-1 outline-primary-200">
                 <img src="{{ asset('images/konten_dashboard.png') }}" alt="Dashboard Preview" class="self-stretch rounded-3xl border-1 border-neutral-300 opacity-90">
             </div>
             <div
-                class="w-96 p-2 left-[67px] top-[394px] absolute rounded-2xl outline outline-1 outline-offset-[-1px] outline-neutral-300">
+                class="w-96 p-2 left-[67px] top-[394px] absolute rounded-2xl outline-1 outline-primary-200">
                 <div
-                    class="self-stretch flex-1 px-2.5 py-4 bg-white rounded-lg shadow-md outline outline-1 outline-offset-[-1px] outline-neutral-300 flex flex-col gap-3.5">
+                    class="self-stretch flex-1 px-2.5 py-4 bg-white rounded-lg shadow-md outline-1 outline-primary-200 flex flex-col gap-3.5">
                     <img src="{{ asset('images/konten2.svg') }}" alt="Analytics Chart" class="w-full">
                 </div>
             </div>
