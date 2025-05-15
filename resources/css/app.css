@@ -197,4 +197,45 @@
   .hover-pulse {
     @apply hover:animate-pulse;
   }
+  
+  /* Form Components */
+  .form-input {
+    @apply py-2.5 px-4 block w-full border border-neutral-300 rounded-lg text-sm 
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+           disabled:opacity-50 disabled:pointer-events-none
+           transition duration-300;
+  }
+  
+  .form-input-lg {
+    @apply py-3 px-4 block w-full border border-neutral-300 rounded-lg text-base
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+           disabled:opacity-50 disabled:pointer-events-none
+           transition duration-300;
+  }
+  
+  .form-select {
+    @apply appearance-none py-2.5 px-4 block w-full border border-neutral-300 rounded-lg text-sm
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+           disabled:opacity-50 disabled:pointer-events-none
+           transition duration-300;
+  }
+  
+  .form-select-lg {
+    @apply appearance-none py-3 px-4 block w-full border border-neutral-300 rounded-lg text-base
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+           disabled:opacity-50 disabled:pointer-events-none
+           transition duration-300;
+  }
+  
+  .form-label {
+    @apply block text-neutral-700 font-medium mb-2;
+  }
+  
+  .form-helper-text {
+    @apply mt-2 text-sm text-neutral-500;
+  }
+  
+  .form-group {
+    @apply mb-5;
+  }
 }
