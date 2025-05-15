@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.4",
+        "phosphor-icons": "^1.4.2",
         "preline": "^3.0.1",
         "tailwindcss": "^4.1.4",
         "vanilla-calendar-pro": "^3.0.4"

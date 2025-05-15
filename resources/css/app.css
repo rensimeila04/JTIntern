@@ -8,6 +8,10 @@
 /* Plugins */
 @plugin "@tailwindcss/forms";
 
+/* Phospor Icons */
+@import "phosphor-icons/src/css/icons.css";
+
+
 @theme {
   --color-primary-950: #0F1F17;
   --color-primary-900: #1D382B;
