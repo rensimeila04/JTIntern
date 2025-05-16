@@ -26,8 +26,8 @@
         </ul>
         {{-- button --}}
         <div class="flex space-x-4">
-            <a href="#" class="btn-secondary">Masuk</a>
-            <a href="#" class="btn-primary">Mulai Sekarang</a>
+            <a href="{{ route('login') }}" class="btn-secondary">Masuk</a>
+            <a href="{{ route('register') }}" class="btn-primary">Mulai Sekarang</a>
         </div>
     </nav>
 
@@ -46,7 +46,7 @@
             dipersonalisasi berdasarkan minat, keahlian,<br>dan rencana kariermu untuk membantumu berkembang di
             jalur
             yang tepat.</p>
-        <a href="#" class="mt-6 btn-primary-animated animate-fade-in-up delay-300">
+        <a href="{{ route('register') }}" class="mt-6 btn-primary-animated animate-fade-in-up delay-300">
             Mulai Sekarang
         </a>
         <div class="mt-15 p-3 outline-1 rounded-3xl outline-primary-200 animate-fade-in-up delay-500">
@@ -195,7 +195,7 @@
                 <p class="text-normal text-base text-neutral-500 text-end">Jelajahi peluang magang terbaik sesuai
                     minat dan keahlianmu,<br>ajukan lamaran dengan mudah, dan
                     pantau perkembanganmu<br>dalam satu sistem terintegrasi.</p>
-                <a href="#" class="btn-primary-animated">
+                <a href="{{ route('register') }}" class="btn-primary-animated">
                     Mulai Sekarang
                     <span><i class="ph ph-caret-double-right"></i></span>
                 </a>

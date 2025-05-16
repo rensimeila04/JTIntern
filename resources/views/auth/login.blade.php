@@ -10,7 +10,7 @@
 <body>
     <div class="h-screen w-full p-6 flex items-center justify-center space-x-6">
         <div class="w-1/2 px-20 h-full overflow-y-auto mt-4 space-y-12.5">
-            <a href="#"
+            <a href="{{ url('/') }}"
                 class="flex items-center flex-row space-x-2 text-neutral-500 hover:text-primary-500 font-medium ">
                 <i class="ph ph-arrow-left"></i>
                 <span>Kembali</span>
@@ -54,7 +54,7 @@
 
                     <div>
                         <span class="text-neutral-500">Belum memiliki akun? </span>
-                        <a href="#" class="text-primary-500 font-medium hover:underline">Daftar Sekarang</a>
+                        <a href="{{ route('register') }}" class="text-primary-500 font-medium hover:underline">Daftar Sekarang</a>
                     </div>
                 </form>
             </div>
