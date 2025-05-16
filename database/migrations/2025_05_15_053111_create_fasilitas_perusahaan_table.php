@@ -16,6 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_fasilitas')->index();
             $table->unsignedBigInteger('id_perusahaan_mitra')->index();
             $table->timestamps();
+
+            $table->foreign('id_fasilitas')->references('id_fasilitas')->on('fasilitas');
+            $table->foreign('id_perusahaan_mitra')->references('id_perusahaan_mitra')->on('perusahaan_mitra');
         });
     }
 

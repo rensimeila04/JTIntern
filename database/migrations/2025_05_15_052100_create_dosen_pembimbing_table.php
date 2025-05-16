@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('nip')->unique();
             $table->string('bidang_minat');
             $table->timestamps();
+
+            $table->foreign('id_user')->references('id_user')->on('user');
         });
     }
 

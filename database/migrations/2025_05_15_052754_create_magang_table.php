@@ -12,8 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('magang', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_magang');
+            $table->unsignedBigInteger('id_mahasiswa')->index();
+            $table->unsignedBigInteger('id_lowongan')->index();
+            $table->unsignedBigInteger('id_dosen_pembimbing')->index();
+            $table->enum('status_magang', ['menunggu', 'diterima', 'ditolak', 'magang', 'selesai'])->default('menunggu');
+            $table->string('path_sertifikat')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa');
+            $table->foreign('id_lowongan')->references('id_lowongan')->on('lowongan');
+            $table->foreign('id_dosen_pembimbing')->references('id_dosen_pembimbing')->on('dosen_pembimbing');
         });
     }
 

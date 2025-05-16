@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->id();
+            $table->string('nim')->unique();
+            $table->enum('jenis_magang', ['wfo', 'remote', 'hybrid']);
+            $table->unsignedBigInteger('id_kompetensi')->index();
+            $table->unsignedBigInteger('id_program_studi')->index();
+            $table->string('preferensi_lokasi');
+            $table->unsignedBigInteger('id_jenis_perusahaan')->index();
             $table->timestamps();
+
+            $table->foreign('id_kompetensi')->references('id_kompetensi')->on('kompetensi');
+            $table->foreign('id_jenis_perusahaan')->references('id_jenis_perusahaan')->on('jenis_perusahaan');
+            $table->foreign('id_program_studi')->references('id_program_studi')->on('program_studi');
         });
     }
 

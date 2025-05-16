@@ -20,7 +20,10 @@ return new class extends Migration
             $table->string('kecamatan');
             $table->string('kota_kabupaten');
             $table->string('provinsi');
-            $table->string('detail_alamat');
+            $table->text('detail_alamat');
+            $table->string('email')->nullable();
+            $table->string('nomor_telepon')->nullable();
+            $table->text('tentang_perusahaan')->nullable();
             $table->timestamps();
 
             $table->foreign('id_jenis_perusahaan')->references('id_jenis_perusahaan')->on('jenis_perusahaan');

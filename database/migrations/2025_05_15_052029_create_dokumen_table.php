@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('path_dokumen');
 
             $table->timestamps();
+
+            $table->foreign('id_jenis_dokumen')->references('id_jenis_dokumen')->on('jenis_dokumen');
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa');
         });
     }
 

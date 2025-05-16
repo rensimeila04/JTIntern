@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('judul_notifikasi');
             $table->string('pesan');
             $table->timestamps();
+
+            $table->foreign('id_user')->references('id_user')->on('user');
         });
     }
 
