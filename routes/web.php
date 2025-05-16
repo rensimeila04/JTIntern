@@ -20,7 +20,3 @@ Route::get('/', function () {
 
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::get('login', [AuthController::class, 'login'])->name('login');
-
-Route::get('coba', function () {
-    return view('layout.template');
-});
