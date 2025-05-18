@@ -31,10 +31,11 @@ class UserModel extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id_level',
+        'name',
         'email',
         'password',
-        'name',
+        'id_level',
+        'remember_token'
     ];
 
     /**
@@ -44,6 +45,7 @@ class UserModel extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
