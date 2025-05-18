@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mahasiswa', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id_mahasiswa');
+            $table->unsignedBigInteger('id_user')->index();
             $table->string('nim')->unique();
             $table->enum('jenis_magang', ['wfo', 'remote', 'hybrid']);
             $table->unsignedBigInteger('id_kompetensi')->index();
@@ -21,6 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_jenis_perusahaan')->index();
             $table->timestamps();
 
+
+            $table->foreign('id_user')->references('id_user')->on('user');
             $table->foreign('id_kompetensi')->references('id_kompetensi')->on('kompetensi');
             $table->foreign('id_jenis_perusahaan')->references('id_jenis_perusahaan')->on('jenis_perusahaan');
             $table->foreign('id_program_studi')->references('id_program_studi')->on('program_studi');

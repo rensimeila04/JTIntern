@@ -16,14 +16,10 @@ return new class extends Migration
             $table->string('nama_perusahaan_mitra');
             $table->string('bidang_industri');
             $table->unsignedBigInteger('id_jenis_perusahaan')->index();
-            $table->string('kelurahan');
-            $table->string('kecamatan');
-            $table->string('kota_kabupaten');
-            $table->string('provinsi');
-            $table->text('detail_alamat');
+            $table->string('alamat');
             $table->string('email')->nullable();
-            $table->string('nomor_telepon')->nullable();
-            $table->text('tentang_perusahaan')->nullable();
+            $table->string('telepon')->nullable();
+            $table->text('tentang')->nullable();
             $table->timestamps();
 
             $table->foreign('id_jenis_perusahaan')->references('id_jenis_perusahaan')->on('jenis_perusahaan');

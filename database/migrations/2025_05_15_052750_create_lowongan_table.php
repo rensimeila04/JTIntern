@@ -12,15 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lowongan', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('id_perusahaan_mitra')->index();
-            $table->unsignedInteger('id_periode_magang')->index();
+            $table->id('id_lowongan');
+            $table->unsignedBigInteger('id_perusahaan_mitra')->index();
+            $table->unsignedBigInteger('id_periode_magang')->index();
             $table->string('judul_lowongan');
             $table->text('deskripsi');
             $table->text('persyaratan');
-            $table->unsignedInteger('id_kompetensi')->index();
+            $table->unsignedBigInteger('id_kompetensi')->index();
             $table->enum('jenis_magang', ['wfo', 'remote', 'hybrid']);
             $table->boolean('status_pendaftaran')->default(true);
+            $table->date('deadline_pendaftaran')->nullable();
             $table->boolean('test')->default(false);
             $table->text('informasi_test')->nullable();
             $table->timestamps();
