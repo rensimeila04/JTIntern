@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="{{ asset('images/logo_icon.png') }}" type="image/png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Masuk - JTIntern</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -20,13 +21,27 @@
                     <h1 class="font-medium text-neutral-900 text-4xl">Masuk ke JTIntern.</h1>
                     <p class="text-normal text-normal text-neutral-500">Masuk dan lanjutkan aktivitas Anda.</p>
                 </div>
-                <form method="POST" action="#" class="mt-8 space-y-5">
+                
+                @if ($errors->any())
+                <div class="mt-4 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert">
+                    <span class="font-bold">Error!</span> 
+                    <ul class="mt-1 ml-4 list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                
+                <div id="alert-container" style="display: none;" class="mt-4"></div>
+                
+                <form id="loginForm" method="POST" action="{{ route('login.post') }}" class="mt-8 space-y-5">
                     @csrf
 
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
                         <input id="email" type="email" name="email" placeholder="Masukkan email"
-                            class="form-input-lg" required>
+                            class="form-input-lg" value="{{ old('email') }}" required>
                     </div>
 
                     <div class="form-group">
@@ -83,5 +98,49 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Optional AJAX submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const alertContainer = document.getElementById('alert-container');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        alertContainer.style.display = 'block';
+                        alertContainer.className = 'mt-4 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500';
+                        alertContainer.innerHTML = `<span class="font-bold">Success!</span> <p>${data.message}</p>`;
+                        
+                        // Redirect after successful login
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 1000);
+                    } else {
+                        alertContainer.style.display = 'block';
+                        alertContainer.className = 'mt-4 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500';
+                        alertContainer.innerHTML = `<span class="font-bold">Error!</span> <p>${data.message}</p>`;
+                    }
+                })
+                .catch(error => {
+                    alertContainer.style.display = 'block';
+                    alertContainer.className = 'mt-4 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500';
+                    alertContainer.innerHTML = '<span class="font-bold">Error!</span> <p>Terjadi kesalahan. Silakan coba lagi.</p>';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
