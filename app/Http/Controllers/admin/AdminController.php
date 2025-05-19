@@ -19,6 +19,13 @@ class AdminController extends Controller
             ['label' => 'Pengguna', 'url' => '#'],
             ['label' => 'Detail Pengguna', 'url' => '#'],
         ];
-        return view('admin.detail_dospem', ['id' => $id], ['breadcrumb' => $breadcrumb]);
+
+        $activeMenu = 'pengguna';
+        
+        return view('admin.detail_dospem', [
+            'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
     }
 }
