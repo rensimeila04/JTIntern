@@ -49,24 +49,36 @@ class MahasiswaModel extends Model
     /**
      * Get the kompetensi associated with the mahasiswa.
      */
-    // public function kompetensi()
-    // {
-    //     return $this->belongsTo(KompetensiModel::class, 'id_kompetensi', 'id_kompetensi');
-    // }
+    public function kompetensi()
+    {
+        return $this->belongsTo(KompetensiModel::class, 'id_kompetensi', 'id_kompetensi');
+    }
 
     /**
      * Get the program studi associated with the mahasiswa.
      */
-    // public function programStudi()
-    // {
-    //     return $this->belongsTo(ProgramStudiModel::class, 'id_program_studi', 'id_program_studi');
-    // }
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudiModel::class, 'id_program_studi', 'id_program_studi');
+    }
 
     /**
      * Get the jenis perusahaan associated with the mahasiswa.
      */
-    // public function jenisPerusahaan()
-    // {
-    //     return $this->belongsTo(JenisPerusahaanModel::class, 'id_jenis_perusahaan', 'id_jenis_perusahaan');
-    // }
+    public function jenisPerusahaan()
+    {
+        return $this->belongsTo(JenisPerusahaanModel::class, 'id_jenis_perusahaan', 'id_jenis_perusahaan');
+    }
+
+    public function magang() {
+        return $this->hasMany(MagangModel::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
+
+    public function JenisDokumen() {
+        return $this->hasMany(JenisDokumenModel::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
+
+    public function feedback() {
+        return $this->hasMany(FeedbackModel::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
 }
