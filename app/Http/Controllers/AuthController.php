@@ -11,7 +11,8 @@ class AuthController extends Controller
 {
     public function register()
     {
-        return view('auth.register');
+        $programStudi = \App\Models\ProgramStudi::all();
+        return view('auth.register', compact('programStudi'));
     }
 
     public function login()

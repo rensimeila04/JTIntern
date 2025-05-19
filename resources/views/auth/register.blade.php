@@ -50,8 +50,9 @@
                         <div class="relative">
                             <select id="study_program" name="study_program" class="form-select-lg" required>
                                 <option value="" disabled selected>Pilih program studi</option>
-                                <option value="ti">D-IV Teknik Informatika</option>
-                                <option value="si">D-IV Sistem Informasi Bisnis</option>
+                                @foreach($programStudi as $prodi)
+                                    <option value="{{ $prodi->kode_prodi }}">{{ $prodi->nama_prodi }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
