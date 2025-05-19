@@ -31,6 +31,8 @@
         <div class="w-full lg:ps-60">
             <!-- Include Header -->
             @include('layout.header')
+            
+            @include('layout.breadcrumb')
 
             <!-- Main Content -->
             <main class="p-6 sm:p-6 md:p-8">
