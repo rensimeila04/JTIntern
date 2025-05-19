@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id_mahasiswa');
             $table->unsignedBigInteger('id_user')->index();
             $table->string('nim')->unique();
-            $table->enum('jenis_magang', ['wfo', 'remote', 'hybrid']);
+            $table->enum('jenis_magang', ['wfo', 'remote', 'hybrid'])->nullable();
             $table->unsignedBigInteger('id_kompetensi')->index();
             $table->unsignedBigInteger('id_program_studi')->index();
             $table->string('preferensi_lokasi');
