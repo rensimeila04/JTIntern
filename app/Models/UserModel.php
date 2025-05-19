@@ -55,4 +55,12 @@ class UserModel extends Authenticatable
     {
         return $this->belongsTo(LevelModel::class, 'id_level', 'id_level');
     }
+
+    public function mahasiswa(){
+        return $this->hasOne(MahasiswaModel::class, 'id_user', 'id_user');
+    }
+
+    public function notifikasi() {
+        return $this->hasMany(NotifikasiModel::class, 'id_user', 'id_user');
+    }
 }
