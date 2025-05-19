@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserModel;
+use App\Models\MahasiswaModel;
+use App\Models\ProgramStudi;
+use App\Models\LevelModel;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -13,6 +18,67 @@ class AuthController extends Controller
     {
         $programStudi = \App\Models\ProgramStudi::all();
         return view('auth.register', compact('programStudi'));
+    }
+
+    public function postRegister(Request $request)
+    {
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'nim' => 'required|string|max:20|unique:mahasiswa,nim',
+            'email' => 'required|string|email|max:255|unique:user,email',
+            'name' => 'required|string|max:255',
+            'study_program' => 'required|string|exists:program_studi,kode_prodi',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // Get mahasiswa level
+        $mahasiswaLevel = LevelModel::where('kode_level', 'MHS')->first();
+        
+        if (!$mahasiswaLevel) {
+            return back()->withErrors(['level' => 'Level mahasiswa tidak ditemukan'])->withInput();
+        }
+
+        try {
+            DB::beginTransaction();
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            
+            // Create user account
+            $user = UserModel::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'id_level' => $mahasiswaLevel->id_level,
+            ]);
+            
+            // Get program studi ID based on code
+            $programStudi = ProgramStudi::where('kode_prodi', $request->study_program)->first();
+            
+            // Insert mahasiswa
+            DB::table('mahasiswa')->insert([
+                'id_user' => $user->id_user,
+                'nim' => $request->nim,
+                'jenis_magang' => null,            
+                'id_program_studi' => $programStudi->id_program_studi,
+                'id_kompetensi' => null,           
+                'preferensi_lokasi' => null,       
+                'id_jenis_perusahaan' => null,     
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            DB::commit();
+            
+            return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan masuk dengan akun Anda.');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['system' => 'Terjadi kesalahan pada sistem: ' . $e->getMessage()])->withInput();
+        }
     }
 
     public function login()

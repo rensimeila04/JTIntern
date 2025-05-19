@@ -33,6 +33,13 @@
                 </div>
                 @endif
                 
+                @if(session('success'))
+                    <div class="mt-4 bg-green-100 border border-green-200 text-sm text-green-800 rounded-lg p-4 dark:bg-green-800/10 dark:border-green-900 dark:text-green-500" role="alert">
+                        <span class="font-bold">Success!</span> 
+                        <p>{{ session('success') }}</p>
+                    </div>
+                @endif
+                
                 <div id="alert-container" style="display: none;" class="mt-4"></div>
                 
                 <form id="loginForm" method="POST" action="{{ route('login.post') }}" class="mt-8 space-y-5">
@@ -121,7 +128,7 @@
                 .then(data => {
                     if (data.status) {
                         alertContainer.style.display = 'block';
-                        alertContainer.className = 'mt-4 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500';
+                        alertContainer.className = 'mt-4 bg-green-100 border border-green-200 text-sm text-green-800 rounded-lg p-4 dark:bg-green-800/10 dark:border-green-900 dark:text-green-500';
                         alertContainer.innerHTML = `<span class="font-bold">Success!</span> <p>${data.message}</p>`;
                         
                         // Redirect after successful login
