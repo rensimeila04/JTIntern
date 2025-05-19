@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,3 +47,7 @@ Route::middleware(['auth'])->group(function () {
         })->name('mahasiswa.dashboard');
     });
 });
+
+Route::group(['prefix' => 'detail'], function () {
+        Route::get('/', [DetailController::class, 'index']);
+    });
