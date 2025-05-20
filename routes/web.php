@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PenggunaController;
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,14 +33,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin', function () {
             return view('admin.index');
         })->name('admin.dashboard');
-
         Route::get('/admin/pengguna', function () {
             return view('admin.pengguna');
         })->name('admin.mahasiswa.index');
         Route::get('/admin/level', function () {
             return view('admin.level_pengguna');
         })->name('admin.level');
-        Route::get('/admin/dospem/{id}', [AdminController::class, 'detailDospem'])
+        Route::get('/admin/dospem/{id}', [UserController::class, 'detailDospem'])
             ->name('admin.detail_dospem');
     });
 
