@@ -24,44 +24,76 @@
                     <p class="text-normal text-normal text-neutral-500">Masukkan kredensialmu sebagai mahasiswa untuk
                         membuat akun JTIntern.</p>
                 </div>
-                <form method="POST" action="#" class="mt-8 space-y-5">
+                <form method="POST" action="{{ route('register.post') }}" class="mt-8 space-y-5">
                     @csrf
+
+                    @if ($errors->any())
+                        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <div class="form-group">
                         <label for="nim" class="form-label">NIM</label>
                         <input id="nim" type="text" name="nim" placeholder="Masukkan NIM"
-                            class="form-input-lg" required>
+                            class="form-input-lg @error('nim') border-red-500 @enderror" 
+                            value="{{ old('nim') }}" required>
+                        @error('nim')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
                         <input id="email" type="email" name="email" placeholder="Masukkan email"
-                            class="form-input-lg" required>
+                            class="form-input-lg @error('email') border-red-500 @enderror"
+                            value="{{ old('email') }}" required>
+                        @error('email')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="name" class="form-label">Nama Lengkap</label>
                         <input id="name" type="text" name="name" placeholder="Masukkan nama lengkap"
-                            class="form-input-lg" required>
+                            class="form-input-lg @error('name') border-red-500 @enderror"
+                            value="{{ old('name') }}" required>
+                        @error('name')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="study_program" class="form-label">Program Studi</label>
                         <div class="relative">
-                            <select id="study_program" name="study_program" class="form-select-lg" required>
+                            <select id="study_program" name="study_program" 
+                                class="form-select-lg @error('study_program') border-red-500 @enderror" required>
                                 <option value="" disabled selected>Pilih program studi</option>
-                                <option value="ti">D-IV Teknik Informatika</option>
-                                <option value="si">D-IV Sistem Informasi Bisnis</option>
+                                @foreach($programStudi as $prodi)
+                                    <option value="{{ $prodi->kode_prodi }}" {{ old('study_program') == $prodi->kode_prodi ? 'selected' : '' }}>
+                                        {{ $prodi->nama_prodi }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
+                        @error('study_program')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="password" class="form-label">Kata Sandi</label>
                         <div class="relative">
                             <input id="password" type="password" name="password" placeholder="Masukkan kata sandi"
-                                class="form-input-lg" required>
+                                class="form-input-lg @error('password') border-red-500 @enderror" required>
                         </div>
+                        @error('password')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="form-group">

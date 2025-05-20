@@ -12,9 +12,9 @@
     <div class="px-4 py-6 flex flex-col gap-4">
         <!-- Dashboard -->
         <a href="/dashboard"
-            class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('dashboard') ? 'bg-primary-100' : '' }}">
-            <x-lucide-house class="size-6 text-neutral-500 group-hover:text-primary-600" stroke-width="1.5" />
-            <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600">Dashboard</div>
+            class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'dashboard' ? 'bg-primary-100' : '' }}">
+            <x-lucide-house class="size-6 {{ $activeMenu == 'dashboard' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600" stroke-width="1.5" />
+            <div class="{{ $activeMenu == 'dashboard' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Dashboard</div>
         </a>
 
         <!-- Manajemen Pengguna Section -->
@@ -22,6 +22,7 @@
             <p class="text-neutral-400 text-xs font-medium">Manajemen Pengguna</p>
             <div class="flex flex-col gap-2">
                 <a href="/level-pengguna"
+
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('level-pengguna') ? 'bg-primary-100' : '' }}">
                     <x-lucide-group class="size-6 text-neutral-500 group-hover:text-primary-600 {{ request()->is('level-pengguna') ? 'bg-primary-100' : '' }}"
                         stroke-width="1.5" />
@@ -33,6 +34,7 @@
                     <x-lucide-users class="size-6 text-neutral-500 group-hover:text-primary-600 {{ request()->is('pengguna') ? 'bg-primary-100' : '' }}"
                         stroke-width="1.5" />
                     <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600 {{ request()->is('pengguna') ? 'bg-primary-100' : '' }}">Pengguna
+
                     </div>
                 </a>
             </div>
@@ -43,17 +45,17 @@
             <p class="text-neutral-400 text-xs font-medium">Mitra dan Institusi</p>
             <div class="flex flex-col gap-2">
                 <a href="/perusahaan-mitra"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('perusahaan-mitra') ? 'bg-primary-100' : '' }}">
-                    <x-lucide-building-2 class="size-6 text-neutral-500 group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'perusahaan-mitra' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-building-2 class="size-6 {{ $activeMenu == 'perusahaan-mitra' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600">Perusahaan
+                    <div class="{{ $activeMenu == 'perusahaan-mitra' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Perusahaan
                         Mitra</div>
                 </a>
                 <a href="/program-studi"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('program-studi') ? 'bg-primary-100' : '' }}">
-                    <x-lucide-graduation-cap class="size-6 text-neutral-500 group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'program-studi' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-graduation-cap class="size-6 {{ $activeMenu == 'program-studi' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600">Program
+                    <div class="{{ $activeMenu == 'program-studi' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Program
                         Studi</div>
                 </a>
             </div>
@@ -64,24 +66,24 @@
             <p class="text-neutral-400 text-xs font-medium">Manajemen Magang</p>
             <div class="flex flex-col gap-2">
                 <a href="/periode-magang"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('periode-magang') ? 'bg-primary-100' : '' }}">
-                    <x-lucide-calendar-days class="size-6 text-neutral-500 group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'periode-magang' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-calendar-days class="size-6 {{ $activeMenu == 'periode-magang' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600">Periode
+                    <div class="{{ $activeMenu == 'periode-magang' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Periode
                         Magang</div>
                 </a>
                 <a href="/lowongan"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('lowongan') ? 'bg-primary-100' : '' }}">
-                    <x-lucide-briefcase class="size-6 text-neutral-500 group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'lowongan' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-briefcase class="size-6 {{ $activeMenu == 'lowongan' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600">Lowongan
+                    <div class="{{ $activeMenu == 'lowongan' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Lowongan
                     </div>
                 </a>
                 <a href="/kelola-magang"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('kelola-magang') ? 'bg-primary-100' : '' }}">
-                    <x-lucide-clipboard-list class="size-6 text-neutral-500 group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'kelola-magang' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-clipboard-list class="size-6 {{ $activeMenu == 'kelola-magang' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600">Kelola
+                    <div class="{{ $activeMenu == 'kelola-magang' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Kelola
                         Magang</div>
                 </a>
             </div>

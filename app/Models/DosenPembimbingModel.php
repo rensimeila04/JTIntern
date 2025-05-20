@@ -42,4 +42,7 @@ class DosenPembimbingModel extends Model
         return $this->belongsTo(UserModel::class, 'id_user', 'id_user');
     }
     
+    public function magang() {
+        return $this->hasMany(MagangModel::class, 'id_dosen_pembimbing', 'id_dosen_pembimbing');
+    }
 }
