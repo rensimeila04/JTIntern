@@ -38,14 +38,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/dospem/{id}', [AdminController::class, 'detailDospem'])
             ->name('admin.detail_dospem');
     });
-    
+
     // Dosen Routes
     Route::middleware(['check.level:DSP'])->group(function () {
         Route::get('/dosen', function () {
             return view('dosen.index');
         })->name('dosen.dashboard');
     });
-    
+
     // Mahasiswa Routes
     Route::middleware(['check.level:MHS'])->group(function () {
         Route::get('/mahasiswa', function () {
