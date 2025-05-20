@@ -30,6 +30,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin', function () {
             return view('admin.index');
         })->name('admin.dashboard');
+        Route::get('/admin/level', function () {
+            return view('admin.level_pengguna');
+        })->name('admin.level');
     });
     
     // Dosen Routes
