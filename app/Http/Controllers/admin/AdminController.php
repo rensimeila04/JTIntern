@@ -21,9 +21,24 @@ class AdminController extends Controller
         ];
 
         $activeMenu = 'pengguna';
-        
+
         return view('admin.detail_dospem', [
             'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
+    public function periodeMagang()
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Periode Magang', 'url' => '#'],
+        ];
+
+        $activeMenu = 'periode_magang';
+
+        return view('admin.periode_magang', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu
         ]);
