@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LevelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +37,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/pengguna', function () {
             return view('admin.pengguna');
         })->name('admin.mahasiswa.index');
-        Route::get('/admin/level', function () {
-            return view('admin.level_pengguna');
-        })->name('admin.level');
+        Route::get('/admin/level', [LevelController::class, 'index'])
+            ->name('admin.level');
         Route::get('/admin/dospem/{id}', [UserController::class, 'detailDospem'])
             ->name('admin.detail_dospem');
     });
@@ -59,5 +59,5 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::group(['prefix' => 'pengguna'], function () {
-        Route::get('/', [PenggunaController::class, 'index']);
-    });
+    Route::get('/', [PenggunaController::class, 'index']);
+});
