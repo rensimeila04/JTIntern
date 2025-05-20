@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,8 @@ Route::get('/', function () {
 
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::get('login', [AuthController::class, 'login'])->name('login');
+
+// route untuk admin
+Route::prefix('admin')->group(function() {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+});

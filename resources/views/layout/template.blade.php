@@ -4,11 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="{{ asset('images/logo_icon.png') }}" type="image/png" />
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'JTIntern' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@900&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
+    <!-- ApexCharts CSS via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.css">
+    <!-- Lodash via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <!-- ApexCharts via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
+    <!-- Preline ApexCharts Helper via CDN -->
+    <script src="https://preline.co/assets/js/hs-apexcharts-helpers.js"></script>
 </head>
 
 <body class="bg-neutral-50">
@@ -34,6 +43,7 @@
 
             <!-- Main Content -->
             <main class="p-6 sm:p-6 md:p-8">
+                @include('layout.breadcrumb')
                 @yield('content')
             </main>
         </div>
@@ -47,6 +57,7 @@
             HSDropdown.autoInit();
         });
     </script>
+    @stack('js')
 </body>
 
 </html>

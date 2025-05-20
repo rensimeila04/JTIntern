@@ -11,10 +11,10 @@
     <!-- Sidebar body with menu -->
     <div class="px-4 py-6 flex flex-col gap-4">
         <!-- Dashboard -->
-        <a href="/dashboard"
-            class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('dashboard') ? 'bg-primary-100' : '' }}">
-            <x-lucide-house class="size-6 text-neutral-500 group-hover:text-primary-600" stroke-width="1.5" />
-            <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600">Dashboard</div>
+        <a href="{{ url('admin') }}"
+            class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ request()->is('admin') ? 'bg-primary-100' : '' }}">
+            <x-lucide-house class="size-6 text-neutral-500 group-hover:text-primary-600 {{ request()->is('admin') ? 'text-primary-600' : '' }}" stroke-width="1.5" />
+            <div class="text-neutral-500 text-base font-normal group-hover:text-primary-600 {{ request()->is('admin') ? 'text-primary-600' : '' }}">Dashboard</div>
         </a>
 
         <!-- Manajemen Pengguna Section -->
