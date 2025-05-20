@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DetailController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LevelController;
@@ -57,3 +58,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+
+Route::group(['prefix' => 'detail'], function () {
+        Route::get('/', [DetailController::class, 'index']);
+    });
