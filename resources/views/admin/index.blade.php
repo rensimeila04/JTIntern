@@ -16,6 +16,7 @@
                     <x-logout-button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                         Logout
                     </x-logout-button>
+                    <a href="{{ url('admin/pengguna/') }}" class="btn btn-primary"><i class="fa fa-fileexcel">Halaman Pengguna</a></i>
                 </div>
             </div>
         </header>

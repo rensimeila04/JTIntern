@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PenggunaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin', function () {
             return view('admin.index');
         })->name('admin.dashboard');
+
+        Route::get('/admin/pengguna', function () {
+            return view('admin.pengguna');
+        })->name('admin.mahasiswa.index');
     });
     
     // Dosen Routes
@@ -46,3 +51,7 @@ Route::middleware(['auth'])->group(function () {
         })->name('mahasiswa.dashboard');
     });
 });
+
+Route::group(['prefix' => 'pengguna'], function () {
+        Route::get('/', [PenggunaController::class, 'index']);
+    });
