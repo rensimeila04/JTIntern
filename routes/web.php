@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DetailController;
-use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LevelController;
 
@@ -41,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.level');
         Route::get('/admin/dospem/{id}', [UserController::class, 'detailDospem'])
             ->name('admin.detail_dospem');
+        Route::get('/admin/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])
+            ->name('admin.detail_mahasiswa');
     });
 
     // Dosen Routes
@@ -57,8 +57,3 @@ Route::middleware(['auth'])->group(function () {
         })->name('mahasiswa.dashboard');
     });
 });
-
-
-Route::group(['prefix' => 'detail'], function () {
-        Route::get('/', [DetailController::class, 'index']);
-    });

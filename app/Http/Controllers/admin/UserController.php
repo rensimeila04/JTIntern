@@ -38,4 +38,21 @@ class UserController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function detailMahasiswa($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Pengguna', 'url' => '#'],
+            ['label' => 'Detail Pengguna', 'url' => '#'],
+        ];
+
+        $activeMenu = 'pengguna';
+        
+        return view('admin.detail_mahasiswa', [
+            'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
 }
