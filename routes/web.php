@@ -34,15 +34,17 @@ Route::middleware(['auth'])->group(function () {
         })->name('admin.dashboard');
         Route::get('/admin/dospem/{id}', [AdminController::class, 'detailDospem'])
             ->name('admin.detail_dospem');
+        Route::get('/admin/detailpm/{id}', [AdminController::class, 'detailPm'])
+            ->name('admin.detail_perusahaan_mitra');
     });
-    
+
     // Dosen Routes
     Route::middleware(['check.level:DSP'])->group(function () {
         Route::get('/dosen', function () {
             return view('dosen.index');
         })->name('dosen.dashboard');
     });
-    
+
     // Mahasiswa Routes
     Route::middleware(['check.level:MHS'])->group(function () {
         Route::get('/mahasiswa', function () {

@@ -28,4 +28,21 @@ class AdminController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function detailPm($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Perusahaan Mitra', 'url' => '#'],
+            ['label' => 'Detail', 'url' => '#'],
+        ];
+
+        $activeMenu = 'perusahaan-mitra';
+        
+        return view('admin.detail_perusahaan_mitra', [
+            'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
 }
