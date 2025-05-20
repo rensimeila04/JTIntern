@@ -77,12 +77,7 @@
                     </div>
                 </div>
 
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <x-lucide-search class="size-4 text-gray-400" stroke-width="1.5" />
-                    </div>
-                    <input type="text" class="py-1.5 sm:py-2 pl-10 px-3 block w-[400px] max-w-[1120px] border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Cari mahasiswa...">
-                </div>
+                <x-search-input placeholder="Cari mahasiswa..." />
             </div>
             <div>
                 <div class="flex flex-col">
