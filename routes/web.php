@@ -34,9 +34,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin', function () {
             return view('admin.index');
         })->name('admin.dashboard');
-        Route::get('/admin/pengguna', function () {
-            return view('admin.pengguna');
-        })->name('admin.mahasiswa.index');
+        Route::get('/admin/pengguna', [UserController::class, 'index'])
+            ->name('admin.pengguna');
         Route::get('/admin/level', [LevelController::class, 'index'])
             ->name('admin.level');
         Route::get('/admin/dospem/{id}', [UserController::class, 'detailDospem'])
@@ -58,6 +57,3 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::group(['prefix' => 'pengguna'], function () {
-    Route::get('/', [PenggunaController::class, 'index']);
-});

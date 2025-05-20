@@ -9,7 +9,17 @@ class UserController extends Controller
 {
     public function index()
     {
-        return view('admin.index');
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Pengguna', 'url' => '#'],
+        ];
+
+        $activeMenu = 'pengguna';
+
+        return view('admin.pengguna', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
     }
 
     public function detailDospem($id)
