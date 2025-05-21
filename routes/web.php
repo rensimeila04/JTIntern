@@ -30,7 +30,7 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
     // Admin Routes
-    Route::middleware(['check.level:ADM'])->group(function () {
+    Route::middleware(['check.level:ADM'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('admin.dashboard');
         Route::get('/pengguna', [UserController::class, 'index'])
@@ -44,15 +44,15 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Dosen Routes
-    Route::middleware(['check.level:DSP'])->group(function () {
+    Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
         Route::get('/dashboard', function () {
             return view('dosen.index');
         })->name('dosen.dashboard');
     });
 
     // Mahasiswa Routes
-    Route::middleware(['check.level:MHS'])->group(function () {
-        Route::get('/mahasiswa', function () {
+    Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
+        Route::get('/dashboard', function () {
             return view('mahasiswa.index');
         })->name('mahasiswa.dashboard');
     });
