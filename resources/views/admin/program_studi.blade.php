@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="w-full p-6 bg-white rounded-xl flex-col gap-6 shadow">
-    <!-- Header dan tombol aksi -->
     <div class="flex justify-between items-center w-full">
         <div class="text-neutral-900 text-xl font-semibold">Program Studi</div>
         <div class="flex gap-2">
@@ -11,8 +10,6 @@
             </button>
         </div>
     </div>
-
-    <!-- Table Responsive -->
     <div class="flex flex-col mt-8">
         <div class="-m-1.5 overflow-x-auto">
             <div class="p-1.5 min-w-full inline-block align-middle">
