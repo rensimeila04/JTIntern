@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Dosen Routes
     Route::middleware(['check.level:DSP'])->group(function () {
-        Route::get('/dosen', function () {
+        Route::get('/dashboard', function () {
             return view('dosen.index');
         })->name('dosen.dashboard');
     });

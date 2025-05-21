@@ -20,56 +20,65 @@
                     role="menu" aria-orientation="vertical" aria-labelledby="notification-dropdown">
                     <div class="py-3 px-4 border-b border-neutral-200 flex justify-between items-center">
                         <p class="text-sm font-medium text-neutral-800">Notifikasi</p>
-                        <span class="inline-flex items-center justify-center size-5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full">3</span>
+                        <span
+                            class="inline-flex items-center justify-center size-5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full">3</span>
                     </div>
                     <div class="max-h-96 overflow-y-auto">
                         <!-- Unread notification -->
-                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100" href="#">
+                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100"
+                            href="#">
                             <div class="grow">
                                 <p class="text-sm font-medium text-neutral-800">Pendaftaran berhasil divalidasi</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Pendaftaran mahasiswa baru telah berhasil divalidasi.</p>
+                                <p class="text-xs text-neutral-500 line-clamp-2">Pendaftaran mahasiswa baru telah
+                                    berhasil divalidasi.</p>
                                 <p class="text-xs text-neutral-400 mt-1">15 menit yang lalu</p>
                             </div>
                             <div class="shrink-0 self-start ms-3">
                                 <span class="size-2 bg-blue-500 rounded-full block"></span>
                             </div>
                         </a>
-                        
+
                         <!-- Unread notification -->
-                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100" href="#">
+                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100"
+                            href="#">
                             <div class="grow">
                                 <p class="text-sm font-medium text-neutral-800">Pengguna baru terdaftar</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Pengguna baru telah mendaftar dan menunggu persetujuan.</p>
+                                <p class="text-xs text-neutral-500 line-clamp-2">Pengguna baru telah mendaftar dan
+                                    menunggu persetujuan.</p>
                                 <p class="text-xs text-neutral-400 mt-1">1 jam yang lalu</p>
                             </div>
                             <div class="shrink-0 self-start ms-3">
                                 <span class="size-2 bg-blue-500 rounded-full block"></span>
                             </div>
                         </a>
-                        
+
                         <!-- Unread notification -->
-                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100" href="#">
+                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100"
+                            href="#">
                             <div class="grow">
                                 <p class="text-sm font-medium text-neutral-800">Aksi diperlukan</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Mohon tinjau laporan magang yang telah dikirimkan.</p>
+                                <p class="text-xs text-neutral-500 line-clamp-2">Mohon tinjau laporan magang yang telah
+                                    dikirimkan.</p>
                                 <p class="text-xs text-neutral-400 mt-1">2 jam yang lalu</p>
                             </div>
                             <div class="shrink-0 self-start ms-3">
                                 <span class="size-2 bg-blue-500 rounded-full block"></span>
                             </div>
                         </a>
-                        
+
                         <!-- Read notification -->
                         <a class="flex p-4 border-b border-neutral-200 hover:bg-neutral-100" href="#">
                             <div class="grow">
                                 <p class="text-sm font-medium text-neutral-800">Pembaruan sistem</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Sistem telah diperbarui ke versi terbaru.</p>
+                                <p class="text-xs text-neutral-500 line-clamp-2">Sistem telah diperbarui ke versi
+                                    terbaru.</p>
                                 <p class="text-xs text-neutral-400 mt-1">Kemarin</p>
                             </div>
                         </a>
                     </div>
                     <div class="py-2 px-4 border-t border-neutral-200">
-                        <a class="text-sm font-medium text-blue-600 hover:text-blue-700 flex justify-center items-center" href="#">
+                        <a class="text-sm font-medium text-blue-600 hover:text-blue-700 flex justify-center items-center"
+                            href="#">
                             Lihat semua notifikasi
                         </a>
                     </div>
@@ -81,7 +90,8 @@
                 <button id="user-dropdown" type="button"
                     class="hs-dropdown-toggle self-stretch py-4 flex justify-start items-center gap-2"
                     aria-haspopup="menu" aria-expanded="false" aria-label="User menu">
-                    <img class="size-9 rounded-full" src="https://randomuser.me/api/portraits/men/33.jpg" alt="User profile">
+                    <img class="size-9 rounded-full" src="https://randomuser.me/api/portraits/men/33.jpg"
+                        alt="User profile">
                     <div>
                         <div class="text-black text-xs font-medium">Rizky Wahyu</div>
                         <div class="text-neutral-400 text-xs">Administrator</div>
@@ -102,11 +112,14 @@
                             <x-lucide-user class="shrink-0 size-4" stroke-width="2" />
                             Profile Pengguna
                         </a>
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-neutral-800 hover:bg-neutral-100 focus:outline-hidden focus:bg-neutral-100"
-                            href="#">
-                            <x-lucide-log-out class="shrink-0 size-4" stroke-width="2" />
-                            Keluar
-                        </a>
+                        <form action="{{ route('logout') }}" method="POST" class="w-full">
+                            @csrf
+                            <button type="submit"
+                                class="flex w-full items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-neutral-800 hover:bg-neutral-100 focus:outline-hidden focus:bg-neutral-100">
+                                <x-lucide-log-out class="shrink-0 size-4" stroke-width="2" />
+                                Keluar
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
