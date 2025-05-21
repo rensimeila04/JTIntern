@@ -23,9 +23,9 @@
             <!-- Card 1 -->
             <div
                 class="self-stretch p-4 bg-white rounded-lg outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col items-center gap-2">
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex items-center justify-center gap-[8px] mb-2">
                     <div class="bg-primary-50 rounded-sm p-2 w-fit h-fit flex items-center justify-center">
-                        <x-lucide-user-check class="size-6 text-primary-600" stroke-width="1.5" />
+                        <x-lucide-user-check class="size-5 text-primary-600" stroke-width="1.5" />
                     </div>
                     <span class="text-base text-neutral-400 font-medium">Mahasiswa</span>
                 </div>
@@ -36,9 +36,9 @@
             <!-- Card 2 -->
             <div
                 class="self-stretch p-4 bg-white rounded-lg outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col items-center gap-2">
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex items-center justify-center gap-[8px] mb-2">
                     <div class="bg-primary-50 rounded-sm p-2 w-fit h-fit flex items-center justify-center">
-                        <x-lucide-square-user-round class="size-6 text-primary-600" stroke-width="1.5" />
+                        <x-lucide-square-user-round class="size-5 text-primary-600" stroke-width="1.5" />
                     </div>
                     <span class="text-base text-neutral-400 font-medium">Dosen Pembimbing</span>
                 </div>
@@ -49,9 +49,9 @@
             <!-- Card 3 -->
             <div
                 class="self-stretch p-4 bg-white rounded-lg outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col items-center gap-2">
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex items-center justify-center gap-[8px] mb-2">
                     <div class="bg-primary-50 rounded-sm p-2 w-fit h-fit flex items-center justify-center">
-                        <x-lucide-briefcase class="size-6 text-primary-600" stroke-width="1.5" />
+                        <x-lucide-briefcase class="size-5 text-primary-600" stroke-width="1.5" />
                     </div>
                     <span class="text-base text-neutral-400 font-medium">Lowongan</span>
                 </div>
