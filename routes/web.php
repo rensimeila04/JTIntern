@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LevelController;
+use App\Http\Controllers\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +31,8 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     // Admin Routes
     Route::middleware(['check.level:ADM'])->group(function () {
-        Route::get('/admin', function () {
-            return view('admin.index');
-        })->name('admin.dashboard');
+        Route::get('/admin', [DashboardController::class, 'index'])
+            ->name('admin.dashboard');
         Route::get('/admin/pengguna', [UserController::class, 'index'])
             ->name('admin.pengguna');
         Route::get('/admin/level', [LevelController::class, 'index'])
