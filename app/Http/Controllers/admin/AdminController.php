@@ -28,4 +28,20 @@ class AdminController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function programStudi($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Program Studi', 'url' => '#'],
+        ];
+
+        $activeMenu = 'program-studi';
+        
+        return view('admin.program_studi', [
+            'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
 }

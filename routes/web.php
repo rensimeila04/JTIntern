@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
         })->name('admin.dashboard');
         Route::get('/admin/dospem/{id}', [AdminController::class, 'detailDospem'])
             ->name('admin.detail_dospem');
+        Route::get('/admin/program_studi/{id}', [AdminController::class, 'programStudi'])
+            ->name('admin.program_studi');
     });
     
     // Dosen Routes
