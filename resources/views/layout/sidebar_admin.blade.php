@@ -11,7 +11,7 @@
     <!-- Sidebar body with menu -->
     <div class="px-4 py-6 flex flex-col gap-4">
         <!-- Dashboard -->
-        <a href="/admin/dashboard"
+        <a href="/admin/"
             class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'dashboard' ? 'bg-primary-100' : '' }}">
             <x-lucide-house class="size-6 {{ $activeMenu == 'dashboard' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600" stroke-width="1.5" />
             <div class="{{ $activeMenu == 'dashboard' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Dashboard</div>
