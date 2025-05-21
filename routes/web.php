@@ -31,15 +31,15 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     // Admin Routes
     Route::middleware(['check.level:ADM'])->group(function () {
-        Route::get('/admin', [DashboardController::class, 'index'])
+        Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('admin.dashboard');
-        Route::get('/admin/pengguna', [UserController::class, 'index'])
+        Route::get('/pengguna', [UserController::class, 'index'])
             ->name('admin.pengguna');
-        Route::get('/admin/level', [LevelController::class, 'index'])
+        Route::get('/level', [LevelController::class, 'index'])
             ->name('admin.level');
-        Route::get('/admin/dospem/{id}', [UserController::class, 'detailDospem'])
+        Route::get('/dospem/{id}', [UserController::class, 'detailDospem'])
             ->name('admin.detail_dospem');
-        Route::get('/admin/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])
+        Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])
             ->name('admin.detail_mahasiswa');
     });
 
