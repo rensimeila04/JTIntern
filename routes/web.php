@@ -51,8 +51,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_perusahaan');
         Route::get('/periode-magang', [PeriodeController::class, 'index'])
             ->name('admin.periode_magang');
-        Route::get('/lowongan', [LowonganController::class, 'index'])
-            ->name('admin.lowongan');
+        Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
+            Route::get('/', [LowonganController::class, 'index']);
+            Route::get('/detail', [LowonganController::class, 'detailLowongan'])->name('.detail');
+        });
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');
     });
