@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PerusahaanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_dospem');
         Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])
             ->name('admin.detail_mahasiswa');
+        Route::get('/perusahaan', [PerusahaanController::class, 'index'])
+            ->name('admin.perusahaan');
         
     });
 
