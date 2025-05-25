@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <button type="button"
-                            class="py-3 px-4 inline-flex items-center justify-end gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none ml-auto">
+                            class="btn-primary-lg">
                             Lihat Detail
                         </button>
                     </div>
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <button type="button"
-                            class="py-3 px-4 inline-flex items-center justify-end gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none ml-auto">
+                            class="btn-primary-lg">
                             Lihat Detail
                         </button>
                     </div>
