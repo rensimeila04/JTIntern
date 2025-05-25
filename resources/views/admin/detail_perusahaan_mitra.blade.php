@@ -76,7 +76,7 @@
                                 <p class="text-xl font-medium text-neutral-900">UI UX Designer</p>
                             </div>
                             <div class="flex items-center gap-2">
-                                <x-lucide-calendar-days class="w-6 h-6 mr-2 text-neutral-500" />
+                                <x-lucide-calendar-days class="size-6 text-neutral-500" stroke-width="1.5" />
                                 <p class="align-top text-base font-normal text-neutral-700">Ganjil 2026</p>
                             </div>
                         </div>
@@ -90,10 +90,10 @@
                             class="w-20 h-20 rounded-lg object-cover">
                         <div class="flex flex-col gap-4 flex-1">
                             <div class="flex items-center gap-2">
-                                <p class="text-xl font-medium text-neutral-900">Frontend Developer</p>
+                                <p class="text-xl font-medium text-neutral-900">UI UX Designer</p>
                             </div>
                             <div class="flex items-center gap-2">
-                                <x-lucide-calendar-days class="w-6 h-6 mr-2 text-neutral-500" />
+                                <x-lucide-calendar-days class="size-6 text-neutral-500" stroke-width="1.5" />
                                 <p class="align-top text-base font-normal text-neutral-700">Ganjil 2026</p>
                             </div>
                         </div>
