@@ -43,4 +43,20 @@ class AdminController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function lowongan()
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Lowongan', 'url' => '#'],
+        ];
+
+        $activeMenu = 'lowongan';
+
+        return view('admin.lowongan', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
 }
