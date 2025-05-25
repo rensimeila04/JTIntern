@@ -59,4 +59,20 @@ class AdminController extends Controller
         ]);
     }
 
+    public function detailLowongan()
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Lowongan', 'url' => '#'],
+            ['label' => 'Detail Lowongan', 'url' => '#'],
+        ];
+
+        $activeMenu = 'lowongan';
+
+        return view('admin.detail_lowongan', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
 }

@@ -36,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_dospem');
         Route::get('/admin/periode_magang', [AdminController::class, 'periodeMagang'])
             ->name('admin.periode_magang');
+        Route::get('/admin/lowongan', [AdminController::class, 'lowongan'])
+            ->name('admin.lowongan');
+        Route::get('/admin/detail_lowongan', [AdminController::class, 'detailLowongan'])
+            ->name('admin.detail_lowongan');
     });
     
     // Dosen Routes
