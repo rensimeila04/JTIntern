@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_dospem');
         Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])
             ->name('admin.detail_mahasiswa');
+        
     });
 
     // Dosen Routes

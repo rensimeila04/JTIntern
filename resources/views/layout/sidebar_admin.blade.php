@@ -42,11 +42,11 @@
         <div class="flex flex-col gap-2">
             <p class="text-neutral-400 text-xs font-medium">Mitra dan Institusi</p>
             <div class="flex flex-col gap-2">
-                <a href="/perusahaan-mitra"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'perusahaan-mitra' ? 'bg-primary-100' : '' }}">
-                    <x-lucide-building-2 class="size-6 {{ $activeMenu == 'perusahaan-mitra' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
+                <a href="{{ url('perusahaan_mitra') }}"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'perusahaan_mitra' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-building-2 class="size-6 {{ $activeMenu == 'perusahaan_mitra' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class="{{ $activeMenu == 'perusahaan-mitra' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Perusahaan
+                    <div class="{{ $activeMenu == 'perusahaan_mitra' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Perusahaan
                         Mitra</div>
                 </a>
                 <a href="/program-studi"
