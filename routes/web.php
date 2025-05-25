@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PerusahaanController;
 use App\Http\Controllers\Admin\PeriodeController;
 use App\Http\Controllers\Admin\LowonganController;
+use App\Http\Controllers\Admin\ProgramStudiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.periode_magang');
         Route::get('/lowongan', [LowonganController::class, 'index'])
             ->name('admin.lowongan');
+        Route::get('/program-studi', [ProgramStudiController::class, 'index'])
+            ->name('admin.program_studi');
     });
 
 
