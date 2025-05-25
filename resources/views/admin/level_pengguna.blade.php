@@ -7,8 +7,6 @@
                 <h2 class="text-xl font-medium items-center">Level Pengguna</h2>
             </div>
             <div class="flex gap-x-3 ">
-                <x-search-input placeholder="Cari level..." />
-
                 <div class="flex">
                     <button type="button" class="btn-primary">
                         <i class="ph-bold ph-plus text-lg"></i>
