@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('content')
-    <div class="w-full p-6 bg-white rounded-xl flex-col gap-6">
+    <div class="w-full p-4 bg-white rounded-xl flex-col space-y-4">
         <!-- Header dan tombol aksi -->
         <div class="flex justify-between items-center w-full">
             <div class="text-neutral-900 text-xl font-medium">Perusahaan Mitra</div>
@@ -19,7 +19,7 @@
         </div>
 
         <!-- Filter "Semua Pengguna" & "Cari Pengguna" -->
-        <div class="flex justify-between mt-6 w-full items-center">
+        <div class="flex justify-between w-full items-center">
             <div class="hs-dropdown relative inline-flex">
                 <button id="hs-dropdown-default" type="button"
                     class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-neutral-900 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
@@ -44,7 +44,7 @@
         </div>
 
         <!-- Table Header -->
-        <div class="flex flex-col mt-4">
+        <div class="flex flex-col">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
                     <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">

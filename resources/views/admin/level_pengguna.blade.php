@@ -9,7 +9,7 @@
             <div class="flex gap-x-3 ">
                 <div class="flex">
                     <button type="button" class="btn-primary">
-                        <i class="ph-bold ph-plus text-lg"></i>
+                        <i class="ph ph-plus"></i>
                         Tambah Level
                     </button>
                 </div>

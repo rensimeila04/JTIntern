@@ -1,16 +1,16 @@
 @extends('layout.template')
 
 @section('content')
-<div class="w-full p-6 bg-white rounded-xl flex-col space-y-4 ">
+<div class="w-full p-4 bg-white rounded-xl flex-col space-y-4 ">
     <div class="flex justify-between items-center w-full">
         <div class="text-neutral-900 text-xl font-semibold">Program Studi</div>
         <div class="flex gap-2">
-            <button class="btn-primary-lg">
+            <button class="btn-primary">
                 <i class="ph ph-plus"></i> Tambah Program Studi
             </button>
         </div>
     </div>
-    <div class="flex flex-col mt-6">
+    <div class="flex flex-col">
         <div class="-m-1.5 overflow-x-auto">
             <div class="p-1.5 w-full inline-block align-middle">
                 <div class="border border-gray-200 rounded-lg overflow-hidden">

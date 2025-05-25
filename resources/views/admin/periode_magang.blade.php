@@ -7,7 +7,7 @@
             </div>
             <div class="flex gap-x-3">
                 <button type="button" class="btn-primary">
-                    <i class="ph-bold ph-plus text-lg"></i>
+                    <i class="ph-bold ph-plus"></i>
                     Tambah Periode Magang
                 </button>
             </div>
