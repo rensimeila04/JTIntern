@@ -52,12 +52,14 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.lowongan');
     });
 
+
     // Dosen Routes
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
         Route::get('/dashboard', function () {
             return view('dosen.index');
         })->name('dosen.dashboard');
     });
+
 
     // Mahasiswa Routes
     Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
