@@ -118,7 +118,7 @@
                 </div>
             </div>
             <span>
-                <button type="button" href="{{ route('admin.detail_lowongan') }}"
+                <button type="button" href="#"
                     class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none">
                     Lihat Detail
                 </button>

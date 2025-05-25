@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PerusahaanController;
+use App\Http\Controllers\Admin\PeriodeController;
+use App\Http\Controllers\Admin\LowonganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_mahasiswa');
         Route::get('/perusahaan', [PerusahaanController::class, 'index'])
             ->name('admin.perusahaan');
-        
+        Route::get('/periode-magang', [PeriodeController::class, 'index'])
+            ->name('admin.periode_magang');
+        Route::get('/lowongan', [LowonganController::class, 'index'])
+            ->name('admin.lowongan');
     });
 
     // Dosen Routes
