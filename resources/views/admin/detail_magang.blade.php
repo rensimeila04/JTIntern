@@ -1,7 +1,6 @@
 @extends('layout.template')
 @section('content')
     <div class="space-y-4">
-        {{-- Detail Perusahaan Mitra --}}
         <div class="flex justify-between items-center">
             <p class="text-xl font-medium text-neutral-900">Detail Magang</p>
         </div>
@@ -28,14 +27,13 @@
                 </div>
             </div>
         </div>
-        {{-- Deskripsi & Kontak --}}
-        <div class="w-full p-6 bg-white rounded-xl flex flex-col gap-6">
+        <div class="w-full p-4 bg-white rounded-2xl flex flex-col gap-6">
             <div class="flex justify-between items-center w-full">
-                <div class="text-neutral-900 text-xl font-semibold">Dokumen Pendukung</div>
+                <div class="text-neutral-900 text-xl font-medium">Dokumen Pendukung</div>
             </div>
-            <div class="flex gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {{-- CV --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 -sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <x-lucide-file class="w-4 h-4 text-primary-600" />
@@ -54,14 +52,14 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-3 py-2.5 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
                 </div>
                 {{-- Portofolio --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 -sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 ">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <x-lucide-image class="w-4 h-4 text-primary-600" />
@@ -80,14 +78,14 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-3 py-2.5 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
                 </div>
                 {{-- Sertifikat --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 -sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-medal w-4 h-4 text-primary-600"></i>
@@ -106,14 +104,14 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-3 py-2.5 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
                 </div>
                 {{-- Surat Pengantar --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 -sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 ">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-envelope-simple w-4 h-4 text-primary-600"></i>
@@ -132,14 +130,14 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-3 py-2.5 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
                 </div>
                 {{-- Transkip Nilai --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 -sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 ">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-chart-line w-4 h-4 text-primary-600"></i>
@@ -158,7 +156,7 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-3 py-2.5 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>

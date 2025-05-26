@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PerusahaanController;
 use App\Http\Controllers\Admin\PeriodeController;
 use App\Http\Controllers\Admin\LowonganController;
 use App\Http\Controllers\Admin\ProgramStudiController;
+use App\Http\Controllers\Admin\MagangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,11 +58,7 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');
-    });
-
-        Route::get('/admin/detailpm/{id}', [AdminController::class, 'detailPm'])
-            ->name('admin.detail_perusahaan_mitra');
-        Route::get('/admin/detailmagang/{id}', [AdminController::class, 'detailMagang'])
+        Route::get('/magang/{id}', [MagangController::class, 'detailMagang'])
             ->name('admin.detail_magang');
     });
 
