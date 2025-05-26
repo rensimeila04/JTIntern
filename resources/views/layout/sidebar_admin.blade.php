@@ -49,7 +49,7 @@
                     <div class="{{ $activeMenu == 'perusahaan_mitra' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Perusahaan
                         Mitra</div>
                 </a>
-                <a href="{{ route('admin.periode_magang') }}"
+                <a href="{{ route('admin.program_studi') }}"
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'program-studi' ? 'bg-primary-100' : '' }}">
                     <x-lucide-graduation-cap class="size-6 {{ $activeMenu == 'program-studi' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
