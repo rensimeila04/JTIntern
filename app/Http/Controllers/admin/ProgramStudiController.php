@@ -21,4 +21,21 @@ class ProgramStudiController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function detailAdmin($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Pengguna', 'url' => '#'],
+            ['label' => 'Detail Pengguna', 'url' => '#'],
+        ];
+
+        $activeMenu = 'pengguna';
+        
+        return view('admin.detail_admin', [
+            'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
 }
