@@ -18,8 +18,9 @@ class UserController extends Controller
 
         $activeMenu = 'pengguna';
 
-        # Ambil data pengguna
-        $user = UserModel::with('level')->get();
+        # Ambil data pengguna gunakan paginate() untuk membatasi jumlah data yang diambil per halaman
+        $user = UserModel::with('level')->paginate(10);
+        # Ambil data level
         $level = LevelModel::all();
 
         # Hitung jumlah pengguna berlevel Mahasiswa

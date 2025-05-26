@@ -83,7 +83,7 @@
                             Semua Pengguna
                         </a>
                         @foreach ($level as $item )
-                             <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
                             href="#">
                             {{ $item->nama_level }}
                         </a>
@@ -177,27 +177,48 @@
         <div class="flex items-center justify-end">
             <!-- Pagination -->
             <nav class="flex items-center gap-x-1" aria-label="Pagination">
-                <button type="button"
-                    class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
-                    aria-label="Previous">
-                    <x-lucide-chevron-left class="shrink-0 size-3.5" stroke-width="2" />
-                    <span>Sebelumnya</span>
-                </button>
+                @if ($user->onFirstPage())
+                    <button type="button" disabled
+                        class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-400 bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-500 dark:bg-neutral-800">
+                        <x-lucide-chevron-left class="shrink-0 size-3.5" stroke-width="2" />
+                        <span>Sebelumnya</span>
+                    </button>
+                @else
+                    <a href="{{ $user->previousPageUrl() }}"
+                        class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+                        <x-lucide-chevron-left class="shrink-0 size-3.5" stroke-width="2" />
+                        <span>Sebelumnya</span>
+                    </a>
+                @endif
+                
                 <div class="flex items-center gap-x-1">
-                    <button type="button"
-                        class="min-h-9.5 min-w-9.5 flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-600 dark:text-white dark:focus:bg-neutral-500"
-                        aria-current="page">1</button>
-                    <button type="button"
-                        class="min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">2</button>
-                    <button type="button"
-                        class="min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">3</button>
+                    @for ($i = 1; $i <= $user->lastPage(); $i++)
+                        @if ($i == $user->currentPage())
+                            <button type="button"
+                                class="min-h-9.5 min-w-9.5 flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-600 dark:text-white dark:focus:bg-neutral-500"
+                                aria-current="page">{{ $i }}</button>
+                        @else
+                            <a href="{{ $user->url($i) }}"
+                                class="min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+                                {{ $i }}
+                            </a>
+                        @endif
+                    @endfor
                 </div>
-                <button type="button"
-                    class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
-                    aria-label="Next">
-                    <span>Selanjutnya</span>
-                    <x-lucide-chevron-right class="shrink-0 size-3.5" stroke-width="2" />
-                </button>
+                
+                @if ($user->hasMorePages())
+                    <a href="{{ $user->nextPageUrl() }}"
+                        class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+                        <span>Selanjutnya</span>
+                        <x-lucide-chevron-right class="shrink-0 size-3.5" stroke-width="2" />
+                    </a>
+                @else
+                    <button type="button" disabled
+                        class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-400 bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-500 dark:bg-neutral-800">
+                        <span>Selanjutnya</span>
+                        <x-lucide-chevron-right class="shrink-0 size-3.5" stroke-width="2" />
+                    </button>
+                @endif
             </nav>
             <!-- End Pagination -->
         </div>
