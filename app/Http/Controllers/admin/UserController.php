@@ -20,13 +20,27 @@ class UserController extends Controller
 
         # Ambil data pengguna
         $user = UserModel::with('level')->get();
-
         $level = LevelModel::all();
+
+        # Hitung jumlah pengguna berlevel Mahasiswa
+        $mahasiswaLevelId = LevelModel::where('kode_level', 'MHS')->value('id_level');
+        $jumlahMahasiswa = UserModel::where('id_level', $mahasiswaLevelId)->count();
+
+        $dosenLevelId = LevelModel::where('kode_level', 'DSP')->value('id_level');
+        $jumlahDosen = UserModel::where('id_level', $dosenLevelId)->count();
+
+        $adminLevelId = LevelModel::where('kode_level', 'ADM')->value('id_level');
+        $jumlahAdmin = UserModel::where('id_level', $adminLevelId)->count();
+
+        
 
         return view('admin.pengguna', [
             'breadcrumb' => $breadcrumb,
             'user' => $user,
             'level' => $level,
+            'jumlahMahasiswa' => $jumlahMahasiswa,
+            'jumlahDosen' => $jumlahDosen,
+            'jumlahAdmin' => $jumlahAdmin,
             'activeMenu' => $activeMenu,
         ]);
     }

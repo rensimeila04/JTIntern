@@ -30,7 +30,7 @@
                     <span class="text-base text-neutral-400 font-medium">Mahasiswa</span>
                 </div>
                 <div class="flex-1 flex items-center justify-center">
-                    <span class="text-4xl font-medium text-neutral-900">260</span>
+                    <span class="text-4xl font-medium text-neutral-900">{{ $jumlahMahasiswa }}</span>
                 </div>
             </div>
             <!-- Card 2 -->
@@ -43,7 +43,7 @@
                     <span class="text-base text-neutral-400 font-medium">Dosen Pembimbing</span>
                 </div>
                 <div class="flex-1 flex items-center justify-center">
-                    <span class="text-4xl font-medium text-neutral-900">65</span>
+                    <span class="text-4xl font-medium text-neutral-900">{{ $jumlahDosen }}</span>
                 </div>
             </div>
             <!-- Card 3 -->
@@ -51,12 +51,12 @@
                 class="self-stretch p-4 bg-white rounded-lg outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col items-center gap-2">
                 <div class="flex items-center justify-center gap-[8px] mb-2">
                     <div class="bg-primary-50 rounded-sm p-2 w-fit h-fit flex items-center justify-center">
-                        <x-lucide-briefcase class="size-5 text-primary-600" stroke-width="1.5" />
+                        <x-lucide-user-round-cog class="size-5 text-primary-600" stroke-width="1.5" />
                     </div>
-                    <span class="text-base text-neutral-400 font-medium">Lowongan</span>
+                    <span class="text-base text-neutral-400 font-medium">Admin</span>
                 </div>
                 <div class="flex-1 flex items-center justify-center">
-                    <span class="text-4xl font-medium text-neutral-900">85</span>
+                    <span class="text-4xl font-medium text-neutral-900">{{ $jumlahAdmin }}</span>
                 </div>
             </div>
         </div>
