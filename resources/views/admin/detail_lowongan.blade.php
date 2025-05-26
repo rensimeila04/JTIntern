@@ -37,11 +37,39 @@
     </div>
     <div class="w-full bg-white p-4 rounded-md mt-5">
         <h4 class="font-semibold">Deskripsi</h4>
-        <p class="mt-2 text-neutral-400 text-sm">We are seeking a skilled and detail-focused UI/UX Designer to develop engaging,
-            user-friendly interfaces and
-            intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders
-            to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and
-            business objectives.</p>
+        <div class="mt-2">
+            <div id="short-description" class="text-neutral-400 text-sm line-clamp-3 whitespace-pre-line">
+                {{ $lowongan->deskripsi ?? 'We are seeking a skilled and detail-focused UI/UX Designer to develop engaging, user-friendly interfaces and intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders to transform requirements into wireframes.' }}
+            </div>
+            <div id="full-description" class="text-neutral-400 text-sm hidden whitespace-pre-line">
+                {!! nl2br(e($lowongan->deskripsi ?? 'We are seeking a skilled and detail-focused UI/UX Designer to develop engaging, user-friendly interfaces and intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and business objectives.
+
+As our UI/UX Designer, you will be responsible for the entire design process, from conducting user research and creating user personas to designing wireframes, interactive prototypes, and final UI components. You should have a strong portfolio demonstrating your design thinking, problem-solving abilities, and attention to detail.
+
+Key Responsibilities:
+• Conduct user research and analysis to understand user behaviors, needs, and motivations
+• Create user personas, user flows, and journey maps to guide design decisions
+• Design wireframes, mockups, and interactive prototypes for various digital products
+• Develop and maintain design systems, pattern libraries, and style guides
+• Collaborate with developers to ensure proper implementation of designs
+• Conduct usability testing and gather user feedback to iterate and improve designs
+• Stay up-to-date with the latest UI/UX trends, tools, and emerging technologies
+
+Requirements:
+• Bachelor\'s degree in Design, Human-Computer Interaction, or a related field (or equivalent experience)
+• 3+ years of experience in UI/UX design for digital products
+• Proficiency with design and prototyping tools (Figma, Adobe XD, Sketch)
+• Strong portfolio demonstrating your design thinking and process
+• Experience with user research methodologies and usability testing
+• Excellent visual design skills with a keen eye for detail
+• Strong communication and presentation skills
+• Ability to work collaboratively in a cross-functional team environment')) !!}
+            </div>
+            <button id="read-more-btn" class="mt-2 text-primary-500 text-sm font-medium hover:text-primary-700 focus:outline-none flex items-center gap-1">
+                <span>Lebih banyak</span>
+                <i class="ph ph-caret-down"></i>
+            </button>
+        </div>
     </div>
     <div class="w-full bg-white p-4 rounded-md mt-5">
         <h4 class="font-semibold">Persyaratan</h4>
@@ -51,4 +79,26 @@
             to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and
             business objectives.</p>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const readMoreBtn = document.getElementById('read-more-btn');
+            const shortDescription = document.getElementById('short-description');
+            const fullDescription = document.getElementById('full-description');
+            
+            readMoreBtn.addEventListener('click', function() {
+                if (shortDescription.classList.contains('hidden')) {
+                    // Show less
+                    shortDescription.classList.remove('hidden');
+                    fullDescription.classList.add('hidden');
+                    readMoreBtn.innerHTML = '<span>Lebih banyak</span><i class="ph ph-caret-down"></i>';
+                } else {
+                    // Show more
+                    shortDescription.classList.add('hidden');
+                    fullDescription.classList.remove('hidden');
+                    readMoreBtn.innerHTML = '<span>Lebih sedikit</span><i class="ph ph-caret-up"></i>';
+                }
+            });
+        });
+    </script>
 @endsection

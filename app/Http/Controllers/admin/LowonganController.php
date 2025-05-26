@@ -22,7 +22,7 @@ class LowonganController extends Controller
         ]);
     }
 
-    public function detailLowongan()
+    public function detailLowongan($id)
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -34,7 +34,8 @@ class LowonganController extends Controller
 
         return view('admin.detail_lowongan', [
             'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu
+            'activeMenu' => $activeMenu,
+            'id' => $id
         ]);
     }
 }
