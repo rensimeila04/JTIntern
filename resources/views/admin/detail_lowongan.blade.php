@@ -22,33 +22,59 @@
                 <p class="text-primary-500 text-sm">
                     PT. Quantum Technology Nusantara
                 </p>
-                <div class="flex flex-col gap-1">
-                    <span class="flex items-center gap-2 text-sm text-neutral-700">
-                        <i class="ph ph-map-pin text-neutral-500 text-xl"></i>
-                        <p>Jakarta Selatan, DKI Jakarta, Indonesia</p>
-                    </span>
-                    <span class="flex items-center gap-2 text-sm text-neutral-700">
-                        <i class="ph ph-calendar text-neutral-500 text-xl"></i>
-                        <p>Ganjil 2026</p>
-                    </span>
+                <div class="flex flex-row items-center gap-10">
+                    <div class="flex flex-col gap-2">
+                        <span class="flex items-center gap-2 text-sm text-neutral-700">
+                            <x-lucide-map-pin class="w-5 h-5 text-neutral-500 text-2xl" />
+                            <p>Jakarta Selatan, DKI Jakarta, Indonesia</p>
+                        </span>
+                        <span class="flex items-center gap-2 text-sm text-neutral-700">
+                            <x-lucide-calendar-days class="w-5 h-5 text-neutral-500 text-2xl" />
+                            <p>Ganjil 2026</p>
+                        </span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <span class="flex items-center gap-2 text-sm text-neutral-700">
+                            <x-lucide-laptop class="w-5 h-5 text-neutral-500 text-2xl" />
+                            <p>UI/UX Design</p>
+                        </span>
+                        <span class="flex items-center gap-2 text-sm text-neutral-700">
+                            <x-lucide-building-2 class="w-5 h-5 text-neutral-500 text-2xl" />
+                            <p>WFO</p>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="w-full bg-white p-4 rounded-md mt-5">
-        <h4 class="font-semibold">Deskripsi</h4>
-        <p class="mt-2 text-neutral-400 text-sm">We are seeking a skilled and detail-focused UI/UX Designer to develop engaging,
-            user-friendly interfaces and
-            intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders
-            to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and
-            business objectives.</p>
+        <div class="flex flex-col gap-3">
+            <h4 class="font-semibold">Deskripsi</h4>
+            <p class="mt-2 text-neutral-400 text-sm">We are seeking a skilled and detail-focused UI/UX Designer to develop engaging,
+                user-friendly interfaces and
+                intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders
+                to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and
+                business objectives.</p>
+        </div>
     </div>
     <div class="w-full bg-white p-4 rounded-md mt-5">
-        <h4 class="font-semibold">Persyaratan</h4>
-        <p class="mt-2 text-neutral-400 text-sm">We are seeking a skilled and detail-focused UI/UX Designer to develop engaging,
-            user-friendly interfaces and
-            intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders
-            to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and
-            business objectives.</p>
+        <div class="flex flex-col gap-3">
+            <h4 class="font-semibold">Persyaratan</h4>
+            <p class="mt-2 text-neutral-400 text-sm">We are seeking a skilled and detail-focused UI/UX Designer to develop engaging,
+                user-friendly interfaces and
+                intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders
+                to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and
+                business objectives.</p>
+        </div>
+    </div>
+    <div class="w-full bg-white p-4 rounded-md mt-5">
+        <div class="flex flex-col gap-3">
+            <h4 class="font-semibold">Informasi Test</h4>
+            <p class="mt-2 text-neutral-400 text-sm">We are seeking a skilled and detail-focused UI/UX Designer to develop engaging,
+                user-friendly interfaces and
+                intuitive digital experiences. You will collaborate closely with product managers, developers, and stakeholders
+                to transform requirements into wireframes, prototypes, and polished designs that meet both user needs and
+                business objectives.</p>
+        </div>
     </div>
 @endsection
