@@ -46,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_dospem');
         Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])
             ->name('admin.detail_mahasiswa');
+        Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])
+            ->name('admin.detail_admin');
         Route::get('/perusahaan', [PerusahaanController::class, 'index'])
             ->name('admin.perusahaan');
         Route::get('/perusahaan/{id}', [PerusahaanController::class, 'detail'])

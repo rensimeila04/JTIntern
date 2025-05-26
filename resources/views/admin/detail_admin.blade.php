@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="flex gap-4">
-    <div class="w-full p-6 bg-white rounded-lg flex flex-col items-center gap-10 shadow">
+    <div class="w-full p-4 bg-white rounded-xl flex flex-col items-center gap-10 ">
         <div class="w-full flex justify-beetwen items-center">
             <div class="text-neutral-900 text-xl font-medium tracking-tight">Detail Pengguna</div>
         </div>
@@ -11,21 +11,21 @@
 
         <div class="w-full flex justify-start items-center gap-6">
             <div class="flex flex-col items-start gap-4">
-                <div class="w-24 text-neutral-900 text-sm font-medium leading-tight tracking-tight">NIP</div>
-                <div class="text-neutral-900 text-sm font-medium leading-tight tracking-tight">Nama Lengkap</div>
-                <div class="w-24 text-neutral-900 text-sm font-medium leading-tight tracking-tight">Email</div>
-                <div class="text-neutral-900 text-sm font-medium leading-tight tracking-tight">Level Pengguna</div>
+                <div class="w-24 text-neutral-900 text-sm font-medium">NIP</div>
+                <div class="text-neutral-900 text-sm font-medium ">Nama Lengkap</div>
+                <div class="w-24 text-neutral-900 text-sm font-medium ">Email</div>
+                <div class="text-neutral-900 text-sm font-medium ">Level Pengguna</div>
             </div>
             <div class="flex flex-col items-start gap-4">
-                <div class="text-neutral-400 text-sm font-medium leading-tight tracking-tight">198907152203123</div>
-                <div class="text-neutral-400 text-sm font-medium leading-tight tracking-tight">Rizky Wahyu</div>
-                <div class="text-neutral-400 text-sm font-medium leading-tight tracking-tight">rizkywahyu@polinema.ac.id</div>
-                <div class="text-neutral-400 text-sm font-medium leading-tight tracking-tight">Administrator</div>
+                <div class="text-neutral-400 text-sm font-medium">198907152203123</div>
+                <div class="text-neutral-400 text-sm font-medium">Rizky Wahyu</div>
+                <div class="text-neutral-400 text-sm font-medium">rizkywahyu@polinema.ac.id</div>
+                <div class="text-neutral-400 text-sm font-medium">Administrator</div>
             </div>
         </div>
     </div>
 
-    <div class="w-full h-[400px] p-6 bg-white rounded-lg flex flex-col items-center gap-6 shadow">
+    <div class="w-full h-[400px] p-4 bg-white rounded-xl flex flex-col items-center gap-6 ">
         <div class="w-full flex justify-beetwen items-center">
             <div class="text-neutral-900 text-xl font-medium tracking-tight">Kata Sandi</div>
         </div>
