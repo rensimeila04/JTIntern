@@ -63,14 +63,14 @@
         <div class="flex flex-col gap-2">
             <p class="text-neutral-400 text-xs font-medium">Manajemen Magang</p>
             <div class="flex flex-col gap-2">
-                <a href="/admin/periode-magang"
+                <a href="{{ route('admin.periode_magang') }}"
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'periode-magang' ? 'bg-primary-100' : '' }}">
                     <x-lucide-calendar-days class="size-6 {{ $activeMenu == 'periode-magang' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
                     <div class="{{ $activeMenu == 'periode-magang' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Periode
                         Magang</div>
                 </a>
-                <a href="/admin/lowongan"
+                <a href="{{ route('admin.lowongan') }}"
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'lowongan' ? 'bg-primary-100' : '' }}">
                     <x-lucide-briefcase class="size-6 {{ $activeMenu == 'lowongan' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
