@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserModel;
+use App\Models\LevelModel;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -16,9 +18,16 @@ class UserController extends Controller
 
         $activeMenu = 'pengguna';
 
+        # Ambil data pengguna
+        $user = UserModel::with('level')->get();
+
+        $level = LevelModel::all();
+
         return view('admin.pengguna', [
             'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu
+            'user' => $user,
+            'level' => $level,
+            'activeMenu' => $activeMenu,
         ]);
     }
 
