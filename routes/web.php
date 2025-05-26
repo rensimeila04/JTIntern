@@ -59,6 +59,11 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.program_studi');
     });
 
+        Route::get('/admin/detailpm/{id}', [AdminController::class, 'detailPm'])
+            ->name('admin.detail_perusahaan_mitra');
+        Route::get('/admin/detailmagang/{id}', [AdminController::class, 'detailMagang'])
+            ->name('admin.detail_magang');
+    });
 
     // Dosen Routes
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
