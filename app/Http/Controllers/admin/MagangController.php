@@ -23,4 +23,38 @@ class MagangController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function pengajuanDitolak($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Kelola Magang', 'url' => '#'],
+            ['label' => 'Pengajuan Ditolak', 'url' => '#'],
+        ];
+
+        $activeMenu = 'kelola-magang';
+        
+        return view('admin.pengajuan_ditolak', [
+            'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
+        public function riwayatMagang($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Kelola Magang', 'url' => '#'],
+            ['label' => 'Riwayat Magang', 'url' => '#'],
+        ];
+
+        $activeMenu = 'kelola-magang';
+        
+        return view('admin.riwayat_magang', [
+            'id' => $id,
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
 }

@@ -62,6 +62,14 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.program_studi');
         Route::get('/magang/{id}', [MagangController::class, 'detailMagang'])
             ->name('admin.detail_magang');
+        Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
+            Route::get('/', [MagangController::class, 'index']);
+            Route::get('/pengajuan-ditolak/{id}', [MagangController::class, 'pengajuanDitolak'])->name('.pengajuan-ditolak');
+        });
+        Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
+            Route::get('/', [MagangController::class, 'index']);
+            Route::get('/riwayat-magang/{id}', [MagangController::class, 'riwayatMagang'])->name('.riwayat-magang');
+        });
     });
 
     // Dosen Routes
