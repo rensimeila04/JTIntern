@@ -111,12 +111,12 @@
                         <div class="flex gap-2">
                             <button type="button" 
                                     id="selectAllFasilitas"
-                                    class="text-xs px-3 py-1 bg-primary-500 text-white rounded hover:bg-primary-600 transition-colors">
+                                    class="btn-primary">
                                 Pilih Semua
                             </button>
                             <button type="button" 
                                     id="deselectAllFasilitas"
-                                    class="text-xs px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                                    class="btn-secondary">
                                 Hapus Semua
                             </button>
                         </div>
@@ -245,19 +245,36 @@
             }
         });
 
-        // Fasilitas checkbox functionality
-        document.getElementById('selectAllFasilitas').addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
-        });
+        // Tunggu DOM selesai dimuat sebelum menambahkan event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fasilitas checkbox functionality - Select All
+            const selectAllButton = document.getElementById('selectAllFasilitas');
+            const deselectAllButton = document.getElementById('deselectAllFasilitas');
+            
+            if (selectAllButton) {
+                selectAllButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Select All clicked'); // Debug log
+                    const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
+                    console.log('Found checkboxes:', checkboxes.length); // Debug log
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                });
+            }
 
-        document.getElementById('deselectAllFasilitas').addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            // Fasilitas checkbox functionality - Deselect All
+            if (deselectAllButton) {
+                deselectAllButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Deselect All clicked'); // Debug log
+                    const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
+                    console.log('Found checkboxes:', checkboxes.length); // Debug log
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                });
+            }
         });
     </script>
 @endsection
