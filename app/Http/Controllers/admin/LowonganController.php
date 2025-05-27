@@ -38,4 +38,20 @@ class LowonganController extends Controller
             'id' => $id
         ]);
     }
+
+    public function tambahLowongan()
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Lowongan', 'url' => route('admin.lowongan')],
+            ['label' => 'Tambah Lowongan', 'url' => '#'],
+        ];
+
+        $activeMenu = 'lowongan';
+
+        return view('admin.tambah_lowongan', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
 }

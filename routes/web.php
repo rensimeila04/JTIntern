@@ -56,7 +56,9 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.periode_magang');
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
+            Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
+
         });
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');
