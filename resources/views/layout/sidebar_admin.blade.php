@@ -77,7 +77,7 @@
                     <div class="{{ $activeMenu == 'lowongan' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Lowongan
                     </div>
                 </a>
-                <a href="/admin/kelola-magang"
+                <a href="{{ route('admin.kelola_magang') }}"
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ $activeMenu == 'kelola-magang' ? 'bg-primary-100' : '' }}">
                     <x-lucide-clipboard-list class="size-6 {{ $activeMenu == 'kelola-magang' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />

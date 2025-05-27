@@ -54,6 +54,11 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_perusahaan');
         Route::get('/periode-magang', [PeriodeController::class, 'index'])
             ->name('admin.periode_magang');
+        Route::prefix('kelola-magang')->name('admin.kelola_magang')->group(function () {
+            Route::get('/', [MagangController::class, 'index']);
+            Route::get('/permohonan-magang', [MagangController::class, 'permohonanMagang'])->name('.permohonan_magang');
+            Route::get('/magang-aktif', [MagangController::class, 'magangAktif'])->name('.magang_aktif');
+        });
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
