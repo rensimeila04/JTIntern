@@ -3,7 +3,7 @@
 @section('content')
     <div class="p-6 space-y-6 bg-white rounded-lg">
         <h1 class="text-xl font-medium text-neutral-900">Tambah Perusahaan</h1>
-        <form action="{{ route('admin.perusahaan.store') }}" method="POST" class="space-y-4">
+        <form action="{{ route('admin.perusahaan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <div class="grid grid-cols-2 gap-6">
                 <div class="space-y-4 w-full">
@@ -81,6 +81,7 @@
                     file:py-3 file:px-4
                     dark:file:bg-neutral-700 dark:file:text-neutral-400"
                             accept="image/*">
+                        <p class="text-xs text-gray-500 mt-1">Jika tidak diisi, akan menggunakan logo default</p>
                     </div>
                 </div>
             </div>

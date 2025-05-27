@@ -91,15 +91,44 @@ class PerusahaanController extends Controller
     {
         $validated = $request->validate([
             'nama_perusahaan' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'telepon' => 'required|string|max:20',
-            'alamat' => 'required|string',
-            'jenis_perusahaan_id' => 'required|exists:jenis_perusahaan,id',
-            'website' => 'nullable|url|max:255',
-            'deskripsi' => 'nullable|string',
+            'email_perusahaan' => 'required|email|max:255',
+            'nomor_telepon' => 'required|string|max:20',
+            'alamat_perusahaan' => 'required|string',
+            'jenis_perusahaan_id' => 'required|exists:jenis_perusahaan,id_jenis_perusahaan',
+            'bidang_industri' => 'required|string|max:255',
+            'tentang_perusahaan' => 'nullable|string',
+            'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'alamat_latitude' => 'nullable|numeric',
+            'alamat_longitude' => 'nullable|numeric',
         ]);
+
+        // Handle logo upload
+        $logoPath = 'images/placeholder_perusahaan.png'; // Default placeholder
         
-        PerusahaanMitraModel::create($validated);
+        if ($request->hasFile('logo_perusahaan')) {
+            // Create custom filename with timestamp
+            $file = $request->file('logo_perusahaan');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Store in public/storage/logo_perusahaan directory
+            $logoPath = $file->storeAs('logo_perusahaan', $filename, 'public');
+        }
+
+        // Map form fields to database fields
+        $data = [
+            'nama_perusahaan_mitra' => $validated['nama_perusahaan'],
+            'email' => $validated['email_perusahaan'],
+            'telepon' => $validated['nomor_telepon'],
+            'alamat' => $validated['alamat_perusahaan'],
+            'id_jenis_perusahaan' => $validated['jenis_perusahaan_id'],
+            'bidang_industri' => $validated['bidang_industri'],
+            'tentang' => $validated['tentang_perusahaan'] ?? null,
+            'logo' => $logoPath,
+            'latitude' => $validated['alamat_latitude'] ?? null,
+            'longitude' => $validated['alamat_longitude'] ?? null,
+        ];
+
+        PerusahaanMitraModel::create($data);
         
         return redirect()->route('admin.perusahaan')
             ->with('success', 'Perusahaan mitra berhasil ditambahkan');
