@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class PerusahaanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -17,13 +17,38 @@ class PerusahaanController extends Controller
         ];
 
         $activeMenu = 'perusahaan_mitra';
-        $perusahaanMitra = PerusahaanMitraModel::with('jenisPerusahaan')->get();
+        
+        // Query builder untuk perusahaan mitra
+        $query = PerusahaanMitraModel::with('jenisPerusahaan');
+        
+        // Filter berdasarkan jenis perusahaan
+        if ($request->filled('jenis_perusahaan') && $request->jenis_perusahaan != 'all') {
+            $query->where('id_jenis_perusahaan', $request->jenis_perusahaan);
+        }
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('bidang_industri', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('alamat', 'LIKE', "%{$searchTerm}%")
+                  ->orWhereHas('jenisPerusahaan', function($q) use ($searchTerm) {
+                      $q->where('nama_jenis_perusahaan', 'LIKE', "%{$searchTerm}%");
+                  });
+            });
+        }
+        
+        $perusahaanMitra = $query->paginate(10)->appends($request->query());
         $jenisPerusahaan = JenisPerusahaanModel::all();
+        
         return view('admin.perusahaan', [
             'breadcrumb' => $breadcrumb,
             'perusahaanMitra' => $perusahaanMitra,
             'jenisPerusahaan' => $jenisPerusahaan,
-            'activeMenu' => $activeMenu
+            'activeMenu' => $activeMenu,
+            'currentFilter' => $request->jenis_perusahaan ?? 'all',
+            'currentSearch' => $request->search ?? ''
         ]);
     }
 
