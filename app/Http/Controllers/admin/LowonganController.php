@@ -54,4 +54,21 @@ class LowonganController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function editLowongan($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Lowongan', 'url' => route('admin.lowongan')],
+            ['label' => 'Edit Lowongan', 'url' => '#'],
+        ];
+
+        $activeMenu = 'lowongan';
+
+        return view('admin.edit_lowongan', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu,
+            'id' => $id
+        ]);
+    }
 }

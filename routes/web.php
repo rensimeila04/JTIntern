@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
+            Route::get('{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
 
         });
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
