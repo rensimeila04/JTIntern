@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PerusahaanMitraModel;
 use App\Models\JenisPerusahaanModel;
+use App\Models\FasilitasModel;
+use App\Models\FasilitasPerusahaanModel;
 use Illuminate\Http\Request;
 
 class PerusahaanController extends Controller
@@ -83,11 +85,13 @@ class PerusahaanController extends Controller
 
         $activeMenu = 'perusahaan_mitra';
         $jenisPerusahaan = JenisPerusahaanModel::all();
+        $fasilitas = FasilitasModel::all();
         
         return view('admin.tambah_perusahaan', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
-            'jenisPerusahaan' => $jenisPerusahaan
+            'jenisPerusahaan' => $jenisPerusahaan,
+            'fasilitas' => $fasilitas
         ]);
     }
 
@@ -104,6 +108,8 @@ class PerusahaanController extends Controller
             'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'alamat_latitude' => 'nullable|numeric',
             'alamat_longitude' => 'nullable|numeric',
+            'fasilitas' => 'nullable|array',
+            'fasilitas.*' => 'exists:fasilitas,id_fasilitas',
         ]);
 
         // Handle logo upload
@@ -132,7 +138,18 @@ class PerusahaanController extends Controller
             'longitude' => $validated['alamat_longitude'] ?? null,
         ];
 
-        PerusahaanMitraModel::create($data);
+        // Create the company
+        $perusahaan = PerusahaanMitraModel::create($data);
+        
+        // Save facilities if selected
+        if (!empty($validated['fasilitas'])) {
+            foreach ($validated['fasilitas'] as $fasilitasId) {
+                FasilitasPerusahaanModel::create([
+                    'id_perusahaan_mitra' => $perusahaan->id_perusahaan_mitra,
+                    'id_fasilitas' => $fasilitasId,
+                ]);
+            }
+        }
         
         return redirect()->route('admin.perusahaan')
             ->with('success', 'Perusahaan mitra berhasil ditambahkan');

@@ -85,6 +85,46 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Fasilitas Perusahaan Section -->
+            <div class="w-full">
+                <label class="block text-sm font-medium mb-4 dark:text-white">Fasilitas Perusahaan</label>
+                <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        @foreach ($fasilitas as $item)
+                            <div class="flex items-center">
+                                <input type="checkbox" 
+                                       id="fasilitas_{{ $item->id_fasilitas }}" 
+                                       name="fasilitas[]" 
+                                       value="{{ $item->id_fasilitas }}"
+                                       class="shrink-0 mt-0.5 border-gray-200 rounded text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-primary-500 dark:checked:border-primary-500 dark:focus:ring-offset-gray-800">
+                                <label for="fasilitas_{{ $item->id_fasilitas }}" 
+                                       class="text-sm text-gray-700 ms-3 dark:text-neutral-400">
+                                    {{ $item->nama_fasilitas }}
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <!-- Select All / Deselect All buttons -->
+                    <div class="mt-4 pt-3 border-t border-gray-200">
+                        <div class="flex gap-2">
+                            <button type="button" 
+                                    id="selectAllFasilitas"
+                                    class="text-xs px-3 py-1 bg-primary-500 text-white rounded hover:bg-primary-600 transition-colors">
+                                Pilih Semua
+                            </button>
+                            <button type="button" 
+                                    id="deselectAllFasilitas"
+                                    class="text-xs px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                                Hapus Semua
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Pilih fasilitas yang tersedia di perusahaan ini</p>
+            </div>
+
             <div class="flex justify-end w-full">
                 <button type="submit" class="btn-primary">
                     Tambahkan Perusahaan
@@ -203,6 +243,21 @@
             if (e.key === 'Enter') {
                 e.preventDefault();
             }
+        });
+
+        // Fasilitas checkbox functionality
+        document.getElementById('selectAllFasilitas').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        });
+
+        document.getElementById('deselectAllFasilitas').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
         });
     </script>
 @endsection
