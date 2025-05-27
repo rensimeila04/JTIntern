@@ -24,7 +24,7 @@
                 <button id="hs-dropdown-default" type="button"
                     class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-neutral-900 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                     aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                    @if($currentFilter == 'all')
+                    @if ($currentFilter == 'all')
                         Semua Perusahaan
                     @else
                         {{ $jenisPerusahaan->where('id_jenis_perusahaan', $currentFilter)->first()->nama_jenis_perusahaan ?? 'Semua Perusahaan' }}
@@ -48,14 +48,12 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Search dengan komponen search-input -->
             <div class="flex items-center gap-2">
-                <form method="GET" action="{{ route('admin.perusahaan') }}" id="searchForm" class="flex items-center gap-2">
-                    <x-search-input 
-                        name="search" 
-                        value="{{ $currentSearch }}" 
-                        placeholder="Cari perusahaan..." 
+                <form method="GET" action="{{ route('admin.perusahaan') }}" id="searchForm"
+                    class="flex items-center gap-2">
+                    <x-search-input name="search" value="{{ $currentSearch }}" placeholder="Cari perusahaan..."
                         id="searchInput"
                         class="py-3 px-4 pl-11 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" />
                     <input type="hidden" name="jenis_perusahaan" value="{{ $currentFilter }}">
@@ -64,14 +62,15 @@
         </div>
 
         <!-- Results Info -->
-        @if($currentSearch || $currentFilter != 'all')
+        @if ($currentSearch || $currentFilter != 'all')
             <div class="text-sm text-gray-600">
                 Menampilkan {{ $perusahaanMitra->count() }} dari {{ $perusahaanMitra->total() }} hasil
-                @if($currentSearch)
+                @if ($currentSearch)
                     untuk pencarian "<strong>{{ $currentSearch }}</strong>"
                 @endif
-                @if($currentFilter != 'all')
-                    dengan filter "<strong>{{ $jenisPerusahaan->where('id_jenis_perusahaan', $currentFilter)->first()->nama_jenis_perusahaan ?? '' }}</strong>"
+                @if ($currentFilter != 'all')
+                    dengan filter
+                    "<strong>{{ $jenisPerusahaan->where('id_jenis_perusahaan', $currentFilter)->first()->nama_jenis_perusahaan ?? '' }}</strong>"
                 @endif
             </div>
         @endif
@@ -146,8 +145,9 @@
                                             <div class="flex flex-col items-center">
                                                 <x-lucide-search class="w-12 h-12 text-gray-300 mb-4" />
                                                 <p>Tidak ada perusahaan yang ditemukan</p>
-                                                @if($currentSearch || $currentFilter != 'all')
-                                                    <a href="{{ route('admin.perusahaan') }}" class="text-blue-600 hover:text-blue-500 mt-2">
+                                                @if ($currentSearch || $currentFilter != 'all')
+                                                    <a href="{{ route('admin.perusahaan') }}"
+                                                        class="text-blue-600 hover:text-blue-500 mt-2">
                                                         Reset pencarian
                                                     </a>
                                                 @endif
@@ -163,9 +163,9 @@
         </div>
 
         <!-- Pagination -->
-        @if($perusahaanMitra->hasPages())
+        @if ($perusahaanMitra->hasPages())
             <div class="flex items-center justify-end mt-8">
-                {{ $perusahaanMitra->links() }}
+                {{ $perusahaanMitra->links('custom.pagination') }}
             </div>
         @endif
     </div>
