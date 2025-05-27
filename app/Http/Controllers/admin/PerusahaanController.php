@@ -252,4 +252,41 @@ class PerusahaanController extends Controller
         return redirect()->route('admin.perusahaan')
             ->with('success', 'Perusahaan mitra berhasil diperbarui');
     }
+
+    public function destroy($id)
+    {
+        try {
+            $perusahaan = PerusahaanMitraModel::findOrFail($id);
+            
+            // Check if company has active internships/lowongan
+            if ($perusahaan->lowongan()->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Perusahaan tidak dapat dihapus karena masih memiliki lowongan aktif'
+                ], 422);
+            }
+            
+            // Delete associated facilities first
+            FasilitasPerusahaanModel::where('id_perusahaan_mitra', $id)->delete();
+            
+            // Delete logo file if exists and is not a placeholder
+            if ($perusahaan->logo && !str_starts_with($perusahaan->logo, 'images/')) {
+                Storage::disk('public')->delete($perusahaan->logo);
+            }
+            
+            // Delete the company
+            $perusahaan->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Perusahaan mitra berhasil dihapus'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus perusahaan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

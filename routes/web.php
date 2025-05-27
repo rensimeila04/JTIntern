@@ -60,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.perusahaan.edit');
         Route::put('/perusahaan/{id}', [PerusahaanController::class, 'update'])
             ->name('admin.perusahaan.update');
+        Route::delete('/perusahaan/{id}', [PerusahaanController::class, 'destroy'])
+            ->name('admin.perusahaan.destroy');
         Route::get('/perusahaan/{id}', [PerusahaanController::class, 'detail'])
             ->name('admin.detail_perusahaan');
         
