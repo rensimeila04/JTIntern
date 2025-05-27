@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
+            Route::post('/tambah', [LowonganController::class, 'storeLowongan'])->name('.store');
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
             Route::get('{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
 
