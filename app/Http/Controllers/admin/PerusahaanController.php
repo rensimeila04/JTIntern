@@ -65,7 +65,7 @@ class PerusahaanController extends Controller
         $activeMenu = 'perusahaan_mitra';
         
         // Ambil data perusahaan dengan relasi
-        $perusahaan = PerusahaanMitraModel::with('jenisPerusahaan')
+        $perusahaan = PerusahaanMitraModel::with(['jenisPerusahaan', 'fasilitasPerusahaan.fasilitas'])
             ->findOrFail($id);
         
         return view('admin.detail_perusahaan_mitra', [

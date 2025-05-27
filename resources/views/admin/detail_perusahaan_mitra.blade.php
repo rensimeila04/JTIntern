@@ -26,8 +26,9 @@
                 </div>
             </div>
         </div>
+
         {{-- Deskripsi & Kontak --}}
-        <div class="flex flex-row gap-6">
+        <div class="flex flex-row gap-4">
             <div class="w-1/2 p-6 bg-white rounded-xl flex flex-col gap-6">
                 <div class="flex justify-between items-center">
                     <p class="text-xl font-medium text-neutral-900">Deskripsi</p>
@@ -66,6 +67,75 @@
                 </div>
             </div>
         </div>
+
+        {{-- Fasilitas Perusahaan --}}
+        <div class="bg-white h-fit p-6 rounded-lg space-y-6">
+            <div class="flex justify-between items-center">
+                <p class="text-xl font-medium text-neutral-900">Fasilitas Perusahaan</p>
+            </div>
+            @if($perusahaan->fasilitasPerusahaan->count() > 0)
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    @foreach($perusahaan->fasilitasPerusahaan as $fasilitasPerusahaan)
+                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                                    @switch($fasilitasPerusahaan->fasilitas->nama_fasilitas)
+                                        @case('Workstation/Laptop')
+                                            <i class="ph ph-laptop text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Internet/Wifi')
+                                            <i class="ph ph-wifi-high text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Ruang Kerja')
+                                            <i class="ph ph-buildings text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Tunjangan Makan')
+                                            <i class="ph ph-fork-knife text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Tunjangan Transport')
+                                            <i class="ph ph-car text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Ruang Meeting')
+                                            <i class="ph ph-users text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Mentoring')
+                                            <i class="ph ph-chats-circle text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Sertifikat Magang')
+                                            <i class="ph ph-certificate text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Training/Workshop')
+                                            <i class="ph ph-graduation-cap text-primary-600 text-lg"></i>
+                                            @break
+                                        @case('Pantry/Coffee Corner')
+                                            <i class="ph ph-coffee text-primary-600 text-lg"></i>
+                                            @break
+                                        @default
+                                            <i class="ph ph-check-circle text-primary-600 text-lg"></i>
+                                    @endswitch
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-neutral-900 truncate">
+                                    {{ $fasilitasPerusahaan->fasilitas->nama_fasilitas }}
+                                </p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <i class="ph ph-buildings text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-sm text-gray-500">Belum ada fasilitas yang terdaftar</p>
+                        <p class="text-xs text-gray-400 mt-1">Fasilitas akan ditampilkan setelah ditambahkan</p>
+                    </div>
+                </div>
+            @endif
+        </div>
+        
         {{-- Lowongan Tersedia - Hard coded untuk sementara --}}
         <div class="h-fit rounded-lg space-y-3">
             <div class="flex justify-between items-center">
