@@ -50,20 +50,15 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_admin');
         
         // Perusahaan routes - reordered for proper route matching
-        Route::get('/perusahaan', [PerusahaanController::class, 'index'])
-            ->name('admin.perusahaan');
-        Route::get('/perusahaan/tambah', [PerusahaanController::class, 'create'])
-            ->name('admin.perusahaan.create');
-        Route::post('/perusahaan/tambah', [PerusahaanController::class, 'store'])
-            ->name('admin.perusahaan.store');
-        Route::get('/perusahaan/{id}/edit', [PerusahaanController::class, 'edit'])
-            ->name('admin.perusahaan.edit');
-        Route::put('/perusahaan/{id}', [PerusahaanController::class, 'update'])
-            ->name('admin.perusahaan.update');
-        Route::delete('/perusahaan/{id}', [PerusahaanController::class, 'destroy'])
-            ->name('admin.perusahaan.destroy');
-        Route::get('/perusahaan/{id}', [PerusahaanController::class, 'detail'])
-            ->name('admin.detail_perusahaan');
+        Route::prefix('perusahaan')->name('admin.perusahaan')->group(function () {
+            Route::get('/', [PerusahaanController::class, 'index'])->name('');
+            Route::get('/tambah', [PerusahaanController::class, 'create'])->name('.create');
+            Route::post('/tambah', [PerusahaanController::class, 'store'])->name('.store');
+            Route::get('/{id}/edit', [PerusahaanController::class, 'edit'])->name('.edit');
+            Route::put('/{id}', [PerusahaanController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('.destroy');
+            Route::get('/{id}', [PerusahaanController::class, 'detail'])->name('.detail');
+        });
         
         Route::get('/periode-magang', [PeriodeController::class, 'index'])
             ->name('admin.periode_magang');

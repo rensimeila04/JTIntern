@@ -124,7 +124,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-end">
                                             <div class="flex justify-end gap-2">
-                                                <a href="{{ route('admin.detail_perusahaan', $item->id_perusahaan_mitra) }}"
+                                                <a href="{{ route('admin.perusahaan.detail', $item->id_perusahaan_mitra) }}"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                 </a>
