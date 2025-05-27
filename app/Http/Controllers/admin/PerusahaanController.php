@@ -56,14 +56,18 @@ class PerusahaanController extends Controller
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Perusahaan Mitra', 'url' => '#'],
+            ['label' => 'Perusahaan Mitra', 'url' => route('admin.perusahaan')],
             ['label' => 'Detail', 'url' => '#'],
         ];
 
-        $activeMenu = 'perusahaan-mitra';
+        $activeMenu = 'perusahaan_mitra';
+        
+        // Ambil data perusahaan dengan relasi
+        $perusahaan = PerusahaanMitraModel::with('jenisPerusahaan')
+            ->findOrFail($id);
         
         return view('admin.detail_perusahaan_mitra', [
-            'id' => $id,
+            'perusahaan' => $perusahaan,
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu
         ]);
@@ -103,7 +107,7 @@ class PerusahaanController extends Controller
         ]);
 
         // Handle logo upload
-        $logoPath = 'images/placeholder_perusahaan.png'; // Default placeholder
+        $logoPath = null;
         
         if ($request->hasFile('logo_perusahaan')) {
             // Create custom filename with timestamp
