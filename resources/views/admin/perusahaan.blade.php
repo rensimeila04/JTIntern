@@ -211,6 +211,38 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="successModal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="successModal-label" class="font-bold text-gray-800 dark:text-white">
+                        Berhasil
+                    </h3>
+                    <button type="button" id="closeSuccessModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="size-4" />
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <x-lucide-check class="w-8 h-8 text-green-600" />
+                        </div>
+                        <p id="successMessage" class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                            Data perusahaan berhasil dihapus!
+                        </p>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="okSuccessBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
@@ -237,6 +269,7 @@
 
         let deleteCompanyId = null;
         let currentModal = null;
+        let successModal = null;
 
         function confirmDelete(id, name) {
             deleteCompanyId = id;
@@ -254,9 +287,32 @@
             deleteCompanyId = null;
         }
 
-        // Event listeners untuk tombol close dan cancel
+        function showSuccessModal(message) {
+            document.getElementById('successMessage').textContent = message;
+            successModal = new HSOverlay(document.getElementById('successModal'));
+            successModal.open();
+        }
+
+        function closeSuccessModal() {
+            if (successModal) {
+                successModal.close();
+                successModal = null;
+            }
+        }
+
+        // Event listeners untuk delete modal
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
         document.getElementById('cancelDelete').addEventListener('click', closeModal);
+
+        // Event listeners untuk success modal
+        document.getElementById('closeSuccessModalBtn').addEventListener('click', function() {
+            closeSuccessModal();
+            window.location.reload();
+        });
+        document.getElementById('okSuccessBtn').addEventListener('click', function() {
+            closeSuccessModal();
+            window.location.reload();
+        });
 
         // Event listener untuk klik di luar modal
         document.getElementById('deleteModal').addEventListener('click', function(e) {
@@ -268,8 +324,13 @@
 
         // Event listener untuk tombol Escape
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && currentModal) {
-                closeModal();
+            if (e.key === 'Escape') {
+                if (currentModal) {
+                    closeModal();
+                } else if (successModal) {
+                    closeSuccessModal();
+                    window.location.reload();
+                }
             }
         });
 
@@ -295,8 +356,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert(data.message);
-                    window.location.reload();
+                    // Close delete modal first
+                    closeModal();
+                    // Show success modal
+                    showSuccessModal(data.message);
                 } else {
                     alert(data.message);
                 }
@@ -310,8 +373,6 @@
                 deleteBtn.disabled = false;
                 deleteText.textContent = 'Hapus';
                 deleteSpinner.classList.add('hidden');
-                
-                closeModal();
             });
         });
     </script>
