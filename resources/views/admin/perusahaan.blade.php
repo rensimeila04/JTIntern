@@ -128,7 +128,7 @@
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                 </a>
-                                                <a href="#"
+                                                <a href="{{ route('admin.perusahaan.edit', $item->id_perusahaan_mitra) }}"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-edit class="w-4 h-4 text-yellow-500" />
                                                 </a>

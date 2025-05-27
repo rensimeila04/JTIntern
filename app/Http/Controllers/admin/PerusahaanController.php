@@ -8,6 +8,7 @@ use App\Models\JenisPerusahaanModel;
 use App\Models\FasilitasModel;
 use App\Models\FasilitasPerusahaanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PerusahaanController extends Controller
 {
@@ -153,5 +154,102 @@ class PerusahaanController extends Controller
         
         return redirect()->route('admin.perusahaan')
             ->with('success', 'Perusahaan mitra berhasil ditambahkan');
+    }
+
+    public function edit($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Perusahaan Mitra', 'url' => route('admin.perusahaan')],
+            ['label' => 'Edit', 'url' => '#'],
+        ];
+
+        $activeMenu = 'perusahaan_mitra';
+        
+        // Ambil data perusahaan dengan relasi fasilitas
+        $perusahaan = PerusahaanMitraModel::with('fasilitasPerusahaan')->findOrFail($id);
+        $jenisPerusahaan = JenisPerusahaanModel::all();
+        $fasilitas = FasilitasModel::all();
+        
+        // Ambil ID fasilitas yang sudah dipilih
+        $selectedFasilitas = $perusahaan->fasilitasPerusahaan->pluck('id_fasilitas')->toArray();
+        
+        return view('admin.edit_perusahaan', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu,
+            'perusahaan' => $perusahaan,
+            'jenisPerusahaan' => $jenisPerusahaan,
+            'fasilitas' => $fasilitas,
+            'selectedFasilitas' => $selectedFasilitas
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $perusahaan = PerusahaanMitraModel::findOrFail($id);
+        
+        $validated = $request->validate([
+            'nama_perusahaan' => 'required|string|max:255',
+            'email_perusahaan' => 'required|email|max:255',
+            'nomor_telepon' => 'required|string|max:20',
+            'alamat_perusahaan' => 'required|string',
+            'jenis_perusahaan_id' => 'required|exists:jenis_perusahaan,id_jenis_perusahaan',
+            'bidang_industri' => 'required|string|max:255',
+            'tentang_perusahaan' => 'nullable|string',
+            'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'alamat_latitude' => 'nullable|numeric',
+            'alamat_longitude' => 'nullable|numeric',
+            'fasilitas' => 'nullable|array',
+            'fasilitas.*' => 'exists:fasilitas,id_fasilitas',
+        ]);
+
+        // Handle logo upload
+        $logoPath = $perusahaan->logo; // Keep existing logo by default
+        
+        if ($request->hasFile('logo_perusahaan')) {
+            // Delete old logo if it exists and is not a placeholder
+            if ($perusahaan->logo && !str_starts_with($perusahaan->logo, 'images/')) {
+                Storage::disk('public')->delete($perusahaan->logo);
+            }
+            
+            // Upload new logo
+            $file = $request->file('logo_perusahaan');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $logoPath = $file->storeAs('logo_perusahaan', $filename, 'public');
+        }
+
+        // Map form fields to database fields
+        $data = [
+            'nama_perusahaan_mitra' => $validated['nama_perusahaan'],
+            'email' => $validated['email_perusahaan'],
+            'telepon' => $validated['nomor_telepon'],
+            'alamat' => $validated['alamat_perusahaan'],
+            'id_jenis_perusahaan' => $validated['jenis_perusahaan_id'],
+            'bidang_industri' => $validated['bidang_industri'],
+            'tentang' => $validated['tentang_perusahaan'] ?? null,
+            'logo' => $logoPath,
+            'latitude' => $validated['alamat_latitude'] ?? null,
+            'longitude' => $validated['alamat_longitude'] ?? null,
+        ];
+
+        // Update the company
+        $perusahaan->update($data);
+        
+        // Update facilities
+        // Delete existing facilities
+        FasilitasPerusahaanModel::where('id_perusahaan_mitra', $id)->delete();
+        
+        // Save new facilities if selected
+        if (!empty($validated['fasilitas'])) {
+            foreach ($validated['fasilitas'] as $fasilitasId) {
+                FasilitasPerusahaanModel::create([
+                    'id_perusahaan_mitra' => $id,
+                    'id_fasilitas' => $fasilitasId,
+                ]);
+            }
+        }
+        
+        return redirect()->route('admin.perusahaan')
+            ->with('success', 'Perusahaan mitra berhasil diperbarui');
     }
 }
