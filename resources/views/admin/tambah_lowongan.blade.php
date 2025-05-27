@@ -70,7 +70,7 @@
                         <label class="block text-sm font-medium mb-2">Deadline Pendaftaran</label>
                         <input
                             class="hs-datepicker py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none"
-                            type="text" placeholder="Select day" readonly="" data-hs-datepicker='{
+                            type="text" placeholder="Pilih deadline" readonly="" data-hs-datepicker='{
                                 "selectedDates": ["2025-01-10 2025-01-15"],
                                 "selectionDatesMode": "multiple-ranged",
                                 "dateMax": "2050-12-31",
