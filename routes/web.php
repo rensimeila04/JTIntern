@@ -70,10 +70,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.program_studi');
         Route::get('/magang/{id}', [MagangController::class, 'detailMagang'])
             ->name('admin.detail_magang');
-        Route::get('/kelola-magang', [MagangController::class, 'kelolaMagang'])
-            ->name('admin.kelola');
         Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
             Route::get('/', [MagangController::class, 'index']);
+            Route::get('/pengajuan-ditolak', [MagangController::class, 'pengajuanDitolak'])->name('.pengajuan-ditolak');
+            Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat-magang');
         });
     });
 

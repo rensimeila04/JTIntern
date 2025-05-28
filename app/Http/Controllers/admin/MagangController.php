@@ -38,10 +38,8 @@ class MagangController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
-}
 
-
-    public function pengajuanDitolak($id)
+    public function pengajuanDitolak()
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -52,13 +50,12 @@ class MagangController extends Controller
         $activeMenu = 'kelola-magang';
         
         return view('admin.pengajuan_ditolak', [
-            'id' => $id,
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu
         ]);
     }
 
-        public function riwayatMagang($id)
+    public function riwayatMagang()
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -69,7 +66,6 @@ class MagangController extends Controller
         $activeMenu = 'kelola-magang';
         
         return view('admin.riwayat_magang', [
-            'id' => $id,
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu
         ]);

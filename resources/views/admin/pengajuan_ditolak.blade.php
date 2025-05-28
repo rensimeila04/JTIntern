@@ -151,7 +151,7 @@
                                         4
                                     </td>
                                     <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium font-medium text-gray-800 dark:text-neutral-200">
+                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         Rafa Fadil Aras
                                     </td>
                                     <td
