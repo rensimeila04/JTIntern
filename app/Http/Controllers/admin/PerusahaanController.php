@@ -66,8 +66,14 @@ class PerusahaanController extends Controller
         $activeMenu = 'perusahaan_mitra';
         
         // Ambil data perusahaan dengan relasi
-        $perusahaan = PerusahaanMitraModel::with(['jenisPerusahaan', 'fasilitasPerusahaan.fasilitas'])
-            ->findOrFail($id);
+        $perusahaan = PerusahaanMitraModel::with([
+            'jenisPerusahaan', 
+            'fasilitasPerusahaan.fasilitas',
+            'lowongan' => function($query) {
+                $query->with(['kompetensi', 'periodeMagang'])
+                      ->orderBy('created_at', 'desc');
+            }
+        ])->findOrFail($id);
         
         return view('admin.detail_perusahaan_mitra', [
             'perusahaan' => $perusahaan,

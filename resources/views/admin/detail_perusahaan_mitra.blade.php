@@ -1,5 +1,8 @@
 @extends('layout.template')
 @section('content')
+    @php
+    use Carbon\Carbon;
+    @endphp
     <div class="space-y-4">
         {{-- Detail Perusahaan Mitra --}}
         <div class="bg-white h-fit p-6 rounded-lg space-y-6">
@@ -136,46 +139,103 @@
             @endif
         </div>
         
-        {{-- Lowongan Tersedia - Hard coded untuk sementara --}}
+        {{-- Lowongan Tersedia --}}
         <div class="h-fit rounded-lg space-y-3">
             <div class="flex justify-between items-center">
                 <p class="text-xl font-medium text-neutral-900">Lowongan Tersedia</p>
             </div>
             <div class="space-y-4">
-                <div class="flex flex-col gap-6">
-                    <div class="bg-white h-fit w-full py-4 px-6 rounded-lg flex items-center gap-6">
-                        <img src="{{ $perusahaan->logo ? asset('storage/' . $perusahaan->logo) : asset('Images/placeholder_perusahaan.png') }}" 
-                             alt="Logo Perusahaan" class="w-20 h-20 rounded-lg object-cover">
-                        <div class="flex flex-col gap-4 flex-1">
-                            <div class="flex items-center gap-2">
-                                <p class="text-xl font-medium text-neutral-900">UI UX Designer</p>
+                @if($perusahaan->lowongan->count() > 0)
+                    <div class="flex flex-col gap-6">
+                        @foreach($perusahaan->lowongan as $lowongan)
+                            <div class="bg-white h-fit w-full py-4 px-6 rounded-lg flex items-center gap-6">
+                                <img src="{{ $perusahaan->logo ? asset('storage/' . $perusahaan->logo) : asset('Images/placeholder_perusahaan.png') }}" 
+                                     alt="Logo Perusahaan" class="w-20 h-20 rounded-lg object-cover">
+                                <div class="flex flex-col gap-4 flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-xl font-medium text-neutral-900">{{ $lowongan->judul_lowongan }}</p>
+                                        @if($lowongan->jenis_magang)
+                                            <span class="px-2 py-1 text-xs font-medium rounded-full 
+                                                @switch($lowongan->jenis_magang)
+                                                    @case('wfo')
+                                                        bg-blue-100 text-blue-800
+                                                        @break
+                                                    @case('remote')
+                                                        bg-green-100 text-green-800
+                                                        @break
+                                                    @case('hybrid')
+                                                        bg-purple-100 text-purple-800
+                                                        @break
+                                                    @default
+                                                        bg-gray-100 text-gray-800
+                                                @endswitch
+                                            ">
+                                                {{ strtoupper($lowongan->jenis_magang) }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex items-center gap-2">
+                                            <x-lucide-calendar-days class="size-6 text-neutral-500" stroke-width="1.5" />
+                                            <p class="align-top text-base font-normal text-neutral-700">
+                                                {{ $lowongan->periodeMagang->nama_periode ?? 'Periode tidak tersedia' }}
+                                            </p>
+                                        </div>
+                                        @if($lowongan->kompetensi)
+                                            <div class="flex items-center gap-2">
+                                                <x-lucide-tag class="size-6 text-neutral-500" stroke-width="1.5" />
+                                                <p class="align-top text-base font-normal text-neutral-700">
+                                                    {{ $lowongan->kompetensi->nama_kompetensi }}
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    @if($lowongan->deadline_pendaftaran)
+                                        <div class="flex items-center gap-2">
+                                            <x-lucide-clock class="size-5 text-amber-500" stroke-width="1.5" />
+                                            <p class="align-top text-sm font-normal text-neutral-600">
+                                                Deadline: {{ \Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->format('d M Y') }}
+                                            </p>
+                                            @if(\Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->isPast())
+                                                <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                                                    Expired
+                                                </span>
+                                            @elseif(\Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->diffInDays() <= 7)
+                                                <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+                                                    Segera Berakhir
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    @if(!$lowongan->status_pendaftaran)
+                                        <span class="px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 rounded-lg text-center">
+                                            Pendaftaran Ditutup
+                                        </span>
+                                    @else
+                                        <a href="{{ route('admin.lowongan.detail', $lowongan->id_lowongan) }}" 
+                                           class="btn-primary-lg">
+                                            Lihat Detail
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <x-lucide-calendar-days class="size-6 text-neutral-500" stroke-width="1.5" />
-                                <p class="align-top text-base font-normal text-neutral-700">Ganjil 2026</p>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="bg-white h-fit w-full py-8 px-6 rounded-lg">
+                        <div class="text-center">
+                            <div class="flex flex-col items-center">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                    <x-lucide-briefcase class="w-8 h-8 text-gray-400" />
+                                </div>
+                                <p class="text-sm text-gray-500">Belum ada lowongan tersedia</p>
+                                <p class="text-xs text-gray-400 mt-1">Lowongan akan ditampilkan setelah perusahaan menambahkan lowongan baru</p>
                             </div>
                         </div>
-                        <button type="button" class="btn-primary-lg">
-                            Lihat Detail
-                        </button>
                     </div>
-                    <div class="bg-white h-fit w-full py-4 px-6 rounded-lg flex items-center gap-6">
-                        <img src="{{ $perusahaan->logo ? asset('storage/' . $perusahaan->logo) : asset('Images/placeholder_perusahaan.png') }}" 
-                             alt="Logo Perusahaan" class="w-20 h-20 rounded-lg object-cover">
-                        <div class="flex flex-col gap-4 flex-1">
-                            <div class="flex items-center gap-2">
-                                <p class="text-xl font-medium text-neutral-900">UI UX Designer</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <x-lucide-calendar-days class="size-6 text-neutral-500" stroke-width="1.5" />
-                                <p class="align-top text-base font-normal text-neutral-700">Ganjil 2026</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-primary-lg">
-                            Lihat Detail
-                        </button>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
