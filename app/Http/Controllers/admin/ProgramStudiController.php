@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProgramStudiModel;
 use Illuminate\Http\Request;
 
 class ProgramStudiController extends Controller
@@ -15,9 +16,13 @@ class ProgramStudiController extends Controller
         ];
 
         $activeMenu = 'program-studi';
-        
+
+        #Ambil data program studi:
+        $programStudi = ProgramStudiModel::all();
+
         return view('admin.program_studi', [
             'breadcrumb' => $breadcrumb,
+            'programStudi' => $programStudi, # Data program studi
             'activeMenu' => $activeMenu
         ]);
     }
