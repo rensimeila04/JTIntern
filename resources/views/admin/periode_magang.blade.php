@@ -22,23 +22,32 @@
                                 <tr>
                                     <th scope="col" class="w-10 px-6 py-3 text-center text-xs font-medium text-gray-500">ID
                                     </th>
-                                    <th scope="col" class="w-24 px-6 py-3 text-start text-xs font-medium text-gray-500">Kode
-                                    </th>
                                     <th scope="col" class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500">
                                         Nama Periode</th>
+                                    <th scope="col" class="w-32 px-6 py-3 text-start text-xs font-medium text-gray-500">
+                                        Tanggal Mulai</th>
+                                    <th scope="col" class="w-32 px-6 py-3 text-start text-xs font-medium text-gray-500">
+                                        Tanggal Selesai</th>
                                     <th scope="col" class="w-48 px-6 py-3 text-start text-xs font-medium text-gray-500">
                                         Aksi</th>
                                 </tr>
                             </thead>
-                             <tbody class="divide-y divide-gray-200">
+                             @foreach ($periodeMagang as $item)
+                            <tbody class="divide-y divide-gray-200">
                                 <tr class="hover:bg-gray-100 gray:hover:bg-neutral-700">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium text-black">1
+                                   
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium text-black">
+                                            {{ $item->id_periode_magang }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        <span
-                                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-200 bg-white text-gray-500 shadow-2xs">ADM</span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
+                                        {{ $item->nama_periode }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">Magang Mandiri</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
+                                        {{ $item->tanggal_mulai }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
+                                        {{ $item->tanggal_selesai }}
+                                    </td>
                                     <td class="gap-2 flex px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
                                         <a href="#"
                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -51,10 +60,12 @@
                                         <a href="#"
                                             class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500 disabled:opacity-50 disabled:pointer-events-none">
                                             <x-lucide-trash-2 class="w-4 h-4 text-red-500" />
-                                        </button>
+                                        </a>
                                     </td>
+                                   
                                 </tr>
                             </tbody>
+                             @endforeach
                         </table>
                     </div>
                 </div>

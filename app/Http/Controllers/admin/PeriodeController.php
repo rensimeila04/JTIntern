@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\PeriodeMagangModel;
 
 class PeriodeController extends Controller
 {
@@ -16,9 +17,12 @@ class PeriodeController extends Controller
 
         $activeMenu = 'periode-magang';
 
+        $periodeMagang = PeriodeMagangModel::all();
+
         return view('admin.periode_magang', [
             'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu
+            'activeMenu' => $activeMenu,
+            'periodeMagang' => $periodeMagang,
         ]);
     }
 }
