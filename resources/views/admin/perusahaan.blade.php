@@ -249,6 +249,11 @@
             const searchForm = document.getElementById('searchForm');
             let searchTimeout;
 
+            // Check for success message from session (for edit success)
+            @if(session('success'))
+                showSuccessModal('{{ session('message') }}');
+            @endif
+
             if (searchInput && searchForm) {
                 searchInput.addEventListener('input', function() {
                     clearTimeout(searchTimeout);

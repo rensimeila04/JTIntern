@@ -226,9 +226,56 @@
         </div>
     </div>
 
+    <!-- Edit Success Modal -->
+    <div id="editSuccessModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="editSuccessModal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="editSuccessModal-label" class="font-bold text-gray-800 dark:text-white">
+                        Berhasil Diperbarui!
+                    </h3>
+                    <button type="button" id="closeEditSuccessModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="size-4" />
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <x-lucide-check-circle class="w-8 h-8 text-green-600" />
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Data Perusahaan Berhasil Diperbarui</h4>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Perubahan data perusahaan <span id="editSuccessCompanyName" class="font-semibold text-gray-900"></span> telah berhasil disimpan.
+                        </p>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                            <div class="flex items-center">
+                                <x-lucide-info class="w-4 h-4 text-green-600 mr-2" />
+                                <p class="text-xs text-green-800">
+                                    Semua perubahan telah diterapkan dan tersimpan dalam sistem.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="backToCompanyListBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                        <x-lucide-list class="w-4 h-4" />
+                        Kembali ke Daftar
+                    </button>
+                    <button type="button" id="editAnotherBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <x-lucide-edit class="w-4 h-4" />
+                        Edit Lagi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let debounceTimer;
         let editConfirmModal = null;
+        let editSuccessModal = null;
 
         // Fungsi untuk mencari alamat menggunakan Nominatim API
         async function searchAddress(query) {
@@ -397,6 +444,34 @@
             }
         }
 
+        // Show edit success modal
+        function showEditSuccessModal(companyName) {
+            console.log('Showing edit success modal for:', companyName);
+            document.getElementById('editSuccessCompanyName').textContent = companyName;
+            
+            // Initialize and show the modal
+            if (window.HSOverlay) {
+                editSuccessModal = new HSOverlay(document.getElementById('editSuccessModal'));
+                editSuccessModal.open();
+            } else {
+                // Fallback if HSOverlay is not available
+                document.getElementById('editSuccessModal').classList.remove('hidden');
+                document.getElementById('editSuccessModal').classList.add('hs-overlay-open');
+            }
+        }
+
+        // Close edit success modal
+        function closeEditSuccessModal() {
+            if (editSuccessModal) {
+                editSuccessModal.close();
+                editSuccessModal = null;
+            } else {
+                // Fallback
+                document.getElementById('editSuccessModal').classList.add('hidden');
+                document.getElementById('editSuccessModal').classList.remove('hs-overlay-open');
+            }
+        }
+
         // Event listener untuk input alamat
         document.getElementById('alamat_perusahaan').addEventListener('input', function(e) {
             clearTimeout(debounceTimer);
@@ -421,6 +496,24 @@
 
         // Tunggu DOM selesai dimuat sebelum menambahkan event listener
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded for edit page');
+            
+            // Check if there's a success message in the session
+            @if(session('success'))
+                console.log('Edit success session found');
+                const companyName = '{{ $perusahaan->nama_perusahaan_mitra }}';
+                console.log('Company name:', companyName);
+                
+                // Delay showing modal to ensure everything is loaded
+                setTimeout(function() {
+                    showEditSuccessModal(companyName);
+                }, 500);
+            @endif
+
+            @if(session('error'))
+                alert('{{ session('error') }}');
+            @endif
+
             // Fasilitas checkbox functionality - Select All
             const selectAllButton = document.getElementById('selectAllFasilitas');
             const deselectAllButton = document.getElementById('deselectAllFasilitas');
@@ -474,6 +567,19 @@
                 document.getElementById('editCompanyForm').submit();
             });
 
+            // Edit success modal event listeners
+            document.getElementById('closeEditSuccessModalBtn').addEventListener('click', closeEditSuccessModal);
+            
+            document.getElementById('backToCompanyListBtn').addEventListener('click', function() {
+                window.location.href = '{{ route("admin.perusahaan") }}';
+            });
+            
+            document.getElementById('editAnotherBtn').addEventListener('click', function() {
+                closeEditSuccessModal();
+                // Scroll to top to see the form
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
             // Close modal when clicking outside
             document.getElementById('editConfirmModal').addEventListener('click', function(e) {
                 const modalContent = this.querySelector('.bg-white');
@@ -484,8 +590,12 @@
 
             // Close modal with Escape key
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && editConfirmModal) {
-                    closeEditConfirmModal();
+                if (e.key === 'Escape') {
+                    if (editConfirmModal) {
+                        closeEditConfirmModal();
+                    } else if (editSuccessModal) {
+                        closeEditSuccessModal();
+                    }
                 }
             });
         });

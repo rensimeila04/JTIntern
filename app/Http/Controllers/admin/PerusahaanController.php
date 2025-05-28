@@ -261,9 +261,11 @@ class PerusahaanController extends Controller
                 }
             }
             
-            return redirect()->route('admin.perusahaan')
+            // Redirect back to edit page with success message
+            return redirect()->route('admin.perusahaan.edit', $id)
                 ->with([
                     'success' => true,
+                    'company_name' => $validated['nama_perusahaan'],
                     'message' => 'Data perusahaan ' . $validated['nama_perusahaan'] . ' berhasil diperbarui'
                 ]);
 
