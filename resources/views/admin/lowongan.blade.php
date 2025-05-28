@@ -12,7 +12,7 @@
                 <a href="#" class="btn-primary bg-amber-500 hover:bg-amber-600">
                     <i class="ph ph-arrow-square-in"></i> Import
                 </a>
-                <a href="#" class="btn-primary">
+                <a href="{{route('admin.lowongan.tambah')}}" class="btn-primary">
                     <i class="ph ph-plus"></i> Tambah Lowongan
                 </a>
             </div>
