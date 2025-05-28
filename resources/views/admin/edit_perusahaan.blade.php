@@ -3,7 +3,7 @@
 @section('content')
     <div class="p-6 space-y-6 bg-white rounded-lg">
         <h1 class="text-xl font-medium text-neutral-900">Edit Perusahaan</h1>
-        <form action="{{ route('admin.perusahaan.update', $perusahaan->id_perusahaan_mitra) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form id="editCompanyForm" action="{{ route('admin.perusahaan.update', $perusahaan->id_perusahaan_mitra) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             @method('PUT')
             <div class="grid grid-cols-2 gap-6">
@@ -147,15 +147,88 @@
                 <a href="{{ route('admin.perusahaan') }}" class="btn-secondary">
                     Batal
                 </a>
-                <button type="submit" class="btn-primary">
+                <button type="button" id="submitEditBtn" class="btn-primary">
                     Perbarui Perusahaan
                 </button>
             </div>
         </form>
     </div>
 
+    <!-- Edit Confirmation Modal -->
+    <div id="editConfirmModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="editConfirmModal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="editConfirmModal-label" class="font-bold text-gray-800 dark:text-white">
+                        Konfirmasi Edit Perusahaan
+                    </h3>
+                    <button type="button" id="closeEditConfirmModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="size-4" />
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <x-lucide-edit class="w-8 h-8 text-amber-600" />
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Konfirmasi Perubahan Data</h4>
+                        <div class="text-left space-y-2 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Nama Perusahaan:</span>
+                                <span id="editConfirmNama" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Jenis Perusahaan:</span>
+                                <span id="editConfirmJenis" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Bidang Industri:</span>
+                                <span id="editConfirmBidang" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Email:</span>
+                                <span id="editConfirmEmail" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Telepon:</span>
+                                <span id="editConfirmTelepon" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Alamat:</span>
+                                <span id="editConfirmAlamat" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Fasilitas:</span>
+                                <span id="editConfirmFasilitas" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div id="editConfirmLogoSection" class="hidden">
+                                <span class="text-sm font-medium text-gray-600">Logo:</span>
+                                <span class="text-sm text-gray-900 ml-2">Logo baru akan diupload</span>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-sm text-gray-600">
+                            Apakah Anda yakin ingin menyimpan perubahan data perusahaan ini?
+                        </p>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="cancelEditConfirm" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                        Batal
+                    </button>
+                    <button type="button" id="confirmEditSubmit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-amber-600 text-white hover:bg-amber-700 focus:outline-hidden focus:bg-amber-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <span id="editConfirmButtonText">Ya, Perbarui</span>
+                        <div id="editConfirmSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading">
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let debounceTimer;
+        let editConfirmModal = null;
 
         // Fungsi untuk mencari alamat menggunakan Nominatim API
         async function searchAddress(query) {
@@ -244,6 +317,86 @@
             document.getElementById('address-suggestions').classList.add('hidden');
         }
 
+        // Validasi form
+        function validateForm() {
+            const requiredFields = [
+                { id: 'nama_perusahaan', name: 'Nama Perusahaan' },
+                { id: 'jenis_perusahaan_id', name: 'Jenis Perusahaan' },
+                { id: 'bidang_industri', name: 'Bidang Industri' },
+                { id: 'email_perusahaan', name: 'Email Perusahaan' },
+                { id: 'nomor_telepon', name: 'Nomor Telepon' },
+                { id: 'alamat_perusahaan', name: 'Alamat Perusahaan' }
+            ];
+
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (!element.value.trim()) {
+                    alert(`${field.name} harus diisi!`);
+                    element.focus();
+                    return false;
+                }
+            }
+
+            // Validasi email
+            const email = document.getElementById('email_perusahaan').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Format email tidak valid!');
+                document.getElementById('email_perusahaan').focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // Menampilkan modal konfirmasi edit
+        function showEditConfirmModal() {
+            // Isi data konfirmasi
+            const namaPerusahaan = document.getElementById('nama_perusahaan').value;
+            const jenisSelect = document.getElementById('jenis_perusahaan_id');
+            const jenisPerusahaan = jenisSelect.options[jenisSelect.selectedIndex].text;
+            const bidangIndustri = document.getElementById('bidang_industri').value;
+            const email = document.getElementById('email_perusahaan').value;
+            const telepon = document.getElementById('nomor_telepon').value;
+            const alamat = document.getElementById('alamat_perusahaan').value;
+            
+            // Dapatkan fasilitas yang dipilih
+            const selectedFasilitas = [];
+            document.querySelectorAll('input[name="fasilitas[]"]:checked').forEach(checkbox => {
+                const label = document.querySelector(`label[for="${checkbox.id}"]`);
+                selectedFasilitas.push(label.textContent.trim());
+            });
+
+            // Check if new logo is uploaded
+            const logoFile = document.getElementById('logo_perusahaan').files[0];
+            const logoSection = document.getElementById('editConfirmLogoSection');
+            
+            if (logoFile) {
+                logoSection.classList.remove('hidden');
+            } else {
+                logoSection.classList.add('hidden');
+            }
+
+            document.getElementById('editConfirmNama').textContent = namaPerusahaan;
+            document.getElementById('editConfirmJenis').textContent = jenisPerusahaan;
+            document.getElementById('editConfirmBidang').textContent = bidangIndustri;
+            document.getElementById('editConfirmEmail').textContent = email;
+            document.getElementById('editConfirmTelepon').textContent = telepon;
+            document.getElementById('editConfirmAlamat').textContent = alamat;
+            document.getElementById('editConfirmFasilitas').textContent = selectedFasilitas.length > 0 ? selectedFasilitas.join(', ') : 'Tidak ada fasilitas dipilih';
+
+            editConfirmModal = new HSOverlay(document.getElementById('editConfirmModal'));
+            editConfirmModal.open();
+        }
+
+        // Menutup modal konfirmasi edit
+        function closeEditConfirmModal() {
+            if (editConfirmModal) {
+                editConfirmModal.close();
+                editConfirmModal = null;
+            }
+        }
+
         // Event listener untuk input alamat
         document.getElementById('alamat_perusahaan').addEventListener('input', function(e) {
             clearTimeout(debounceTimer);
@@ -292,6 +445,49 @@
                     });
                 });
             }
+
+            // Submit button event listener
+            document.getElementById('submitEditBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    showEditConfirmModal();
+                }
+            });
+
+            // Edit confirmation modal event listeners
+            document.getElementById('closeEditConfirmModalBtn').addEventListener('click', closeEditConfirmModal);
+            document.getElementById('cancelEditConfirm').addEventListener('click', closeEditConfirmModal);
+
+            // Confirm edit submit
+            document.getElementById('confirmEditSubmit').addEventListener('click', function() {
+                const confirmBtn = this;
+                const confirmText = document.getElementById('editConfirmButtonText');
+                const confirmSpinner = document.getElementById('editConfirmSpinner');
+
+                // Show loading state
+                confirmBtn.disabled = true;
+                confirmText.textContent = 'Menyimpan...';
+                confirmSpinner.classList.remove('hidden');
+
+                // Submit the form
+                document.getElementById('editCompanyForm').submit();
+            });
+
+            // Close modal when clicking outside
+            document.getElementById('editConfirmModal').addEventListener('click', function(e) {
+                const modalContent = this.querySelector('.bg-white');
+                if (!modalContent.contains(e.target)) {
+                    closeEditConfirmModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && editConfirmModal) {
+                    closeEditConfirmModal();
+                }
+            });
         });
     </script>
 @endsection

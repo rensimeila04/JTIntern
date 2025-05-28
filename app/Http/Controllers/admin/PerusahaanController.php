@@ -214,54 +214,64 @@ class PerusahaanController extends Controller
             'fasilitas.*' => 'exists:fasilitas,id_fasilitas',
         ]);
 
-        // Handle logo upload
-        $logoPath = $perusahaan->logo; // Keep existing logo by default
-        
-        if ($request->hasFile('logo_perusahaan')) {
-            // Delete old logo if it exists and is not a placeholder
-            if ($perusahaan->logo && !str_starts_with($perusahaan->logo, 'images/')) {
-                Storage::disk('public')->delete($perusahaan->logo);
+        try {
+            // Handle logo upload
+            $logoPath = $perusahaan->logo; // Keep existing logo by default
+            
+            if ($request->hasFile('logo_perusahaan')) {
+                // Delete old logo if it exists and is not a placeholder
+                if ($perusahaan->logo && !str_starts_with($perusahaan->logo, 'images/')) {
+                    Storage::disk('public')->delete($perusahaan->logo);
+                }
+                
+                // Upload new logo
+                $file = $request->file('logo_perusahaan');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $logoPath = $file->storeAs('logo_perusahaan', $filename, 'public');
+            }
+
+            // Map form fields to database fields
+            $data = [
+                'nama_perusahaan_mitra' => $validated['nama_perusahaan'],
+                'email' => $validated['email_perusahaan'],
+                'telepon' => $validated['nomor_telepon'],
+                'alamat' => $validated['alamat_perusahaan'],
+                'id_jenis_perusahaan' => $validated['jenis_perusahaan_id'],
+                'bidang_industri' => $validated['bidang_industri'],
+                'tentang' => $validated['tentang_perusahaan'] ?? null,
+                'logo' => $logoPath,
+                'latitude' => $validated['alamat_latitude'] ?? null,
+                'longitude' => $validated['alamat_longitude'] ?? null,
+            ];
+
+            // Update the company
+            $perusahaan->update($data);
+            
+            // Update facilities
+            // Delete existing facilities
+            FasilitasPerusahaanModel::where('id_perusahaan_mitra', $id)->delete();
+            
+            // Save new facilities if selected
+            if (!empty($validated['fasilitas'])) {
+                foreach ($validated['fasilitas'] as $fasilitasId) {
+                    FasilitasPerusahaanModel::create([
+                        'id_perusahaan_mitra' => $id,
+                        'id_fasilitas' => $fasilitasId,
+                    ]);
+                }
             }
             
-            // Upload new logo
-            $file = $request->file('logo_perusahaan');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $logoPath = $file->storeAs('logo_perusahaan', $filename, 'public');
-        }
-
-        // Map form fields to database fields
-        $data = [
-            'nama_perusahaan_mitra' => $validated['nama_perusahaan'],
-            'email' => $validated['email_perusahaan'],
-            'telepon' => $validated['nomor_telepon'],
-            'alamat' => $validated['alamat_perusahaan'],
-            'id_jenis_perusahaan' => $validated['jenis_perusahaan_id'],
-            'bidang_industri' => $validated['bidang_industri'],
-            'tentang' => $validated['tentang_perusahaan'] ?? null,
-            'logo' => $logoPath,
-            'latitude' => $validated['alamat_latitude'] ?? null,
-            'longitude' => $validated['alamat_longitude'] ?? null,
-        ];
-
-        // Update the company
-        $perusahaan->update($data);
-        
-        // Update facilities
-        // Delete existing facilities
-        FasilitasPerusahaanModel::where('id_perusahaan_mitra', $id)->delete();
-        
-        // Save new facilities if selected
-        if (!empty($validated['fasilitas'])) {
-            foreach ($validated['fasilitas'] as $fasilitasId) {
-                FasilitasPerusahaanModel::create([
-                    'id_perusahaan_mitra' => $id,
-                    'id_fasilitas' => $fasilitasId,
+            return redirect()->route('admin.perusahaan')
+                ->with([
+                    'success' => true,
+                    'message' => 'Data perusahaan ' . $validated['nama_perusahaan'] . ' berhasil diperbarui'
                 ]);
-            }
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
         }
-        
-        return redirect()->route('admin.perusahaan')
-            ->with('success', 'Perusahaan mitra berhasil diperbarui');
     }
 
     public function destroy($id)
