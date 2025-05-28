@@ -20,63 +20,75 @@
                             "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100",
                             "optionTemplate": "<div><div class=\"flex items-center\"><div class=\"me-2\" data-icon></div><div class=\"text-gray-800 \" data-title></div></div></div>",
                             "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/></svg></div>"
-                            }' class="hidden">
+                            }' class="hidden" name="perusahaan_id">
                             <option value="">Choose</option>
-                            <option value="AF"
-                                data-hs-select-option='{}'>
+                            <option value="1" selected data-hs-select-option='{}'>
                                 PT. Digital Inovasi Indonesia
                             </option>
-                            <option value="US"
-                                data-hs-select-option='{}'>
+                            <option value="2" data-hs-select-option='{}'>
                                 PT. Teknologi Masa Depan
+                            </option>
+                            <option value="3" data-hs-select-option='{}'>
+                                PT. Solusi Kreatif Nusantara
                             </option>
                         </select>
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Periode Magang</label>
-                        <select
-                            class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                            <option value="" disabled selected>Pilih periode magang</option>
-                            <option>Ganjil 2025</option>
-                            <option>Genap 2026</option>
+                        <select name="periode_magang"
+                            class="py-2.5 sm:py-3 px-4 block w-full text-gray-800 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="" disabled>Pilih periode magang</option>
+                            <option value="ganjil_2025" selected>Ganjil 2025</option>
+                            <option value="genap_2025">Genap 2025</option>
+                            <option value="ganjil_2026">Ganjil 2026</option>
+                            <option value="genap_2026">Genap 2026</option>
                         </select>
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Judul Lowongan</label>
-                        <input type="text"
+                        <input type="text" name="judul_lowongan" value="Frontend Developer Intern"
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
                             placeholder="ex: Frontend Developer">
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Deskripsi</label>
-                        <textarea
+                        <textarea name="deskripsi"
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
-                            rows="3" placeholder="Tambahkan deskripsi lowongan..."></textarea>
+                            rows="3" placeholder="Tambahkan deskripsi lowongan...">Kami mencari mahasiswa yang passionate dalam pengembangan web frontend untuk bergabung dengan tim development kami. Anda akan terlibat dalam pengembangan aplikasi web modern menggunakan teknologi terkini seperti React, Vue.js, dan framework CSS modern.</textarea>
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Persyaratan</label>
-                        <textarea
+                        <textarea name="persyaratan"
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
-                            rows="3" placeholder="Tambahkan persyaratan..."></textarea>
+                            rows="3" placeholder="Tambahkan persyaratan...">- Mahasiswa aktif jurusan Teknik Informatika, Sistem Informasi, atau bidang terkait
+- Memiliki pemahaman dasar HTML, CSS, dan JavaScript
+- Familiar dengan framework frontend (React/Vue.js/Angular)
+- Memiliki pengalaman dengan Git dan version control
+- Mampu bekerja dalam tim dan komunikatif
+- Minimal semester 5</textarea>
                     </div>
                 </div>
                 <div class="space-y-4 w-full">
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Kompetensi</label>
-                        <select
-                            class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                            <option value="" disabled selected>Pilih kompetensi</option>
-                            <option>UI/UX</option>
-                            <option>Backend</option>
+                        <select name="kompetensi_id"
+                            class="py-2.5 sm:py-3 px-4 block w-full text-gray-800 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="" disabled>Pilih kompetensi</option>
+                            <option value="1" selected>Frontend Development</option>
+                            <option value="2">Backend Development</option>
+                            <option value="3">UI/UX Design</option>
+                            <option value="4">Mobile Development</option>
+                            <option value="5">Data Science</option>
                         </select>
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Jenis Magang</label>
-                        <select
-                            class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                            <option value="" disabled selected>Pilih jenis magang</option>
-                            <option>Remote</option>
-                            <option>WFO</option>
+                        <select name="jenis_magang"
+                            class="py-2.5 sm:py-3 px-4 block w-full text-gray-800 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="" disabled>Pilih jenis magang</option>
+                            <option value="remote">Remote</option>
+                            <option value="wfo" selected>WFO (Work From Office)</option>
+                            <option value="hybrid">Hybrid</option>
                         </select>
                     </div>
                     <div class="w-full relative">
@@ -84,8 +96,8 @@
                         <input
                             id="deadlineInput"
                             class="py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500 cursor-pointer"
-                            type="text" placeholder="Pilih deadline" readonly>
-                        <input type="hidden" name="deadline_pendaftaran" id="deadlineHidden">
+                            type="text" placeholder="Pilih deadline" value="15 Agustus 2025" readonly>
+                        <input type="hidden" name="deadline_pendaftaran" id="deadlineHidden" value="2025-08-15">
                         <span class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 pointer-events-none">
                             <i class="ph ph-calendar-days text-xl"></i>
                         </span>
@@ -138,10 +150,10 @@
                             </div>
                         </div>
                     </div>
-                   <div class="flex flex-row gap-4">
-                        <label for="" class="block text-sm font-medium mb-2">Tes seleksi diperlukan</label>
+                   <div class="flex flex-row gap-4 items-center">
+                        <label class="block text-sm font-medium mb-2">Tes seleksi diperlukan</label>
                         <label for="tes-seleksi-switch" class="relative inline-block w-11 h-6 cursor-pointer">
-                            <input type="checkbox" id="tes-seleksi-switch" class="peer sr-only">
+                            <input type="checkbox" id="tes-seleksi-switch" name="tes_seleksi" value="1" checked class="peer sr-only">
                             <span
                                 class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-primary-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
                             <span
@@ -150,14 +162,18 @@
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Informasi Test</label>
-                        <textarea
+                        <textarea name="informasi_test"
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
-                            rows="3" placeholder="Tambahkan informasi test..."></textarea>
+                            rows="3" placeholder="Tambahkan informasi test...">Test akan dilakukan dalam 2 tahap:
+1. Test online berupa coding challenge (JavaScript/React) - 90 menit
+2. Interview teknis dan behavioral - 45 menit
+
+Test online akan dikirim via email 1 hari setelah batas pendaftaran. Interview akan dijadwalkan setelah lolos test online.</textarea>
                     </div>
-                    <div class="flex flex-row gap-4">
-                        <label for="" class="block text-sm font-medium mb-2">Status Pendaftaran</label>
+                    <div class="flex flex-row gap-4 items-center">
+                        <label class="block text-sm font-medium mb-2">Status Pendaftaran</label>
                         <label for="status-pendaftaran-switch" class="relative inline-block w-11 h-6 cursor-pointer">
-                            <input type="checkbox" id="status-pendaftaran-switch" class="peer sr-only">
+                            <input type="checkbox" id="status-pendaftaran-switch" name="status_aktif" value="1" checked class="peer sr-only">
                             <span
                                 class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-primary-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
                             <span
@@ -166,16 +182,18 @@
                     </div>
                 </div>
             </div>
-            <div class="flex justify-end w-full">
+            <div class="flex justify-end gap-3 w-full">
+                <a href="#" class="btn-secondary">
+                    Batal
+                </a>
                 <button type="submit" class="btn-primary">
-                    Edit Lowongan
+                    Simpan Perubahan
                 </button>
             </div>
         </form>
     </div>
-@endsection
 
-<script>
+    <script>
         // Custom Date Picker
         class CustomDatePicker {
             constructor() {
@@ -187,11 +205,22 @@
                 ];
                 
                 this.init();
+                this.loadExistingDate();
             }
             
             init() {
                 this.bindEvents();
                 this.updateCalendar();
+            }
+            
+            loadExistingDate() {
+                // Load existing date from hidden input
+                const hiddenInput = document.getElementById('deadlineHidden');
+                if (hiddenInput.value) {
+                    this.selectedDate = new Date(hiddenInput.value);
+                    this.currentDate = new Date(this.selectedDate);
+                    this.updateCalendar();
+                }
             }
             
             bindEvents() {
@@ -338,3 +367,4 @@
             new CustomDatePicker();
         });
     </script>
+@endsection
