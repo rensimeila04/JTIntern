@@ -39,21 +39,6 @@ class MagangController extends Controller
         ]);
     }
 
-    public function index()
-    {
-        $breadcrumb = [
-            ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Kelola Magang', 'url' => '#'],
-        ];
-
-        $activeMenu = 'kelola-magang';
-        
-        return view('admin.kelola_magang', [
-            'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu
-        ]);
-    }
-
     public function pengajuanDitolak()
     {
         $breadcrumb = [
@@ -85,7 +70,6 @@ class MagangController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
-}
 
     public function permohonanMagang()
     {
