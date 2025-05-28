@@ -3,7 +3,7 @@
 @section('content')
     <div class="p-6 space-y-6 bg-white rounded-lg">
         <h1 class="text-xl font-medium text-neutral-900">Tambah Perusahaan</h1>
-        <form action="{{ route('admin.perusahaan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form id="companyForm" action="{{ route('admin.perusahaan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <div class="grid grid-cols-2 gap-6">
                 <div class="space-y-4 w-full">
@@ -126,15 +126,84 @@
             </div>
 
             <div class="flex justify-end w-full">
-                <button type="submit" class="btn-primary">
+                <button type="button" id="submitBtn" class="btn-primary">
                     Tambahkan Perusahaan
                 </button>
             </div>
         </form>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="confirmModal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="confirmModal-label" class="font-bold text-gray-800 dark:text-white">
+                        Konfirmasi Tambah Perusahaan
+                    </h3>
+                    <button type="button" id="closeConfirmModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="size-4" />
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <x-lucide-building class="w-8 h-8 text-blue-600" />
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Konfirmasi Data Perusahaan</h4>
+                        <div class="text-left space-y-2 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Nama Perusahaan:</span>
+                                <span id="confirmNama" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Jenis Perusahaan:</span>
+                                <span id="confirmJenis" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Bidang Industri:</span>
+                                <span id="confirmBidang" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Email:</span>
+                                <span id="confirmEmail" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Telepon:</span>
+                                <span id="confirmTelepon" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Alamat:</span>
+                                <span id="confirmAlamat" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Fasilitas:</span>
+                                <span id="confirmFasilitas" class="text-sm text-gray-900 ml-2"></span>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-sm text-gray-600">
+                            Apakah Anda yakin ingin menambahkan perusahaan ini?
+                        </p>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="cancelConfirm" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                        Batal
+                    </button>
+                    <button type="button" id="confirmSubmit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <span id="confirmButtonText">Ya, Tambahkan</span>
+                        <div id="confirmSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading">
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let debounceTimer;
+        let confirmModal = null;
 
         // Fungsi untuk mencari alamat menggunakan Nominatim API
         async function searchAddress(query) {
@@ -223,6 +292,76 @@
             document.getElementById('address-suggestions').classList.add('hidden');
         }
 
+        // Validasi form
+        function validateForm() {
+            const requiredFields = [
+                { id: 'nama_perusahaan', name: 'Nama Perusahaan' },
+                { id: 'jenis_perusahaan_id', name: 'Jenis Perusahaan' },
+                { id: 'bidang_industri', name: 'Bidang Industri' },
+                { id: 'email_perusahaan', name: 'Email Perusahaan' },
+                { id: 'nomor_telepon', name: 'Nomor Telepon' },
+                { id: 'alamat_perusahaan', name: 'Alamat Perusahaan' }
+            ];
+
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (!element.value.trim()) {
+                    alert(`${field.name} harus diisi!`);
+                    element.focus();
+                    return false;
+                }
+            }
+
+            // Validasi email
+            const email = document.getElementById('email_perusahaan').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Format email tidak valid!');
+                document.getElementById('email_perusahaan').focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // Menampilkan modal konfirmasi
+        function showConfirmModal() {
+            // Isi data konfirmasi
+            const namaPerusahaan = document.getElementById('nama_perusahaan').value;
+            const jenisSelect = document.getElementById('jenis_perusahaan_id');
+            const jenisPerusahaan = jenisSelect.options[jenisSelect.selectedIndex].text;
+            const bidangIndustri = document.getElementById('bidang_industri').value;
+            const email = document.getElementById('email_perusahaan').value;
+            const telepon = document.getElementById('nomor_telepon').value;
+            const alamat = document.getElementById('alamat_perusahaan').value;
+            
+            // Dapatkan fasilitas yang dipilih
+            const selectedFasilitas = [];
+            document.querySelectorAll('input[name="fasilitas[]"]:checked').forEach(checkbox => {
+                const label = document.querySelector(`label[for="${checkbox.id}"]`);
+                selectedFasilitas.push(label.textContent.trim());
+            });
+
+            document.getElementById('confirmNama').textContent = namaPerusahaan;
+            document.getElementById('confirmJenis').textContent = jenisPerusahaan;
+            document.getElementById('confirmBidang').textContent = bidangIndustri;
+            document.getElementById('confirmEmail').textContent = email;
+            document.getElementById('confirmTelepon').textContent = telepon;
+            document.getElementById('confirmAlamat').textContent = alamat;
+            document.getElementById('confirmFasilitas').textContent = selectedFasilitas.length > 0 ? selectedFasilitas.join(', ') : 'Tidak ada fasilitas dipilih';
+
+            confirmModal = new HSOverlay(document.getElementById('confirmModal'));
+            confirmModal.open();
+        }
+
+        // Menutup modal konfirmasi
+        function closeConfirmModal() {
+            if (confirmModal) {
+                confirmModal.close();
+                confirmModal = null;
+            }
+        }
+
         // Event listener untuk input alamat
         document.getElementById('alamat_perusahaan').addEventListener('input', function(e) {
             clearTimeout(debounceTimer);
@@ -254,9 +393,7 @@
             if (selectAllButton) {
                 selectAllButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('Select All clicked'); // Debug log
                     const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
-                    console.log('Found checkboxes:', checkboxes.length); // Debug log
                     checkboxes.forEach(checkbox => {
                         checkbox.checked = true;
                     });
@@ -267,14 +404,55 @@
             if (deselectAllButton) {
                 deselectAllButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('Deselect All clicked'); // Debug log
                     const checkboxes = document.querySelectorAll('input[name="fasilitas[]"]');
-                    console.log('Found checkboxes:', checkboxes.length); // Debug log
                     checkboxes.forEach(checkbox => {
                         checkbox.checked = false;
                     });
                 });
             }
+
+            // Submit button event listener
+            document.getElementById('submitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    showConfirmModal();
+                }
+            });
+
+            // Modal event listeners
+            document.getElementById('closeConfirmModalBtn').addEventListener('click', closeConfirmModal);
+            document.getElementById('cancelConfirm').addEventListener('click', closeConfirmModal);
+
+            // Confirm submit
+            document.getElementById('confirmSubmit').addEventListener('click', function() {
+                const confirmBtn = this;
+                const confirmText = document.getElementById('confirmButtonText');
+                const confirmSpinner = document.getElementById('confirmSpinner');
+
+                // Show loading state
+                confirmBtn.disabled = true;
+                confirmText.textContent = 'Menyimpan...';
+                confirmSpinner.classList.remove('hidden');
+
+                // Submit the form
+                document.getElementById('companyForm').submit();
+            });
+
+            // Close modal when clicking outside
+            document.getElementById('confirmModal').addEventListener('click', function(e) {
+                const modalContent = this.querySelector('.bg-white');
+                if (!modalContent.contains(e.target)) {
+                    closeConfirmModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && confirmModal) {
+                    closeConfirmModal();
+                }
+            });
         });
     </script>
 @endsection
