@@ -201,9 +201,56 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="successModal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="successModal-label" class="font-bold text-gray-800 dark:text-white">
+                        Berhasil!
+                    </h3>
+                    <button type="button" id="closeSuccessModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="size-4" />
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <x-lucide-check class="w-8 h-8 text-green-600" />
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Perusahaan Berhasil Ditambahkan</h4>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Data perusahaan <span id="successCompanyName" class="font-semibold text-gray-900"></span> telah berhasil disimpan ke dalam sistem.
+                        </p>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                            <div class="flex items-center">
+                                <x-lucide-info class="w-4 h-4 text-green-600 mr-2" />
+                                <p class="text-xs text-green-800">
+                                    Perusahaan dapat langsung digunakan untuk membuat lowongan magang.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="backToListBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                        <x-lucide-list class="w-4 h-4" />
+                        Kembali ke Daftar
+                    </button>
+                    <button type="button" id="addAnotherBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <x-lucide-plus class="w-4 h-4" />
+                        Tambah Lagi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let debounceTimer;
         let confirmModal = null;
+        let successModal = null;
 
         // Fungsi untuk mencari alamat menggunakan Nominatim API
         async function searchAddress(query) {
@@ -362,6 +409,34 @@
             }
         }
 
+        // Show success modal
+        function showSuccessModal(companyName) {
+            console.log('Showing success modal for:', companyName);
+            document.getElementById('successCompanyName').textContent = companyName;
+            
+            // Initialize and show the modal
+            if (window.HSOverlay) {
+                successModal = new HSOverlay(document.getElementById('successModal'));
+                successModal.open();
+            } else {
+                // Fallback if HSOverlay is not available
+                document.getElementById('successModal').classList.remove('hidden');
+                document.getElementById('successModal').classList.add('hs-overlay-open');
+            }
+        }
+
+        // Close success modal
+        function closeSuccessModal() {
+            if (successModal) {
+                successModal.close();
+                successModal = null;
+            } else {
+                // Fallback
+                document.getElementById('successModal').classList.add('hidden');
+                document.getElementById('successModal').classList.remove('hs-overlay-open');
+            }
+        }
+
         // Event listener untuk input alamat
         document.getElementById('alamat_perusahaan').addEventListener('input', function(e) {
             clearTimeout(debounceTimer);
@@ -386,6 +461,24 @@
 
         // Tunggu DOM selesai dimuat sebelum menambahkan event listener
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            // Check if there's a success message in the session
+            @if(session('success'))
+                console.log('Success session found');
+                const companyName = '{{ session('company_name', 'perusahaan') }}';
+                console.log('Company name:', companyName);
+                
+                // Delay showing modal to ensure everything is loaded
+                setTimeout(function() {
+                    showSuccessModal(companyName);
+                }, 500);
+            @endif
+
+            @if(session('error'))
+                alert('{{ session('error') }}');
+            @endif
+
             // Fasilitas checkbox functionality - Select All
             const selectAllButton = document.getElementById('selectAllFasilitas');
             const deselectAllButton = document.getElementById('deselectAllFasilitas');
@@ -439,6 +532,24 @@
                 document.getElementById('companyForm').submit();
             });
 
+            // Success modal event listeners
+            document.getElementById('closeSuccessModalBtn').addEventListener('click', closeSuccessModal);
+            
+            document.getElementById('backToListBtn').addEventListener('click', function() {
+                window.location.href = '{{ route("admin.perusahaan") }}';
+            });
+            
+            document.getElementById('addAnotherBtn').addEventListener('click', function() {
+                closeSuccessModal();
+                // Reset form
+                document.getElementById('companyForm').reset();
+                // Clear address coordinates
+                document.getElementById('alamat_latitude').value = '';
+                document.getElementById('alamat_longitude').value = '';
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
             // Close modal when clicking outside
             document.getElementById('confirmModal').addEventListener('click', function(e) {
                 const modalContent = this.querySelector('.bg-white');
@@ -447,10 +558,22 @@
                 }
             });
 
+            // Close success modal when clicking outside
+            document.getElementById('successModal').addEventListener('click', function(e) {
+                const modalContent = this.querySelector('.bg-white');
+                if (!modalContent.contains(e.target)) {
+                    closeSuccessModal();
+                }
+            });
+
             // Close modal with Escape key
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && confirmModal) {
-                    closeConfirmModal();
+                if (e.key === 'Escape') {
+                    if (confirmModal) {
+                        closeConfirmModal();
+                    } else if (successModal) {
+                        closeSuccessModal();
+                    }
                 }
             });
         });

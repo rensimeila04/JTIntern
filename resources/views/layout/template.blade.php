@@ -55,8 +55,16 @@
     <!-- Preline JS -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            HSOverlay.autoInit();
-            HSDropdown.autoInit();
+            if (typeof HSOverlay !== 'undefined') {
+                HSOverlay.autoInit();
+                console.log('HSOverlay initialized');
+            } else {
+                console.error('HSOverlay not found');
+            }
+            
+            if (typeof HSDropdown !== 'undefined') {
+                HSDropdown.autoInit();
+            }
         });
     </script>
     @stack('js')

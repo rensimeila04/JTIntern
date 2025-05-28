@@ -113,47 +113,58 @@ class PerusahaanController extends Controller
             'fasilitas.*' => 'exists:fasilitas,id_fasilitas',
         ]);
 
-        // Handle logo upload
-        $logoPath = null;
-        
-        if ($request->hasFile('logo_perusahaan')) {
-            // Create custom filename with timestamp
-            $file = $request->file('logo_perusahaan');
-            $filename = time() . '_' . $file->getClientOriginalName();
+        try {
+            // Handle logo upload
+            $logoPath = null;
             
-            // Store in public/storage/logo_perusahaan directory
-            $logoPath = $file->storeAs('logo_perusahaan', $filename, 'public');
-        }
-
-        // Map form fields to database fields
-        $data = [
-            'nama_perusahaan_mitra' => $validated['nama_perusahaan'],
-            'email' => $validated['email_perusahaan'],
-            'telepon' => $validated['nomor_telepon'],
-            'alamat' => $validated['alamat_perusahaan'],
-            'id_jenis_perusahaan' => $validated['jenis_perusahaan_id'],
-            'bidang_industri' => $validated['bidang_industri'],
-            'tentang' => $validated['tentang_perusahaan'] ?? null,
-            'logo' => $logoPath,
-            'latitude' => $validated['alamat_latitude'] ?? null,
-            'longitude' => $validated['alamat_longitude'] ?? null,
-        ];
-
-        // Create the company
-        $perusahaan = PerusahaanMitraModel::create($data);
-        
-        // Save facilities if selected
-        if (!empty($validated['fasilitas'])) {
-            foreach ($validated['fasilitas'] as $fasilitasId) {
-                FasilitasPerusahaanModel::create([
-                    'id_perusahaan_mitra' => $perusahaan->id_perusahaan_mitra,
-                    'id_fasilitas' => $fasilitasId,
-                ]);
+            if ($request->hasFile('logo_perusahaan')) {
+                // Create custom filename with timestamp
+                $file = $request->file('logo_perusahaan');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                // Store in public/storage/logo_perusahaan directory
+                $logoPath = $file->storeAs('logo_perusahaan', $filename, 'public');
             }
+
+            // Map form fields to database fields
+            $data = [
+                'nama_perusahaan_mitra' => $validated['nama_perusahaan'],
+                'email' => $validated['email_perusahaan'],
+                'telepon' => $validated['nomor_telepon'],
+                'alamat' => $validated['alamat_perusahaan'],
+                'id_jenis_perusahaan' => $validated['jenis_perusahaan_id'],
+                'bidang_industri' => $validated['bidang_industri'],
+                'tentang' => $validated['tentang_perusahaan'] ?? null,
+                'logo' => $logoPath,
+                'latitude' => $validated['alamat_latitude'] ?? null,
+                'longitude' => $validated['alamat_longitude'] ?? null,
+            ];
+
+            // Create the company
+            $perusahaan = PerusahaanMitraModel::create($data);
+            
+            // Save facilities if selected
+            if (!empty($validated['fasilitas'])) {
+                foreach ($validated['fasilitas'] as $fasilitasId) {
+                    FasilitasPerusahaanModel::create([
+                        'id_perusahaan_mitra' => $perusahaan->id_perusahaan_mitra,
+                        'id_fasilitas' => $fasilitasId,
+                    ]);
+                }
+            }
+            
+            return redirect()->route('admin.perusahaan.create')
+                ->with([
+                    'success' => true,
+                    'company_name' => $validated['nama_perusahaan'],
+                    'message' => 'Perusahaan mitra berhasil ditambahkan'
+                ]);
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
         }
-        
-        return redirect()->route('admin.perusahaan')
-            ->with('success', 'Perusahaan mitra berhasil ditambahkan');
     }
 
     public function edit($id)
