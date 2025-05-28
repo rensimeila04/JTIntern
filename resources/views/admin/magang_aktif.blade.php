@@ -76,115 +76,107 @@
                             <thead class="bg-gray-50 dark:bg-neutral-700">
                                 <tr>
                                     <th scope="col"
-                                        class="w-4 px-6 py-6 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-12 px-3 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         ID</th>
                                     <th scope="col"
-                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-32 px-3 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Nama Mahasiswa</th>
                                     <th scope="col"
-                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-40 px-3 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Judul Lowongan</th>
                                     <th scope="col"
-                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-36 px-3 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Nama Perusahaan</th>
                                     <th scope="col"
-                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-24 px-3 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Status</th>
                                     <th scope="col"
-                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-36 px-3 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Dosen Pembimbing</th>
                                     <th scope="col"
-                                        class="w-4 px-5 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400 whitespace-nowrap">
+                                        class="w-24 px-3 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400 whitespace-nowrap">
                                         Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                 <tr>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         1
                                     </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        Atthalaric Nero M
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        <div class="truncate max-w-32">Atthalaric Nero M</div>
                                     </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        Machine Learning Trainer
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        <div class="truncate max-w-40" title="Machine Learning Trainer">Machine Learning
+                                            Trainer</div>
                                     </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        Kementerian Komunikasi Digital
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        <div class="truncate max-w-36" title="Kementerian Komunikasi Digital">Kementerian
+                                            Komunikasi Digital</div>
                                     </td>
                                     <!-- Kolom Status -->
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         <span
-                                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-blue-600 text-blue-600 dark:text-blue-500">Magang</span>
+                                            class="inline-flex items-center gap-x-1 py-1 px-2 rounded-md text-xs font-medium border border-blue-600 text-blue-600 dark:text-blue-500">Magang</span>
                                     </td>
                                     <!-- Kolom Dosen Pembimbing -->
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        Dr. Ahmad Syauqi, M.Kom
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        <div class="truncate max-w-36" title="Dr. Ahmad Syauqi, M.Kom">Dr. Ahmad Syauqi,
+                                            M.Kom</div>
                                     </td>
-                                    <td class="px-5 py-4 whitespace-nowrap text-sm font-medium text-end">
-                                        <div class="flex justify-end gap-2">
+                                    <td class="px-3 py-3 text-sm font-medium">
+                                        <div class="flex justify-start gap-1">
                                             <a href="#"
-                                                class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-files class="w-4 h-4 text-primary-500" />
                                             </a>
                                             <a href="#"
-                                                class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
                                             </a>
                                             <a href="#"
-                                                class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-trash-2 class="w-4 h-4 text-red-500" />
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         2
                                     </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        Michelle Alexandra
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        <div class="truncate max-w-32">Michelle Alexandra</div>
                                     </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        Machine Learning
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        <div class="truncate max-w-40" title="Machine Learning">Machine Learning</div>
                                     </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        Kementerian Komunikasi Digital
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        <div class="truncate max-w-36" title="Kementerian Komunikasi Digital">Kementerian
+                                            Komunikasi Digital</div>
                                     </td>
                                     <!-- Kolom Status -->
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         <span
-                                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-teal-500 text-teal-500">
+                                            class="inline-flex items-center gap-x-1 py-1 px-2 rounded-md text-xs font-medium border border-teal-500 text-teal-500">
                                             Diterima </span>
                                     </td>
                                     <!-- Kolom Dosen Pembimbing -->
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-400 dark:text-neutral-200">
-                                        Belum Ditambahkan
+                                    <td class="px-3 py-3 text-sm font-medium text-neutral-400 dark:text-neutral-200">
+                                        <div class="truncate max-w-36">Belum Ditambahkan</div>
                                     </td>
-                                    <td class="px-5 py-4 whitespace-nowrap text-sm font-medium text-end">
-                                        <div class="flex justify-end gap-2">
+                                    <td class="px-3 py-3 text-sm font-medium">
+                                        <div class="flex justify-start gap-1">
                                             <a href="#"
-                                                class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-files class="w-4 h-4 text-primary-500" />
                                             </a>
                                             <a href="#"
-                                                class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
                                             </a>
                                             <a href="#"
-                                                class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-trash-2 class="w-4 h-4 text-red-500" />
                                             </a>
                                         </div>

@@ -62,28 +62,26 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/periode-magang', [PeriodeController::class, 'index'])
             ->name('admin.periode_magang');
-        Route::prefix('kelola-magang')->name('admin.kelola_magang')->group(function () {
+            
+        Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
             Route::get('/', [MagangController::class, 'index']);
             Route::get('/permohonan-magang', [MagangController::class, 'permohonanMagang'])->name('.permohonan_magang');
             Route::get('/magang-aktif', [MagangController::class, 'magangAktif'])->name('.magang_aktif');
+            Route::get('/pengajuan-ditolak', [MagangController::class, 'pengajuanDitolak'])->name('.pengajuan_ditolak');
+            Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat_magang');
+            Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
         });
+        
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
             Route::post('/tambah', [LowonganController::class, 'storeLowongan'])->name('.store');
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
             Route::get('{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
-
         });
+        
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');
-        Route::get('/magang/{id}', [MagangController::class, 'detailMagang'])
-            ->name('admin.detail_magang');
-        Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
-            Route::get('/', [MagangController::class, 'index']);
-            Route::get('/pengajuan-ditolak', [MagangController::class, 'pengajuanDitolak'])->name('.pengajuan-ditolak');
-            Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat-magang');
-        });
     });
 
     // Dosen Routes
