@@ -21,27 +21,27 @@
                             <thead class="bg-gray-50 dark:bg-neutral-700">
                                 <tr>
                                     <th scope="col"
-                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-fit px-3 py-1.5 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         ID
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-1/6 px-3 py-1.5 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Nama Mahasiswa
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-1/5 px-3 py-1.5 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Judul Lowongan
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-1/6 px-3 py-1.5 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Nama Perusahaan
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
+                                        class="w-1/6 px-3 py-1.5 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Dosen Pembimbing
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400 ">
+                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-400">
                                         Sertifikat
                                     </th>
                                     <th scope="col"
@@ -52,27 +52,22 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                 <tr>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         1
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Atthalaric Nero M
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-36 truncate">
                                         Machine Learning Trainer
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         PT Global Tiket Network
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Belum ditambahkan
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -84,7 +79,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -102,27 +97,22 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         2
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Chiko Abilla Basya
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-36 truncate">
                                         Frontend Developer
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         PT PLN (Persero)
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Belum ditambahkan
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -134,7 +124,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -152,27 +142,22 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         3
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Leon Shan Yoedha Adjie
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-36 truncate">
                                         Frontend Developer
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Illiyin Studio
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Ubaidillah S.Kom. M.Kom
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -184,7 +169,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -202,27 +187,22 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         4
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Rafa Fadil Aras
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-36 truncate">
                                         System Analyst
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Kementrian Komunikasi dan Digital
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Andi Wijaya S.Kom. M.Kom
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -234,7 +214,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -252,27 +232,22 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         5
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Rensi Meila Yulvinata
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-36 truncate">
                                         UI/UX Design Internship
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         PT Telekomunikasi Indonesia
                                     </td>
-                                    <td
-                                        class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-48 truncate">
+                                    <td class="px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-neutral-200 max-w-32 truncate">
                                         Jafar Hidayatullah S.Kom. M.Kom
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
@@ -284,7 +259,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium text-end">
+                                    <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-start gap-2">
                                             <a href="#"
                                                 class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
