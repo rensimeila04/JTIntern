@@ -48,10 +48,18 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_mahasiswa');
         Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])
             ->name('admin.detail_admin');
-        Route::get('/perusahaan', [PerusahaanController::class, 'index'])
-            ->name('admin.perusahaan');
-        Route::get('/perusahaan/{id}', [PerusahaanController::class, 'detail'])
-            ->name('admin.detail_perusahaan');
+        
+        // Perusahaan routes - reordered for proper route matching
+        Route::prefix('perusahaan')->name('admin.perusahaan')->group(function () {
+            Route::get('/', [PerusahaanController::class, 'index'])->name('');
+            Route::get('/tambah', [PerusahaanController::class, 'create'])->name('.create');
+            Route::post('/tambah', [PerusahaanController::class, 'store'])->name('.store');
+            Route::get('/{id}/edit', [PerusahaanController::class, 'edit'])->name('.edit');
+            Route::put('/{id}', [PerusahaanController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('.destroy');
+            Route::get('/{id}', [PerusahaanController::class, 'detail'])->name('.detail');
+        });
+        
         Route::get('/periode-magang', [PeriodeController::class, 'index'])
             ->name('admin.periode_magang');
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {

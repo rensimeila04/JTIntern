@@ -21,7 +21,22 @@ class PerusahaanMitraModel extends Model
         'email',
         'telepon',
         'tentang',
+        'logo',
+        'latitude',
+        'longitude',
     ];
+
+    // Add accessor for logo URL
+    public function getLogoUrlAttribute()
+    {
+        if (str_starts_with($this->logo, 'images/')) {
+            // Placeholder image - use asset helper
+            return asset($this->logo);
+        } else {
+            // Uploaded image - use storage helper
+            return asset('storage/' . $this->logo);
+        }
+    }
 
     public function jenisPerusahaan(){
         return $this->belongsTo(JenisPerusahaanModel::class, 'id_jenis_perusahaan', 'id_jenis_perusahaan');

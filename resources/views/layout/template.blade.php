@@ -6,6 +6,7 @@
     <link rel="icon" href="{{ asset('images/logo_icon.png') }}" type="image/png" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'JTIntern' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@900&family=Inter:wght@400;500;600&display=swap"
@@ -54,8 +55,16 @@
     <!-- Preline JS -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            HSOverlay.autoInit();
-            HSDropdown.autoInit();
+            if (typeof HSOverlay !== 'undefined') {
+                HSOverlay.autoInit();
+                console.log('HSOverlay initialized');
+            } else {
+                console.error('HSOverlay not found');
+            }
+            
+            if (typeof HSDropdown !== 'undefined') {
+                HSDropdown.autoInit();
+            }
         });
     </script>
     @stack('js')
