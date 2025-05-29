@@ -34,8 +34,24 @@
     </div>
 
     <div class="flex">
-        <!-- Include Sidebar -->
-        @include('layout.sidebar_admin')
+        <!-- Include Sidebar based on user level -->
+        @if(Auth::check())
+            @php
+                $levelCode = Auth::user()->level->kode_level ?? '';
+            @endphp
+            
+            @if($levelCode === 'ADM')
+                @include('layout.sidebar_admin')
+            @elseif($levelCode === 'MHS')
+                @include('layout.sidebar_mahasiswa')
+            @elseif($levelCode === 'DSP')
+                @include('layout.sidebar_dosen')
+            @else
+                @include('layout.sidebar_admin')
+            @endif
+        @else
+            @include('layout.sidebar_admin')
+        @endif
 
         <!-- Content -->
         <div class="w-full lg:ps-60">

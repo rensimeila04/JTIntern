@@ -12,9 +12,9 @@
     <div class="px-4 py-6 flex flex-col gap-4">
         <!-- Dashboard -->
         <a href="{{ route('mahasiswa.dashboard') }}"
-            class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group ">
-            <x-lucide-house class="size-6 text-neutral-500 group-hover:text-primary-600" stroke-width="1.5" />
-            <div class=" text-base text-neutral-500 font-normal group-hover:text-primary-600">Dashboard</div>
+            class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'dashboard' ? 'bg-primary-100' : '' }}">
+            <x-lucide-house class="size-6 {{ ($activeMenu ?? '') == 'dashboard' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600" stroke-width="1.5" />
+            <div class="{{ ($activeMenu ?? '') == 'dashboard' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Dashboard</div>
         </a>
 
         <!-- Manajemen Magang Section -->
@@ -22,24 +22,24 @@
             <p class="text-neutral-400 text-xs font-medium">Manajemen Magang</p>
             <div class="flex flex-col gap-2">
                 <a href="#"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group ">
-                    <x-lucide-briefcase class="size-6 text-neutral-500 group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'lowongan' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-briefcase class="size-6 {{ ($activeMenu ?? '') == 'lowongan' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class=" text-base text-neutral-500 font-normal group-hover:text-primary-600">Lowongan
+                    <div class="{{ ($activeMenu ?? '') == 'lowongan' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Lowongan
                     </div>
                 </a>
                 <a href="#"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group ">
-                    <x-lucide-file-text class="size-6 text-neutral-500  group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'rincian-magang' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-file-text class="size-6 {{ ($activeMenu ?? '') == 'rincian-magang' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class=" text-base text-neutral-500 font-normal group-hover:text-primary-600">Rincian
+                    <div class="{{ ($activeMenu ?? '') == 'rincian-magang' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Rincian
                         Magang</div>
                 </a>
                 <a href="#"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group ">
-                    <x-lucide-activity class="size-6 text-neutral-500 group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'log-aktivitas' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-activity class="size-6 {{ ($activeMenu ?? '') == 'log-aktivitas' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class=" text-base text-neutral-500 font-normal group-hover:text-primary-600">Log
+                    <div class="{{ ($activeMenu ?? '') == 'log-aktivitas' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Log
                         Aktivitas</div>
                 </a>
             </div>
