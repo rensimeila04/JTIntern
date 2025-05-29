@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class LowonganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -21,9 +21,49 @@ class LowonganController extends Controller
 
         $activeMenu = 'lowongan';
 
+        // Query builder untuk lowongan dengan relasi
+        $query = LowonganModel::with(['perusahaanMitra', 'periodeMagang', 'kompetensi']);
+
+        // Filter berdasarkan periode
+        if ($request->filled('periode') && $request->periode != 'all') {
+            $query->where('id_periode_magang', $request->periode);
+        }
+
+        // Filter berdasarkan perusahaan
+        if ($request->filled('perusahaan') && $request->perusahaan != 'all') {
+            $query->where('id_perusahaan_mitra', $request->perusahaan);
+        }
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('deskripsi', 'LIKE', "%{$searchTerm}%")
+                  ->orWhereHas('perusahaanMitra', function($q) use ($searchTerm) {
+                      $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
+                  })
+                  ->orWhereHas('kompetensi', function($q) use ($searchTerm) {
+                      $q->where('nama_kompetensi', 'LIKE', "%{$searchTerm}%");
+                  });
+            });
+        }
+
+        $lowongan = $query->orderBy('created_at', 'desc')->paginate(5)->appends($request->query());
+        
+        // Data untuk dropdown filter
+        $periodeList = PeriodeMagangModel::all();
+        $perusahaanList = PerusahaanMitraModel::all();
+
         return view('admin.lowongan', [
             'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu
+            'activeMenu' => $activeMenu,
+            'lowongan' => $lowongan,
+            'periodeList' => $periodeList,
+            'perusahaanList' => $perusahaanList,
+            'currentPeriode' => $request->periode ?? 'all',
+            'currentPerusahaan' => $request->perusahaan ?? 'all',
+            'currentSearch' => $request->search ?? ''
         ]);
     }
 
@@ -31,16 +71,20 @@ class LowonganController extends Controller
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Lowongan', 'url' => '#'],
+            ['label' => 'Lowongan', 'url' => route('admin.lowongan')],
             ['label' => 'Detail Lowongan', 'url' => '#'],
         ];
 
         $activeMenu = 'lowongan';
 
+        // Ambil data lowongan dengan relasi
+        $lowongan = LowonganModel::with(['perusahaanMitra', 'periodeMagang', 'kompetensi'])
+                                 ->findOrFail($id);
+
         return view('admin.detail_lowongan', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
-            'id' => $id
+            'lowongan' => $lowongan
         ]);
     }
 
