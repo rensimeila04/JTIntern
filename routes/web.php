@@ -80,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
             Route::get('/{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
             Route::put('/{id}', [LowonganController::class, 'updateLowongan'])->name('.update');
+            Route::delete('/{id}', [LowonganController::class, 'destroyLowongan'])->name('.destroy');
         });
         
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])

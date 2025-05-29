@@ -229,4 +229,37 @@ class LowonganController extends Controller
             'message' => 'Data lowongan berhasil diperbarui'
         ]);
     }
+
+    public function destroyLowongan($id)
+    {
+        try {
+            $lowongan = LowonganModel::findOrFail($id);
+            
+            // Check if lowongan has active applications/magang
+            // Uncomment this if you have magang/application model
+            // if ($lowongan->magang()->exists()) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Lowongan tidak dapat dihapus karena sudah memiliki pendaftar'
+            //     ], 422);
+            // }
+            
+            $judulLowongan = $lowongan->judul_lowongan;
+            $perusahaanNama = $lowongan->perusahaanMitra->nama_perusahaan_mitra;
+            
+            // Delete the lowongan
+            $lowongan->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => "Lowongan '{$judulLowongan}' dari {$perusahaanNama} berhasil dihapus"
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus lowongan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
