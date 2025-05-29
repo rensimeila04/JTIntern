@@ -145,7 +145,7 @@
                                 class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
                         </label>
                     </div>
-                    <div class="w-full">
+                    <div id="informasiTestContainer" class="w-full hidden">
                         <label class="block text-sm font-medium mb-2">Informasi Test</label>
                         <textarea name="informasi_test"
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
@@ -322,6 +322,32 @@
         // Initialize date picker when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             new CustomDatePicker();
+            
+            // Toggle informasi test visibility
+            const testCheckbox = document.getElementById('test');
+            const informasiTestContainer = document.getElementById('informasiTestContainer');
+            const informasiTestTextarea = informasiTestContainer.querySelector('textarea[name="informasi_test"]');
+            
+            // Function to toggle informasi test
+            function toggleInformasiTest() {
+                if (testCheckbox.checked) {
+                    informasiTestContainer.classList.remove('hidden');
+                    // Make textarea required when test is enabled
+                    informasiTestTextarea.setAttribute('required', 'required');
+                } else {
+                    informasiTestContainer.classList.add('hidden');
+                    // Remove required attribute when test is disabled
+                    informasiTestTextarea.removeAttribute('required');
+                    // Clear the textarea value
+                    informasiTestTextarea.value = '';
+                }
+            }
+            
+            // Add event listener for checkbox change
+            testCheckbox.addEventListener('change', toggleInformasiTest);
+            
+            // Initialize state on page load
+            toggleInformasiTest();
         });
 
         document.querySelector('form').addEventListener('submit', function (e) {
