@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('name', 100);
+            $table->string('profile_photo')->nullable();
             $table->timestamps();
 
             $table->foreign('id_level')->references('id_level')->on('level');

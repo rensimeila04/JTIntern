@@ -90,11 +90,12 @@
                 <button id="user-dropdown" type="button"
                     class="hs-dropdown-toggle self-stretch py-4 flex justify-start items-center gap-2"
                     aria-haspopup="menu" aria-expanded="false" aria-label="User menu">
-                    <img class="size-9 rounded-full" src="https://randomuser.me/api/portraits/men/33.jpg"
-                        alt="User profile">
-                    <div>
-                        <div class="text-black text-xs font-medium">Rizky Wahyu</div>
-                        <div class="text-neutral-400 text-xs">Administrator</div>
+                    <img class="size-9 rounded-full"
+                         src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/avatar.svg') }}"
+                         alt="User profile">
+                    <div class="flex flex-col justify-start text-left">
+                        <div class="text-black text-xs font-medium">{{ Auth::user()->name }}</div>
+                        <div class="text-neutral-400 text-xs">{{ Auth::user()->level->nama_level }}</div>
                     </div>
                     <x-lucide-chevron-down class="size-6 text-neutral-400 hs-dropdown-open:rotate-180"
                         stroke-width="1.5" />
@@ -103,8 +104,8 @@
                 <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg -mt-1 z-50"
                     role="menu" aria-orientation="vertical" aria-labelledby="user-dropdown">
                     <div class="py-3 px-4 border-b border-neutral-200">
-                        <p class="text-sm text-neutral-500">Signed in as</p>
-                        <p class="text-sm font-medium text-neutral-800">rizky.wahyu@jtintern.com</p>
+                        <p class="text-sm text-neutral-500">Masuk sebagai</p>
+                        <p class="text-sm font-medium text-neutral-800">{{ Auth::user()->email }}</p>
                     </div>
                     <div class="p-1 space-y-0.5">
                         <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-neutral-800 hover:bg-neutral-100 focus:outline-hidden focus:bg-neutral-100"
