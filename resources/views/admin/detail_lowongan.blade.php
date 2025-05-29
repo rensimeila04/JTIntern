@@ -29,9 +29,10 @@
                                 {{ $lowongan->status_pendaftaran ? 'Aktif Merekrut' : 'Tidak Aktif' }}
                             </span>
                         </div>
-                        <p class="text-primary-500 text-base font-normal">
+                        <a href="{{ route('admin.perusahaan.detail', $lowongan->perusahaanMitra->id_perusahaan_mitra) }}"
+                            class="text-primary-500 text-base font-normal hover:text-primary-700 hover:underline transition-colors duration-200 w-fit block">
                             {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}
-                        </p>
+                        </a>
                     </div>
                     <div class="flex flex-row gap-10 items-start">
                         <div class="flex flex-col gap-2">
