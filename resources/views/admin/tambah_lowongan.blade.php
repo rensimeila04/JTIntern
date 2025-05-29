@@ -22,9 +22,14 @@
                         }' name="id_perusahaan_mitra" required class="hidden">
                             <option value="">Pilih perusahaan</option>
                             @foreach($perusahaan as $p)
-                                <option value="{{ $p->id_perusahaan_mitra }}">{{ $p->nama_perusahaan_mitra }}</option>
+                                <option value="{{ $p->id_perusahaan_mitra }}" {{ old('id_perusahaan_mitra') == $p->id_perusahaan_mitra ? 'selected' : '' }}>
+                                    {{ $p->nama_perusahaan_mitra }}
+                                </option>
                             @endforeach
                         </select>
+                        @error('id_perusahaan_mitra')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Periode Magang</label>
@@ -32,27 +37,41 @@
                             class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                             <option value="" disabled selected>Pilih periode magang</option>
                             @foreach($periode as $pr)
-                                <option value="{{ $pr->id_periode_magang }}">{{ $pr->nama_periode }}</option>
+                                <option value="{{ $pr->id_periode_magang }}" {{ old('id_periode_magang') == $pr->id_periode_magang ? 'selected' : '' }}>
+                                    {{ $pr->nama_periode }}
+                                </option>
                             @endforeach
                         </select>
+                        @error('id_periode_magang')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Judul Lowongan</label>
-                        <input type="text" name="judul_lowongan" required
+                        <input type="text" name="judul_lowongan" required value="{{ old('judul_lowongan') }}"
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
                             placeholder="ex: Frontend Developer">
+                        @error('judul_lowongan')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Deskripsi</label>
                         <textarea name="deskripsi" required
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
-                            rows="3" placeholder="Tambahkan deskripsi lowongan..."></textarea>
+                            rows="3" placeholder="Tambahkan deskripsi lowongan...">{{ old('deskripsi') }}</textarea>
+                        @error('deskripsi')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Persyaratan</label>
                         <textarea name="persyaratan" required
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
-                            rows="3" placeholder="Tambahkan persyaratan..."></textarea>
+                            rows="3" placeholder="Tambahkan persyaratan...">{{ old('persyaratan') }}</textarea>
+                        @error('persyaratan')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
                 <div class="space-y-4 w-full">
@@ -62,19 +81,27 @@
                             class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                             <option value="" disabled selected>Pilih kompetensi</option>
                             @foreach($kompetensi as $k)
-                                <option value="{{ $k->id_kompetensi }}">{{ $k->nama_kompetensi }}</option>
+                                <option value="{{ $k->id_kompetensi }}" {{ old('id_kompetensi') == $k->id_kompetensi ? 'selected' : '' }}>
+                                    {{ $k->nama_kompetensi }}
+                                </option>
                             @endforeach
                         </select>
+                        @error('id_kompetensi')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Jenis Magang</label>
                         <select name="jenis_magang" required
                             class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                             <option value="" disabled selected>Pilih jenis magang</option>
-                            <option value="wfo">WFO</option>
-                            <option value="remote">Remote</option>
-                            <option value="hybrid">Hybrid</option>
+                            <option value="wfo" {{ old('jenis_magang') == 'wfo' ? 'selected' : '' }}>WFO</option>
+                            <option value="remote" {{ old('jenis_magang') == 'remote' ? 'selected' : '' }}>Remote</option>
+                            <option value="hybrid" {{ old('jenis_magang') == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
                         </select>
+                        @error('jenis_magang')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="w-full relative">
                         <label class="block text-sm font-medium mb-2">Deadline Pendaftaran</label>
@@ -82,10 +109,13 @@
                             id="deadlineInput"
                             class="py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500 cursor-pointer"
                             type="text" placeholder="Pilih deadline" readonly>
-                        <input type="hidden" name="deadline_pendaftaran" id="deadlineHidden">
+                        <input type="hidden" name="deadline_pendaftaran" id="deadlineHidden" value="{{ old('deadline_pendaftaran') }}">
                         <span class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 pointer-events-none">
                             <i class="ph ph-calendar-days text-xl"></i>
                         </span>
+                        @error('deadline_pendaftaran')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                         
                         <!-- Custom Date Picker -->
                         <div id="datePicker" class="absolute top-full left-0 mt-2 z-50 hidden">
@@ -138,18 +168,21 @@
                     <div class="flex flex-row gap-4 items-center">
                         <label class="block text-sm font-medium mb-2">Tes seleksi diperlukan</label>
                         <label for="test" class="relative inline-block w-11 h-6 cursor-pointer">
-                            <input type="checkbox" id="test" name="test" value="1" class="peer sr-only">
+                            <input type="checkbox" id="test" name="test" value="1" class="peer sr-only" {{ old('test') ? 'checked' : '' }}>
                             <span
                                 class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-primary-500"></span>
                             <span
                                 class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
                         </label>
                     </div>
-                    <div id="informasiTestContainer" class="w-full hidden">
+                    <div id="informasiTestContainer" class="w-full {{ old('test') ? '' : 'hidden' }}">
                         <label class="block text-sm font-medium mb-2">Informasi Test</label>
                         <textarea name="informasi_test"
                             class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
-                            rows="3" placeholder="Tambahkan informasi test..."></textarea>
+                            rows="3" placeholder="Tambahkan informasi test...">{{ old('informasi_test') }}</textarea>
+                        @error('informasi_test')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -160,6 +193,32 @@
             </div>
         </form>
     </div>
+
+    <!-- Success Modal -->
+    @if(session('success'))
+    <div id="successModal" class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 bg-black opacity-25"></div>
+            <div class="relative bg-white rounded-lg max-w-md mx-auto p-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ph ph-check text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Berhasil!</h3>
+                    <p class="text-sm text-gray-500 mb-4">{{ session('success') }}</p>
+                    <div class="flex gap-2 justify-center">
+                        <a href="{{ route('admin.lowongan') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                            Lihat Daftar Lowongan
+                        </a>
+                        <a href="{{ route('admin.lowongan.tambah') }}" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
+                            Tambah Lagi
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <script>
         // Custom Date Picker
@@ -178,6 +237,15 @@
             init() {
                 this.bindEvents();
                 this.updateCalendar();
+                this.loadExistingDate();
+            }
+            
+            loadExistingDate() {
+                const deadlineHidden = document.getElementById('deadlineHidden');
+                if (deadlineHidden.value) {
+                    const existingDate = new Date(deadlineHidden.value);
+                    this.selectDate(existingDate);
+                }
             }
             
             bindEvents() {
@@ -348,26 +416,14 @@
             
             // Initialize state on page load
             toggleInformasiTest();
-        });
 
-        document.querySelector('form').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const form = e.target;
-            const data = new FormData(form);
-            fetch(form.action, {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                body: data
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        alert('Lowongan berhasil ditambahkan!');
-                        window.location.href = "{{ route('admin.lowongan') }}";
-                    } else {
-                        alert('Gagal menambah lowongan');
-                    }
-                });
+            // Auto-close success modal after 5 seconds
+            const successModal = document.getElementById('successModal');
+            if (successModal) {
+                setTimeout(() => {
+                    successModal.style.display = 'none';
+                }, 5000);
+            }
         });
     </script>
 @endsection
