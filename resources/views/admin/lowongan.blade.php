@@ -104,25 +104,29 @@
                 <div class="flex">
                     <img src="{{ $item->perusahaanMitra->logo ? Storage::url($item->perusahaanMitra->logo) : asset('Images/placeholder_perusahaan.png') }}"
                         alt="{{ $item->perusahaanMitra->nama_perusahaan_mitra }}" class="w-30 h-30 rounded-lg object-contain">
-                    <div class="flex flex-col pl-6 gap-y-1">
-                        <div class="flex gap-4 items-center">
-                            <h4 class="font-semibold">{{ $item->judul_lowongan }}</h4>
-                            <p
-                                class="rounded-md border {{ $item->status_pendaftaran ? 'border-teal-500 text-teal-500' : 'border-red-500 text-red-500' }} p-1 text-xs">
-                                {{ $item->status_pendaftaran ? 'Aktif Merekrut' : 'Tidak Aktif' }}
+                    <div class="flex flex-col pl-6 gap-y-4">
+                        <div class="flex flex-col space-y-1">
+                            <div class="flex gap-4 items-center">
+                                <h4 class="font-semibold">{{ $item->judul_lowongan }}</h4>
+                                <p
+                                    class="rounded-md border {{ $item->status_pendaftaran ? 'border-teal-500 text-teal-500' : 'border-red-500 text-red-500' }} p-1 text-xs">
+                                    {{ $item->status_pendaftaran ? 'Aktif Merekrut' : 'Tidak Aktif' }}
+                                </p>
+                            </div>
+                            <p class="text-primary-500">
+                                {{ $item->perusahaanMitra->nama_perusahaan_mitra }}
                             </p>
                         </div>
-                        <p class="text-primary-500">
-                            {{ $item->perusahaanMitra->nama_perusahaan_mitra }}
-                        </p>
-                        <span class="flex items-center gap-2">
-                            <i class="ph ph-map-pin text-neutral-500"></i>
-                            <p class="text-neutral-700">{{ $item->perusahaanMitra->alamat }}</p>
-                        </span>
-                        <span class="flex items-center gap-2">
-                            <i class="ph ph-calendar text-neutral-500"></i>
-                            <p class="text-neutral-700">{{ $item->periodeMagang->nama_periode }}</p>
-                        </span>
+                        <div class="flex flex-col space-y-2">
+                            <span class="flex items-center gap-2">
+                                <x-lucide-map-pin class="text-neutral-500 size-6" stroke-width="1.5" />
+                                <p class="text-neutral-700">{{ $item->perusahaanMitra->alamat }}</p>
+                            </span>
+                            <span class="flex items-center gap-2">
+                                <x-lucide-calendar-days class="text-neutral-500 size-6" stroke-width="1.5" />
+                                <p class="text-neutral-700">{{ $item->periodeMagang->nama_periode }}</p>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <span>
