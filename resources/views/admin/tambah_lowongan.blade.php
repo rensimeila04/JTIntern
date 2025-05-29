@@ -2,13 +2,14 @@
 @section('content')
     <div class="p-6 space-y-6 bg-white rounded-lg">
         <h1 class="text-xl font-medium text-neutral-900">Tambah Lowongan</h1>
-        <form action="{{ route('admin.lowongan.store') }}" method="POST" class="space-y-4">
+        <form id="lowonganForm" action="{{ route('admin.lowongan.store') }}" method="POST" class="space-y-4">
             @csrf
             <div class="grid grid-cols-2 gap-6">
                 <div class="space-y-4 w-full">
                     <div class="w-full">
                         <label class="block text-sm font-medium mb-2">Perusahaan</label>
-                        <select data-hs-select='{
+                        <select
+                            data-hs-select='{
                             "hasSearch": true,
                             "searchPlaceholder": "Cari perusahaan...",
                             "searchClasses": "block w-full sm:text-sm border-gray-200 rounded-lg focus:border-primary-500 focus:ring-primary-500 before:absolute before:inset-0 before:z-1 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 py-1.5 sm:py-2 px-3",
@@ -19,10 +20,12 @@
                             "dropdownClasses": "mt-2 max-h-72 pb-1 px-1 space-y-0.5 z-20 w-full bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
                             "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
                             "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
-                        }' name="id_perusahaan_mitra" required class="hidden">
+                        }'
+                            name="id_perusahaan_mitra" required class="hidden">
                             <option value="">Pilih perusahaan</option>
-                            @foreach($perusahaan as $p)
-                                <option value="{{ $p->id_perusahaan_mitra }}" {{ old('id_perusahaan_mitra') == $p->id_perusahaan_mitra ? 'selected' : '' }}>
+                            @foreach ($perusahaan as $p)
+                                <option value="{{ $p->id_perusahaan_mitra }}"
+                                    {{ old('id_perusahaan_mitra') == $p->id_perusahaan_mitra ? 'selected' : '' }}>
                                     {{ $p->nama_perusahaan_mitra }}
                                 </option>
                             @endforeach
@@ -36,8 +39,9 @@
                         <select name="id_periode_magang" required
                             class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                             <option value="" disabled selected>Pilih periode magang</option>
-                            @foreach($periode as $pr)
-                                <option value="{{ $pr->id_periode_magang }}" {{ old('id_periode_magang') == $pr->id_periode_magang ? 'selected' : '' }}>
+                            @foreach ($periode as $pr)
+                                <option value="{{ $pr->id_periode_magang }}"
+                                    {{ old('id_periode_magang') == $pr->id_periode_magang ? 'selected' : '' }}>
                                     {{ $pr->nama_periode }}
                                 </option>
                             @endforeach
@@ -80,8 +84,9 @@
                         <select name="id_kompetensi" required
                             class="py-2.5 sm:py-3 px-4 block w-full text-gray-500 border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                             <option value="" disabled selected>Pilih kompetensi</option>
-                            @foreach($kompetensi as $k)
-                                <option value="{{ $k->id_kompetensi }}" {{ old('id_kompetensi') == $k->id_kompetensi ? 'selected' : '' }}>
+                            @foreach ($kompetensi as $k)
+                                <option value="{{ $k->id_kompetensi }}"
+                                    {{ old('id_kompetensi') == $k->id_kompetensi ? 'selected' : '' }}>
                                     {{ $k->nama_kompetensi }}
                                 </option>
                             @endforeach
@@ -105,47 +110,61 @@
                     </div>
                     <div class="w-full relative">
                         <label class="block text-sm font-medium mb-2">Deadline Pendaftaran</label>
-                        <input
-                            id="deadlineInput"
+                        <input id="deadlineInput"
                             class="py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500 cursor-pointer"
                             type="text" placeholder="Pilih deadline" readonly>
-                        <input type="hidden" name="deadline_pendaftaran" id="deadlineHidden" value="{{ old('deadline_pendaftaran') }}">
+                        <input type="hidden" name="deadline_pendaftaran" id="deadlineHidden"
+                            value="{{ old('deadline_pendaftaran') }}">
                         <span class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 pointer-events-none">
                             <i class="ph ph-calendar-days text-xl"></i>
                         </span>
                         @error('deadline_pendaftaran')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        
+
                         <!-- Custom Date Picker -->
                         <div id="datePicker" class="absolute top-full left-0 mt-2 z-50 hidden">
-                            <div class="w-80 flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden">
+                            <div
+                                class="w-80 flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden">
                                 <!-- Calendar -->
                                 <div class="p-3 space-y-0.5">
                                     <!-- Months -->
                                     <div class="grid grid-cols-5 items-center gap-x-3 mx-1.5 pb-3">
                                         <!-- Prev Button -->
                                         <div class="col-span-1">
-                                            <button type="button" id="prevMonth" class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
-                                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                                            <button type="button" id="prevMonth"
+                                                class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
+                                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+                                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <path d="m15 18-6-6 6-6" />
+                                                </svg>
                                             </button>
                                         </div>
-                                        
+
                                         <!-- Month / Year -->
                                         <div class="col-span-3 flex justify-center items-center gap-x-1">
-                                            <span id="currentMonth" class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
+                                            <span id="currentMonth"
+                                                class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
                                             <span class="text-gray-800">/</span>
-                                            <span id="currentYear" class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
+                                            <span id="currentYear"
+                                                class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
                                         </div>
-                                        
+
                                         <!-- Next Button -->
                                         <div class="col-span-1 flex justify-end">
-                                            <button type="button" id="nextMonth" class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
-                                                <svg class="shrink-0 size-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                            <button type="button" id="nextMonth"
+                                                class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
+                                                <svg class="shrink-0 size-4" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="m9 18 6-6-6-6" />
+                                                </svg>
                                             </button>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Weeks -->
                                     <div class="flex pb-1.5">
                                         <span class="m-px w-10 block text-center text-sm text-gray-500">Sen</span>
@@ -156,7 +175,7 @@
                                         <span class="m-px w-10 block text-center text-sm text-gray-500">Sab</span>
                                         <span class="m-px w-10 block text-center text-sm text-gray-500">Min</span>
                                     </div>
-                                    
+
                                     <!-- Days Container -->
                                     <div id="daysContainer" class="space-y-0">
                                         <!-- Days will be generated by JavaScript -->
@@ -168,7 +187,8 @@
                     <div class="flex flex-row gap-4 items-center">
                         <label class="block text-sm font-medium mb-2">Tes seleksi diperlukan</label>
                         <label for="test" class="relative inline-block w-11 h-6 cursor-pointer">
-                            <input type="checkbox" id="test" name="test" value="1" class="peer sr-only" {{ old('test') ? 'checked' : '' }}>
+                            <input type="checkbox" id="test" name="test" value="1" class="peer sr-only"
+                                {{ old('test') ? 'checked' : '' }}>
                             <span
                                 class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-primary-500"></span>
                             <span
@@ -187,38 +207,115 @@
                 </div>
             </div>
             <div class="flex justify-end w-full">
-                <button type="submit" class="btn-primary">
+                <button type="button" id="submitBtn" class="btn-primary">
                     Tambahkan Lowongan
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- Success Modal -->
-    @if(session('success'))
-    <div id="successModal" class="fixed inset-0 z-50 overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="fixed inset-0 bg-black opacity-25"></div>
-            <div class="relative bg-white rounded-lg max-w-md mx-auto p-6">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="ph ph-check text-green-600 text-2xl"></i>
+    <!-- Confirmation Modal -->
+    <div id="confirmModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="confirmModal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="confirmModal-label" class="font-bold text-gray-800 dark:text-white">
+                        Konfirmasi Tambah Lowongan
+                    </h3>
+                    <button type="button" id="closeConfirmModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-briefcase text-blue-600 text-2xl"></i>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                            Apakah Anda yakin ingin menambahkan lowongan <span id="confirmJudul"
+                                class="font-semibold"></span>
+                            di <span id="confirmPerusahaan" class="font-semibold"></span>?
+                        </p>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">Berhasil!</h3>
-                    <p class="text-sm text-gray-500 mb-4">{{ session('success') }}</p>
-                    <div class="flex gap-2 justify-center">
-                        <a href="{{ route('admin.lowongan') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-                            Lihat Daftar Lowongan
-                        </a>
-                        <a href="{{ route('admin.lowongan.tambah') }}" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
-                            Tambah Lagi
-                        </a>
-                    </div>
+                </div>
+                <div
+                    class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="cancelConfirm"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                        Batal
+                    </button>
+                    <button type="button" id="confirmSubmit"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <span id="confirmButtonText">Ya, Tambahkan</span>
+                        <div id="confirmSpinner"
+                            class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full"
+                            role="status" aria-label="loading"></div>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-    @endif
+
+    <!-- Success Modal -->
+    <div id="successModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="successModal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="successModal-label" class="font-bold text-gray-800 dark:text-white">
+                        Berhasil!
+                    </h3>
+                    <button type="button" id="closeSuccessModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-check text-green-600 text-2xl"></i>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                            Lowongan <span id="successJudul" class="font-semibold"></span> berhasil ditambahkan!
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="backToListBtn"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                        Lihat Daftar Lowongan
+                    </button>
+                    <button type="button" id="addAnotherBtn"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                        Tambah Lagi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Custom Date Picker
@@ -230,16 +327,16 @@
                     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
                 ];
-                
+
                 this.init();
             }
-            
+
             init() {
                 this.bindEvents();
                 this.updateCalendar();
                 this.loadExistingDate();
             }
-            
+
             loadExistingDate() {
                 const deadlineHidden = document.getElementById('deadlineHidden');
                 if (deadlineHidden.value) {
@@ -247,91 +344,94 @@
                     this.selectDate(existingDate);
                 }
             }
-            
+
             bindEvents() {
                 const deadlineInput = document.getElementById('deadlineInput');
                 const datePicker = document.getElementById('datePicker');
                 const prevMonth = document.getElementById('prevMonth');
                 const nextMonth = document.getElementById('nextMonth');
-                
+
                 // Toggle date picker
                 deadlineInput.addEventListener('click', () => {
                     datePicker.classList.toggle('hidden');
                 });
-                
+
                 // Close when clicking outside
                 document.addEventListener('click', (e) => {
                     if (!deadlineInput.contains(e.target) && !datePicker.contains(e.target)) {
                         datePicker.classList.add('hidden');
                     }
                 });
-                
+
                 // Month navigation
                 prevMonth.addEventListener('click', () => {
                     this.currentDate.setMonth(this.currentDate.getMonth() - 1);
                     this.updateCalendar();
                 });
-                
+
                 nextMonth.addEventListener('click', () => {
                     this.currentDate.setMonth(this.currentDate.getMonth() + 1);
                     this.updateCalendar();
                 });
             }
-            
+
             updateCalendar() {
                 const currentMonth = document.getElementById('currentMonth');
                 const currentYear = document.getElementById('currentYear');
                 const daysContainer = document.getElementById('daysContainer');
-                
+
                 // Update month/year display
                 currentMonth.textContent = this.monthNames[this.currentDate.getMonth()];
                 currentYear.textContent = this.currentDate.getFullYear();
-                
+
                 // Generate calendar days
                 this.generateDays(daysContainer);
             }
-            
+
             generateDays(container) {
                 container.innerHTML = '';
-                
+
                 const year = this.currentDate.getFullYear();
                 const month = this.currentDate.getMonth();
                 const today = new Date();
-                
+
                 // First day of the month
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
-                
+
                 // Get first Monday of the calendar
                 const startDate = new Date(firstDay);
                 const dayOfWeek = firstDay.getDay();
                 const daysBack = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
                 startDate.setDate(firstDay.getDate() - daysBack);
-                
+
                 // Generate 6 weeks
                 for (let week = 0; week < 6; week++) {
                     const weekDiv = document.createElement('div');
                     weekDiv.className = 'flex';
-                    
+
                     for (let day = 0; day < 7; day++) {
                         const currentDate = new Date(startDate);
                         currentDate.setDate(startDate.getDate() + (week * 7) + day);
-                        
+
                         const dayDiv = document.createElement('div');
                         const button = document.createElement('button');
                         button.type = 'button';
                         button.textContent = currentDate.getDate();
-                        
+
                         const isCurrentMonth = currentDate.getMonth() === month;
                         const isToday = currentDate.toDateString() === today.toDateString();
                         const isPast = currentDate < today && !isToday;
-                        const isSelected = this.selectedDate && currentDate.toDateString() === this.selectedDate.toDateString();
-                        
+                        const isSelected = this.selectedDate && currentDate.toDateString() === this.selectedDate
+                            .toDateString();
+
                         // Base classes
-                        let classes = 'm-px size-10 flex justify-center items-center border-[1.5px] border-transparent text-sm rounded-full focus:outline-hidden';
-                        
+                        let classes =
+                            'm-px size-10 flex justify-center items-center border-[1.5px] border-transparent text-sm rounded-full focus:outline-hidden';
+
                         if (!isCurrentMonth) {
-                            classes += ' text-gray-400 hover:border-primary-600 hover:text-primary-600 disabled:opacity-50 disabled:pointer-events-none';
+                            classes +=
+                                ' text-gray-400 hover:border-primary-600 hover:text-primary-600 disabled:opacity-50 disabled:pointer-events-none';
                             button.disabled = true;
                         } else if (isPast) {
                             classes += ' text-gray-400 opacity-50 cursor-not-allowed';
@@ -339,91 +439,267 @@
                         } else if (isSelected) {
                             classes += ' bg-primary-600 text-white font-medium';
                         } else if (isToday) {
-                            classes += ' bg-primary-100 text-primary-600 font-medium hover:bg-primary-600 hover:text-white';
+                            classes +=
+                                ' bg-primary-100 text-primary-600 font-medium hover:bg-primary-600 hover:text-white';
                         } else {
-                            classes += ' text-gray-800 hover:border-primary-600 hover:text-primary-600 focus:border-primary-600 focus:text-primary-600';
+                            classes +=
+                                ' text-gray-800 hover:border-primary-600 hover:text-primary-600 focus:border-primary-600 focus:text-primary-600';
                         }
-                        
+
                         button.className = classes;
-                        
+
                         // Add click event for date selection
                         if (isCurrentMonth && !isPast) {
                             button.addEventListener('click', () => {
                                 this.selectDate(currentDate);
                             });
                         }
-                        
+
                         dayDiv.appendChild(button);
                         weekDiv.appendChild(dayDiv);
                     }
-                    
+
                     container.appendChild(weekDiv);
                 }
             }
-            
+
             selectDate(date) {
                 this.selectedDate = new Date(date);
                 const deadlineInput = document.getElementById('deadlineInput');
                 const deadlineHidden = document.getElementById('deadlineHidden');
                 const datePicker = document.getElementById('datePicker');
-                
+
                 // Format date as DD Month YYYY (Indonesian format)
                 const day = this.selectedDate.getDate();
                 const monthName = this.monthNames[this.selectedDate.getMonth()];
                 const year = this.selectedDate.getFullYear();
                 const displayDate = `${day} ${monthName} ${year}`;
-                
+
                 // Set display value
                 deadlineInput.value = displayDate;
-                
+
                 // Set hidden input with YYYY-MM-DD format for form submission
                 deadlineHidden.value = this.selectedDate.toISOString().split('T')[0];
-                
+
                 // Close picker
                 datePicker.classList.add('hidden');
-                
+
                 // Update calendar to show selection
                 this.updateCalendar();
             }
         }
-        
-        // Initialize date picker when DOM is loaded
+
+        // Modal functionality
+        let confirmModal = null;
+        let successModal = null;
+
+        // Validate form function
+        function validateForm() {
+            const requiredFields = [{
+                    name: 'id_perusahaan_mitra',
+                    label: 'Perusahaan'
+                },
+                {
+                    name: 'id_periode_magang',
+                    label: 'Periode Magang'
+                },
+                {
+                    name: 'judul_lowongan',
+                    label: 'Judul Lowongan'
+                },
+                {
+                    name: 'deskripsi',
+                    label: 'Deskripsi'
+                },
+                {
+                    name: 'persyaratan',
+                    label: 'Persyaratan'
+                },
+                {
+                    name: 'id_kompetensi',
+                    label: 'Kompetensi'
+                },
+                {
+                    name: 'jenis_magang',
+                    label: 'Jenis Magang'
+                }
+            ];
+
+            for (const field of requiredFields) {
+                const element = document.querySelector(`[name="${field.name}"]`);
+                if (!element || !element.value.trim()) {
+                    alert(`${field.label} harus diisi!`);
+                    if (element) element.focus();
+                    return false;
+                }
+            }
+
+            // Check if test is checked and informasi_test is required
+            const testCheckbox = document.getElementById('test');
+            const informasiTest = document.querySelector('textarea[name="informasi_test"]');
+
+            if (testCheckbox.checked && (!informasiTest.value || !informasiTest.value.trim())) {
+                alert('Informasi test harus diisi jika tes seleksi diperlukan!');
+                informasiTest.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // Show confirmation modal
+        function showConfirmModal() {
+            // Get form data for confirmation
+            const perusahaanSelect = document.querySelector('[name="id_perusahaan_mitra"]');
+            const judulLowongan = document.querySelector('[name="judul_lowongan"]').value;
+
+            // Get selected company name
+            const selectedOption = perusahaanSelect.options[perusahaanSelect.selectedIndex];
+            const perusahaanNama = selectedOption ? selectedOption.textContent : '';
+
+            // Fill confirmation modal
+            document.getElementById('confirmJudul').textContent = judulLowongan;
+            document.getElementById('confirmPerusahaan').textContent = perusahaanNama;
+
+            confirmModal = new HSOverlay(document.getElementById('confirmModal'));
+            confirmModal.open();
+        }
+
+        // Close confirmation modal
+        function closeConfirmModal() {
+            if (confirmModal) {
+                confirmModal.close();
+                confirmModal = null;
+            }
+        }
+
+        // Show success modal
+        function showSuccessModal(judulLowongan) {
+            document.getElementById('successJudul').textContent = judulLowongan;
+            successModal = new HSOverlay(document.getElementById('successModal'));
+            successModal.open();
+        }
+
+        // Close success modal
+        function closeSuccessModal() {
+            if (successModal) {
+                successModal.close();
+                successModal = null;
+            }
+        }
+
+        // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             new CustomDatePicker();
-            
+
             // Toggle informasi test visibility
             const testCheckbox = document.getElementById('test');
             const informasiTestContainer = document.getElementById('informasiTestContainer');
             const informasiTestTextarea = informasiTestContainer.querySelector('textarea[name="informasi_test"]');
-            
+
             // Function to toggle informasi test
             function toggleInformasiTest() {
                 if (testCheckbox.checked) {
                     informasiTestContainer.classList.remove('hidden');
-                    // Make textarea required when test is enabled
                     informasiTestTextarea.setAttribute('required', 'required');
                 } else {
                     informasiTestContainer.classList.add('hidden');
-                    // Remove required attribute when test is disabled
                     informasiTestTextarea.removeAttribute('required');
-                    // Clear the textarea value
                     informasiTestTextarea.value = '';
                 }
             }
-            
+
             // Add event listener for checkbox change
             testCheckbox.addEventListener('change', toggleInformasiTest);
-            
+
             // Initialize state on page load
             toggleInformasiTest();
 
-            // Auto-close success modal after 5 seconds
-            const successModal = document.getElementById('successModal');
-            if (successModal) {
+            // Check for success message from session
+            @if (session('success'))
+                const judulLowongan = '{{ old('judul_lowongan', 'lowongan') }}';
                 setTimeout(() => {
-                    successModal.style.display = 'none';
-                }, 5000);
-            }
+                    showSuccessModal(judulLowongan);
+                }, 500);
+            @endif
+
+            // Submit button event listener
+            document.getElementById('submitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (validateForm()) {
+                    showConfirmModal();
+                }
+            });
+
+            // Modal event listeners
+            document.getElementById('closeConfirmModalBtn').addEventListener('click', closeConfirmModal);
+            document.getElementById('cancelConfirm').addEventListener('click', closeConfirmModal);
+
+            // Confirm submit
+            document.getElementById('confirmSubmit').addEventListener('click', function() {
+                const confirmBtn = this;
+                const confirmText = document.getElementById('confirmButtonText');
+                const confirmSpinner = document.getElementById('confirmSpinner');
+
+                // Show loading state
+                confirmBtn.disabled = true;
+                confirmText.textContent = 'Menyimpan...';
+                confirmSpinner.classList.remove('hidden');
+
+                // Submit the form
+                document.getElementById('lowonganForm').submit();
+            });
+
+            // Success modal event listeners
+            document.getElementById('closeSuccessModalBtn').addEventListener('click', closeSuccessModal);
+
+            document.getElementById('backToListBtn').addEventListener('click', function() {
+                window.location.href = '{{ route('admin.lowongan') }}';
+            });
+
+            document.getElementById('addAnotherBtn').addEventListener('click', function() {
+                closeSuccessModal();
+                // Reset form
+                document.getElementById('lowonganForm').reset();
+                // Clear date picker
+                document.getElementById('deadlineInput').value = '';
+                document.getElementById('deadlineHidden').value = '';
+                // Reset test container
+                document.getElementById('informasiTestContainer').classList.add('hidden');
+                // Scroll to top
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Close modal when clicking outside
+            document.getElementById('confirmModal').addEventListener('click', function(e) {
+                const modalContent = this.querySelector('.bg-white');
+                if (!modalContent.contains(e.target)) {
+                    closeConfirmModal();
+                }
+            });
+
+            // Close success modal when clicking outside
+            document.getElementById('successModal').addEventListener('click', function(e) {
+                const modalContent = this.querySelector('.bg-white');
+                if (!modalContent.contains(e.target)) {
+                    closeSuccessModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (confirmModal) {
+                        closeConfirmModal();
+                    } else if (successModal) {
+                        closeSuccessModal();
+                    }
+                }
+            });
         });
     </script>
 @endsection
