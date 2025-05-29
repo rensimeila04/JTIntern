@@ -49,8 +49,9 @@
 @endif
 
 <!-- Pagination -->
+<!-- Pagination -->
 @if ($lowongan->hasPages())
-    <div class="flex items-center justify-end mt-5">
-        {{ $lowongan->links('pagination::simple-tailwind') }}
-    </div>
+<div class="flex items-center justify-end mt-8">
+    {{ $lowongan->links('custom.pagination') }}
+</div>
 @endif

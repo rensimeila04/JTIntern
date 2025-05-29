@@ -78,7 +78,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
             Route::post('/tambah', [LowonganController::class, 'storeLowongan'])->name('.store');
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
-            Route::get('{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
+            Route::get('/{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
+            Route::put('/{id}', [LowonganController::class, 'updateLowongan'])->name('.update');
         });
         
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])

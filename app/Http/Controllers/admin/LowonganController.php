@@ -168,10 +168,65 @@ class LowonganController extends Controller
 
         $activeMenu = 'lowongan';
 
+        // Get the lowongan data
+        $lowongan = LowonganModel::with(['perusahaanMitra', 'periodeMagang', 'kompetensi'])
+                                 ->findOrFail($id);
+
+        // Get all data for dropdowns
+        $perusahaan = PerusahaanMitraModel::all();
+        $periode = PeriodeMagangModel::all();
+        $kompetensi = KompetensiModel::all();
+
         return view('admin.edit_lowongan', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
-            'id' => $id
+            'lowongan' => $lowongan,
+            'perusahaan' => $perusahaan,
+            'periode' => $periode,
+            'kompetensi' => $kompetensi,
+        ]);
+    }
+
+    public function updateLowongan(Request $request, $id)
+    {
+        $lowongan = LowonganModel::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'id_perusahaan_mitra' => 'required|exists:perusahaan_mitra,id_perusahaan_mitra',
+            'id_periode_magang' => 'required|exists:periode_magang,id_periode_magang',
+            'judul_lowongan' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'persyaratan' => 'required|string',
+            'id_kompetensi' => 'required|exists:kompetensi,id_kompetensi',
+            'jenis_magang' => 'required|in:wfo,remote,hybrid',
+            'deadline_pendaftaran' => 'nullable|date',
+            'test' => 'nullable|boolean',
+            'informasi_test' => 'nullable|string',
+            'status_pendaftaran' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $lowongan->update([
+            'id_perusahaan_mitra' => $request->id_perusahaan_mitra,
+            'id_periode_magang' => $request->id_periode_magang,
+            'judul_lowongan' => $request->judul_lowongan,
+            'deskripsi' => $request->deskripsi,
+            'persyaratan' => $request->persyaratan,
+            'id_kompetensi' => $request->id_kompetensi,
+            'jenis_magang' => $request->jenis_magang,
+            'status_pendaftaran' => $request->status_pendaftaran ? true : false,
+            'deadline_pendaftaran' => $request->deadline_pendaftaran,
+            'test' => $request->test ? true : false,
+            'informasi_test' => $request->informasi_test,
+        ]);
+
+        return redirect()->route('admin.lowongan.edit', $id)->with([
+            'success' => true,
+            'judul_lowongan' => $request->judul_lowongan,
+            'message' => 'Data lowongan berhasil diperbarui'
         ]);
     }
 }
