@@ -1,5 +1,6 @@
 @extends('layout.template')
 @section('content')
+    <!-- Header section remains the same -->
     <div class="flex flex-row items-center justify-between">
         <div>
             <h2 class="text-xl font-medium">Daftar Lowongan</h2>
@@ -23,7 +24,7 @@
     <div class="mt-5 flex flex-row justify-between">
         <div class="flex gap-2">
             <!-- Filter Periode -->
-            <form method="GET" action="{{ route('admin.lowongan') }}" class="inline">
+            <form method="GET" action="{{ route('admin.lowongan') }}" class="inline" id="filter-periode-form">
                 <input type="hidden" name="perusahaan" value="{{ $currentPerusahaan }}">
                 <input type="hidden" name="search" value="{{ $currentSearch }}">
                 <div class="hs-dropdown relative inline-flex">
@@ -56,7 +57,7 @@
             </form>
 
             <!-- Filter Perusahaan -->
-            <form method="GET" action="{{ route('admin.lowongan') }}" class="inline">
+            <form method="GET" action="{{ route('admin.lowongan') }}" class="inline" id="filter-perusahaan-form">
                 <input type="hidden" name="periode" value="{{ $currentPeriode }}">
                 <input type="hidden" name="search" value="{{ $currentSearch }}">
                 <div class="hs-dropdown relative inline-flex">
@@ -89,68 +90,143 @@
             </form>
         </div>
 
-        <!-- Search Form -->
-        <form method="GET" action="{{ route('admin.lowongan') }}" class="flex items-center">
-            <input type="hidden" name="periode" value="{{ $currentPeriode }}">
-            <input type="hidden" name="perusahaan" value="{{ $currentPerusahaan }}">
-            <x-search-input placeholder="Cari lowongan..." name="search" value="{{ $currentSearch }}" />
-        </form>
+        <!-- Live Search Form -->
+        <div class="flex items-center gap-2">
+            <form method="GET" action="{{ route('admin.lowongan') }}" id="searchForm" class="flex items-center gap-2">
+                <x-search-input 
+                    name="search" 
+                    value="{{ $currentSearch }}" 
+                    placeholder="Cari lowongan..."
+                    id="live-search-input"
+                    class="py-3 px-4 pl-11 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                />
+                <input type="hidden" name="periode" value="{{ $currentPeriode }}">
+                <input type="hidden" name="perusahaan" value="{{ $currentPerusahaan }}">
+                
+                <!-- Loading indicator -->
+                <div id="search-loading" class="hidden">
+                    <div class="animate-spin h-4 w-4 border-2 border-primary-500 border-t-transparent rounded-full"></div>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- Lowongan List -->
-    @if ($lowongan->count() > 0)
-        @foreach ($lowongan as $item)
-            <div class="flex justify-between items-center mt-5 w-full bg-white p-4 rounded-md">
-                <div class="flex">
-                    <img src="{{ $item->perusahaanMitra->logo ? Storage::url($item->perusahaanMitra->logo) : asset('Images/placeholder_perusahaan.png') }}"
-                        alt="{{ $item->perusahaanMitra->nama_perusahaan_mitra }}" class="w-30 h-30 rounded-lg object-contain">
-                    <div class="flex flex-col pl-6 gap-y-4">
-                        <div class="flex flex-col space-y-1">
-                            <div class="flex gap-4 items-center">
-                                <h4 class="font-semibold">{{ $item->judul_lowongan }}</h4>
-                                <p
-                                    class="rounded-md border {{ $item->status_pendaftaran ? 'border-teal-500 text-teal-500' : 'border-red-500 text-red-500' }} p-1 text-xs">
-                                    {{ $item->status_pendaftaran ? 'Aktif Merekrut' : 'Tidak Aktif' }}
-                                </p>
-                            </div>
-                            <a href="{{ route('admin.perusahaan.detail', $item->perusahaanMitra->id_perusahaan_mitra) }}" 
-                               class="text-primary-500 hover:text-primary-700 hover:underline transition-colors duration-200 w-fit">
-                                {{ $item->perusahaanMitra->nama_perusahaan_mitra }}
-                            </a>
-                        </div>
-                        <div class="flex flex-col space-y-2">
-                            <span class="flex items-center gap-2">
-                                <x-lucide-map-pin class="text-neutral-500 size-6" stroke-width="1.5" />
-                                <p class="text-neutral-700">{{ $item->perusahaanMitra->alamat }}</p>
-                            </span>
-                            <span class="flex items-center gap-2">
-                                <x-lucide-calendar-days class="text-neutral-500 size-6" stroke-width="1.5" />
-                                <p class="text-neutral-700">{{ $item->periodeMagang->nama_periode }}</p>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <span>
-                    <a href="{{ route('admin.lowongan.detail', $item->id_lowongan) }}" class="btn-primary-lg">
-                        Lihat Detail
-                    </a>
-                </span>
-            </div>
-        @endforeach
-    @else
+    <!-- Loading overlay for content -->
+    <div id="content-loading" class="hidden">
         <div class="flex justify-center items-center mt-10 w-full p-8 rounded-md">
             <div class="text-center">
-                <i class="ph ph-folder-open text-6xl text-gray-300 mb-4"></i>
-                <h3 class="text-lg font-medium text-gray-500 mb-2">Tidak ada lowongan ditemukan</h3>
-                <p class="text-gray-400">Silakan coba filter atau pencarian yang berbeda</p>
+                <div class="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                <p class="text-gray-500">Mencari lowongan...</p>
             </div>
         </div>
-    @endif
+    </div>
 
-    <!-- Pagination -->
-    @if ($lowongan->hasPages())
-        <div class="flex items-center justify-end mt-5">
-            {{ $lowongan->links('pagination::simple-tailwind') }}
-        </div>
-    @endif
+    <!-- Lowongan List Container -->
+    <div id="lowongan-container">
+        @include('admin.partials.lowongan-list', ['lowongan' => $lowongan])
+    </div>
+
+    <script>
+        let searchTimeout;
+        const searchInput = document.getElementById('live-search-input');
+        const searchLoading = document.getElementById('search-loading');
+        const contentLoading = document.getElementById('content-loading');
+        const lowonganContainer = document.getElementById('lowongan-container');
+        
+        // Current filter values
+        let currentPeriode = '{{ $currentPeriode }}';
+        let currentPerusahaan = '{{ $currentPerusahaan }}';
+
+        // Live search function
+        function performSearch(searchTerm) {
+            // Show loading indicators
+            searchLoading.classList.remove('hidden');
+            contentLoading.classList.remove('hidden');
+            lowonganContainer.classList.add('hidden');
+            
+            // Build URL with current filters
+            const url = new URL('{{ route("admin.lowongan") }}', window.location.origin);
+            const params = new URLSearchParams();
+            
+            if (currentPeriode !== 'all') {
+                params.append('periode', currentPeriode);
+            }
+            if (currentPerusahaan !== 'all') {
+                params.append('perusahaan', currentPerusahaan);
+            }
+            if (searchTerm.trim()) {
+                params.append('search', searchTerm.trim());
+            }
+            
+            url.search = params.toString();
+            
+            // Update browser URL without reload
+            window.history.replaceState({}, '', url.toString());
+            
+            // Perform AJAX request
+            fetch(url.toString(), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Parse the response to get only the lowongan container content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContent = doc.getElementById('lowongan-container');
+                
+                if (newContent) {
+                    lowonganContainer.innerHTML = newContent.innerHTML;
+                }
+                
+                // Hide loading indicators
+                searchLoading.classList.add('hidden');
+                contentLoading.classList.add('hidden');
+                lowonganContainer.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Search error:', error);
+                // Hide loading indicators
+                searchLoading.classList.add('hidden');
+                contentLoading.classList.add('hidden');
+                lowonganContainer.classList.remove('hidden');
+            });
+        }
+
+        // Search input event listener
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value;
+            
+            // Clear previous timeout
+            clearTimeout(searchTimeout);
+            
+            // Set new timeout for 300ms delay
+            searchTimeout = setTimeout(() => {
+                performSearch(searchTerm);
+            }, 300);
+        });
+
+        // Update current filter values when form submissions occur
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update periode filter
+            const periodeForm = document.getElementById('filter-periode-form');
+            if (periodeForm) {
+                periodeForm.addEventListener('submit', function(e) {
+                    const formData = new FormData(e.target);
+                    currentPeriode = formData.get('periode') || 'all';
+                });
+            }
+
+            // Update perusahaan filter  
+            const perusahaanForm = document.getElementById('filter-perusahaan-form');
+            if (perusahaanForm) {
+                perusahaanForm.addEventListener('submit', function(e) {
+                    const formData = new FormData(e.target);
+                    currentPerusahaan = formData.get('perusahaan') || 'all';
+                });
+            }
+        });
+    </script>
 @endsection

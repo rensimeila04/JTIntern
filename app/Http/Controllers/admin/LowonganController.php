@@ -55,7 +55,7 @@ class LowonganController extends Controller
         $periodeList = PeriodeMagangModel::all();
         $perusahaanList = PerusahaanMitraModel::all();
 
-        return view('admin.lowongan', [
+        $data = [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'lowongan' => $lowongan,
@@ -64,7 +64,15 @@ class LowonganController extends Controller
             'currentPeriode' => $request->periode ?? 'all',
             'currentPerusahaan' => $request->perusahaan ?? 'all',
             'currentSearch' => $request->search ?? ''
-        ]);
+        ];
+
+        // Check if this is an AJAX request for live search
+        if ($request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            // Return only the lowongan container content for AJAX requests
+            return view('admin.lowongan', $data);
+        }
+
+        return view('admin.lowongan', $data);
     }
 
     public function detailLowongan($id)
