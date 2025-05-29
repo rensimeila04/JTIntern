@@ -152,7 +152,10 @@ class LowonganController extends Controller
             'informasi_test' => $request->informasi_test,
         ]);
 
-        return redirect()->route('admin.lowongan')->with('success', 'Lowongan berhasil ditambahkan!');
+        return redirect()->route('admin.lowongan.tambah')->with([
+            'success' => true,
+            'judul_lowongan' => $request->judul_lowongan
+        ]);
     }
 
     public function editLowongan($id)
