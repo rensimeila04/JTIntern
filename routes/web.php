@@ -92,7 +92,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LevelController::class, 'update'])->name('.update');
             Route::delete('/{id}', [LevelController::class, 'destroy'])->name('.destroy');
             Route::get('/{id}', [LevelController::class, 'detail'])->name('.detail');
-    });
+        });
     });
 
     // Dosen Routes

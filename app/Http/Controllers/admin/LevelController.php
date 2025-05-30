@@ -67,7 +67,6 @@ class LevelController extends Controller
     {
         $level = LevelModel::findOrFail($id);
 
-        // Jika request AJAX (untuk modal), balas JSON saja
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -79,8 +78,62 @@ class LevelController extends Controller
             ]);
         }
 
-        // Jika bukan AJAX, bisa redirect atau tampilkan error
         return abort(404);
     }
-}
 
+    
+    public function edit($id)
+    {
+        $level = LevelModel::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => $level
+        ]);
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $level = LevelModel::findOrFail($id);
+        
+        $validator = Validator::make($request->all(), [
+            'kode_level' => 'required|string|max:10|unique:level,kode_level,' . $id . ',id_level',
+            'nama_level' => 'required|string|max:50',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        
+        $level->kode_level = strtoupper($request->kode_level);
+        $level->nama_level = $request->nama_level;
+        $level->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Level Pengguna berhasil diperbarui.',
+            'data' => $level
+        ]);
+    }
+    public function destroy($id)
+    {
+        try {
+            $level = LevelModel::findOrFail($id);
+    
+            $level->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Level pengguna berhasil dihapus'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus level pengguna: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+}
