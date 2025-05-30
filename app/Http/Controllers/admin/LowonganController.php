@@ -9,6 +9,7 @@ use App\Models\PeriodeMagangModel;
 use App\Models\KompetensiModel;
 use App\Models\LowonganModel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class LowonganController extends Controller
 {
@@ -236,8 +237,8 @@ class LowonganController extends Controller
             $lowongan = LowonganModel::findOrFail($id);
             
             // Check if lowongan has active applications/magang
-            // Uncomment this if you have magang/application model
-            if ($lowongan->magang()->exists()) {
+            // Add null check for relationship
+            if (method_exists($lowongan, 'magang') && $lowongan->magang()->exists()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Lowongan tidak dapat dihapus karena sudah memiliki pendaftar'
@@ -245,7 +246,9 @@ class LowonganController extends Controller
             }
             
             $judulLowongan = $lowongan->judul_lowongan;
-            $perusahaanNama = $lowongan->perusahaanMitra->nama_perusahaan_mitra;
+            
+            // Add null check for relationship
+            $perusahaanNama = optional($lowongan->perusahaanMitra)->nama_perusahaan_mitra ?? 'Unknown';
             
             // Delete the lowongan
             $lowongan->delete();
@@ -256,9 +259,14 @@ class LowonganController extends Controller
             ]);
             
         } catch (\Exception $e) {
+            Log::error('Error deleting lowongan: ' . $e->getMessage(), [
+                'id' => $id,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat menghapus lowongan: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan saat menghapus lowongan'
             ], 500);
         }
     }
