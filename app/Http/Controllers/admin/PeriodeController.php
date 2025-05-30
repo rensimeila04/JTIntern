@@ -47,4 +47,32 @@ class PeriodeController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Periode Magang', 'url' => route('admin.periode_magang')],
+            ['label' => 'Tambah Periode', 'url' => '#'],
+        ];
+
+        $activeMenu = 'periode-magang';
+
+        return view('admin.tambah_periode_magang', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_periode' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+        ]);
+
+        PeriodeMagangModel::create($request->all());
+
+        return redirect()->route('admin.periode_magang.create')->with('success', 'Periode magang berhasil ditambahkan.');
+    }
 }
