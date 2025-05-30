@@ -49,7 +49,7 @@
                                         {{ $item->tanggal_selesai }}
                                     </td>
                                     <td class="gap-2 flex px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
-                                        <a href="#"
+                                        <a href="{{ route('admin.periode_magang.detail', $item->id_periode_magang) }}"
                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                             <x-lucide-files class="w-4 h-4 text-primary-500" />
                                         </a>

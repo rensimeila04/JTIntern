@@ -18,25 +18,27 @@ class UserController extends Controller
 
         $activeMenu = 'pengguna';
 
-        # ambil parameter level_id dari url, jika tidak ada maka akan bernilai null
-        $levelId = $request->query('level_id');
-
-        # melakukan pengecekan apakah level_id ada di dalam request
-        if ($levelId) { # paginate di sini digunakan untuk membatasi jumlah data yang ditampilkan per halaman
-            $user = UserModel::with('level')->where('id_level', $levelId)->paginate(10);
-            $labelFilter = LevelModel::find($levelId)->nama_level ?? 'Semua Pengguna'; # maksud dari ?? (Null Coalescing) disini adalah sebagai penentu nilai mana yang dikembalikan
-                                                                                           # kalau nama_level nya gak ditemukan, maka akan mengembalikan 'Semua Pengguna'
-                                                                                           # kalau ada ya nama_level nya yang dikembalikan
-        } else {
-            $user = UserModel::with('level')->paginate(10);
-            $labelFilter = 'Semua Pengguna';
+        // Query builder for users
+        $query = UserModel::with('level');
+        
+        // Filter based on level
+        if ($request->filled('level_id') && $request->level_id != 'all') {
+            $query->where('id_level', $request->level_id);
+        }
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%")
+                  ->orWhereHas('level', function($q) use ($searchTerm) {
+                      $q->where('nama_level', 'LIKE', "%{$searchTerm}%");
+                  });
+            });
         }
 
-        # tujuannya agar di halaman yang lain, filter masih bisa digunakan
-        $user->appends($request->query());
-
-        
-        # Ambil data level
+        $user = $query->paginate(10)->appends($request->query());
         $level = LevelModel::all();
 
         # Hitung jumlah pengguna sesuai dengan levelnya
@@ -49,22 +51,22 @@ class UserController extends Controller
         $adminLevelId = LevelModel::where('kode_level', 'ADM')->value('id_level');
         $jumlahAdmin = UserModel::where('id_level', $adminLevelId)->count();
 
-        
-
         return view('admin.pengguna', [
             'breadcrumb' => $breadcrumb,
             'user' => $user,
             'level' => $level,
-            'labelFilter' => $labelFilter,
             'jumlahMahasiswa' => $jumlahMahasiswa,
             'jumlahDosen' => $jumlahDosen,
             'jumlahAdmin' => $jumlahAdmin,
             'activeMenu' => $activeMenu,
+            'currentFilter' => $request->level_id ?? 'all',
+            'currentSearch' => $request->search ?? ''
         ]);
     }
 
     public function detailDospem($id)
     {
+        // Existing code unchanged
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Pengguna', 'url' => '#'],
@@ -82,6 +84,7 @@ class UserController extends Controller
 
     public function detailMahasiswa($id)
     {
+        // Existing code unchanged
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Pengguna', 'url' => '#'],
@@ -99,6 +102,7 @@ class UserController extends Controller
     
     public function detailAdmin($id)
     {
+        // Existing code unchanged
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Pengguna', 'url' => '#'],

@@ -25,4 +25,26 @@ class PeriodeController extends Controller
             'periodeMagang' => $periodeMagang,
         ]);
     }
+
+    public function detail($id) 
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Periode Magang', 'url' => route('admin.periode_magang')],
+            ['label' => 'Detail Periode', 'url' => '#'],
+        ];
+
+        $activeMenu = 'periode-magang';
+
+        // Load periode_magang with its lowongan relationship
+        $periodeMagang = PeriodeMagangModel::with('lowongan.perusahaanMitra', 'lowongan.kompetensi')
+                         ->findOrFail($id);
+
+        return view('admin.detail_periode_magang', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu,
+            'periodeMagang' => $periodeMagang,
+        ]);
+    }
+
 }
