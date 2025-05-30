@@ -351,7 +351,7 @@
             deleteText.textContent = 'Menghapus...';
             deleteSpinner.classList.remove('hidden');
 
-            fetch(`/admin/perusahaan/${deleteCompanyId}`, {
+            fetch(`{{ route('admin.perusahaan') }}/${deleteCompanyId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
