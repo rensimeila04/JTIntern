@@ -757,7 +757,7 @@
 
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch(`/admin/level/${deleteLevelId}`, {
+            fetch(`{{ route('admin.level') }}/${deleteLevelId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -822,7 +822,7 @@
             if (e.target.closest('.edit-btn')) {
                 const btn = e.target.closest('.edit-btn');
                 const id = btn.getAttribute('data-level-id');
-                fetch(`/admin/level/${id}/edit`, {
+                fetch(`{{ route('admin.level') }}/${id}/edit`, { 
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -884,7 +884,7 @@
             formData.append('nama_level', nama);
             formData.append('_method', 'PUT');
 
-            fetch(`/admin/level/${id}`, {
+            fetch(`{{ route('admin.level') }}/${id}`, { 
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
