@@ -237,12 +237,12 @@ class LowonganController extends Controller
             
             // Check if lowongan has active applications/magang
             // Uncomment this if you have magang/application model
-            // if ($lowongan->magang()->exists()) {
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => 'Lowongan tidak dapat dihapus karena sudah memiliki pendaftar'
-            //     ], 422);
-            // }
+            if ($lowongan->magang()->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lowongan tidak dapat dihapus karena sudah memiliki pendaftar'
+                ], 422);
+            }
             
             $judulLowongan = $lowongan->judul_lowongan;
             $perusahaanNama = $lowongan->perusahaanMitra->nama_perusahaan_mitra;
