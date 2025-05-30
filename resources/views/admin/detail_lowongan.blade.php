@@ -273,20 +273,19 @@
                 deleteText.textContent = 'Menghapus...';
                 deleteSpinner.classList.remove('hidden');
 
+                // Buat FormData dengan method spoofing
+                const formData = new FormData();
+                formData.append('_method', 'DELETE');
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
                 fetch(`/admin/lowongan/${deleteLowonganId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
+                    method: 'POST', // Gunakan POST dengan method spoofing
+                    body: formData // Gunakan FormData bukan JSON
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Close delete modal first
                         closeDeleteModal();
-                        
-                        // Show success modal with custom message
                         showSuccessModal(data.message);
                     } else {
                         alert(data.message);
