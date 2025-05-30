@@ -83,6 +83,16 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');
+
+        Route::prefix('level')->name('admin.level')->group(function () {
+            Route::get('/', [LevelController::class, 'index'])->name('');
+            Route::get('/tambah', [LevelController::class, 'create'])->name('.create');
+            Route::post('/tambah', [LevelController::class, 'store'])->name('.store');
+            Route::get('/{id}/edit', [LevelController::class, 'edit'])->name('.edit');
+            Route::put('/{id}', [LevelController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [LevelController::class, 'destroy'])->name('.destroy');
+            Route::get('/{id}', [LevelController::class, 'detail'])->name('.detail');
+    });
     });
 
     // Dosen Routes
