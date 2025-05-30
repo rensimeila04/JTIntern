@@ -51,10 +51,10 @@
                                             {{ $level->nama_level }}
                                         </td>
                                         <td class="gap-2 flex px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
-                                            <button data-level-id="{{ $level->id_level }}"
+                                            <a href="{{ route('admin.level.detail', $level->id_level) }}"
                                                 class="detail-btn flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-files class="w-4 h-4 text-primary-500" />
-                                            </button>
+                                            </a>
                                             <button data-level-id="{{ $level->id_level }}"
                                                 class="edit-btn flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                 <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
@@ -76,14 +76,20 @@
     </div>
 
     <!-- Modal Tambah Level Pengguna -->
-    <div id="tambahLevelModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" tabindex="-1" aria-labelledby="tambahLevelModalLabel">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto w-full max-w-md mx-auto">
+    <div id="tambahLevelModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        tabindex="-1" aria-labelledby="tambahLevelModalLabel">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto w-full max-w-md mx-auto">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
                     <h3 class="font-bold text-gray-800 text-lg" id="tambahLevelModalLabel">
                         Tambah Level Pengguna
                     </h3>
-                    <button type="button" data-hs-overlay="#tambahLevelModal" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200" aria-label="Close">
+                    <button type="button" data-hs-overlay="#tambahLevelModal"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200"
+                        aria-label="Close">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -125,16 +131,56 @@
         </div>
     </div>
 
+    <!-- Modal detail Level Pengguna -->
+    <div id="detailLevelModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        tabindex="-1" aria-labelledby="detailLevelModalLabel">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
+                    <h3 class="font-bold text-gray-800 text-lg" id="detailLevelModalLabel">
+                        Detail Level Pengguna
+                    </h3>
+                    <button type="button" id="closeDetailLevelModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200"
+                        aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="size-4" />
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <span class="block text-xs text-gray-500 mb-1">ID Level</span>
+                        <span id="detailIdLevel" class="font-semibold text-gray-800"></span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-gray-500 mb-1">Kode Level</span>
+                        <span id="detailKodeLevel" class="font-semibold text-gray-800"></span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-gray-500 mb-1">Nama Level</span>
+                        <span id="detailNamaLevel" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Konfirmasi Tambah Level Pengguna -->
-    <div id="confirmLevelModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="confirmLevelModal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+    <div id="confirmLevelModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="confirmLevelModal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
             <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
                     <h3 id="confirmLevelModal-label" class="font-bold text-gray-800">
                         Konfirmasi Tambah Level Pengguna
                     </h3>
-                    <button type="button" id="closeConfirmLevelModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200" aria-label="Close">
+                    <button type="button" id="closeConfirmLevelModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200"
+                        aria-label="Close">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -161,12 +207,16 @@
                     </div>
                 </div>
                 <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200">
-                    <button type="button" id="cancelConfirmLevel" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50">
+                    <button type="button" id="cancelConfirmLevel"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50">
                         Batal
                     </button>
-                    <button type="button" id="confirmLevelSubmit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700">
+                    <button type="button" id="confirmLevelSubmit"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700">
                         <span id="confirmLevelButtonText">Ya, Tambahkan</span>
-                        <div id="confirmLevelSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading"></div>
+                        <div id="confirmLevelSpinner"
+                            class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full"
+                            role="status" aria-label="loading"></div>
                     </button>
                 </div>
             </div>
@@ -174,14 +224,19 @@
     </div>
 
     <!-- Modal Sukses -->
-    <div id="successLevelModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="successLevelModal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+    <div id="successLevelModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="successLevelModal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
             <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
                     <h3 id="successLevelModal-label" class="font-bold text-gray-800">
                         Berhasil!
                     </h3>
-                    <button type="button" id="closeSuccessLevelModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200" aria-label="Close">
+                    <button type="button" id="closeSuccessLevelModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200"
+                        aria-label="Close">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -193,12 +248,14 @@
                         </div>
                         <h4 class="text-lg font-semibold text-gray-900 mb-2">Level Pengguna Berhasil Ditambahkan</h4>
                         <p class="text-sm text-gray-600 mb-4">
-                            Data level <span id="successLevelName" class="font-semibold text-gray-900"></span> telah berhasil disimpan ke dalam sistem.
+                            Data level <span id="successLevelName" class="font-semibold text-gray-900"></span> telah
+                            berhasil disimpan ke dalam sistem.
                         </p>
                     </div>
                 </div>
                 <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200">
-                    <button type="button" id="closeSuccessLevelBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50">
+                    <button type="button" id="closeSuccessLevelBtn"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50">
                         Tutup
                     </button>
                 </div>
@@ -207,14 +264,19 @@
     </div>
 
     <!-- Modal Error -->
-    <div id="errorLevelModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="errorLevelModal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+    <div id="errorLevelModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="errorLevelModal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
             <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
                     <h3 id="errorLevelModal-label" class="font-bold text-gray-800">
                         Gagal!
                     </h3>
-                    <button type="button" id="closeErrorLevelModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200" aria-label="Close">
+                    <button type="button" id="closeErrorLevelModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200"
+                        aria-label="Close">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -231,7 +293,8 @@
                     </div>
                 </div>
                 <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200">
-                    <button type="button" id="closeErrorLevelBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50">
+                    <button type="button" id="closeErrorLevelBtn"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50">
                         Tutup
                     </button>
                 </div>
@@ -243,9 +306,10 @@
         let confirmLevelModal = null;
         let successLevelModal = null;
         let errorLevelModal = null;
+        let detailLevelModal = null;
 
         // Tampilkan modal konfirmasi sebelum submit
-        document.querySelector('form[action="{{ route('admin.level.store') }}"] button[type="submit"]').addEventListener('click', function(e) {
+        document.querySelector('form[action="{{ route('admin.level.store') }}"] button[type="submit"]').addEventListener('click', function (e) {
             e.preventDefault();
 
             // Ambil data input
@@ -274,13 +338,13 @@
         }
         document.getElementById('closeConfirmLevelModalBtn').onclick = closeConfirmLevelModal;
         document.getElementById('cancelConfirmLevel').onclick = closeConfirmLevelModal;
-        document.getElementById('confirmLevelModal').addEventListener('click', function(e) {
+        document.getElementById('confirmLevelModal').addEventListener('click', function (e) {
             const modalContent = this.querySelector('.bg-white');
             if (!modalContent.contains(e.target)) closeConfirmLevelModal();
         });
 
         // Submit form setelah konfirmasi
-        document.getElementById('confirmLevelSubmit').onclick = function() {
+        document.getElementById('confirmLevelSubmit').onclick = function () {
             const btn = this;
             const text = document.getElementById('confirmLevelButtonText');
             const spinner = document.getElementById('confirmLevelSpinner');
@@ -301,34 +365,74 @@
                 },
                 body: formData
             })
-            .then(async response => {
-                btn.disabled = false;
-                text.textContent = 'Ya, Tambahkan';
-                spinner.classList.add('hidden');
-                closeConfirmLevelModal();
+                .then(async response => {
+                    btn.disabled = false;
+                    text.textContent = 'Ya, Tambahkan';
+                    spinner.classList.add('hidden');
+                    closeConfirmLevelModal();
 
-                if (response.ok) {
-                    const data = await response.json();
-                    showSuccessLevelModal(formData.get('nama_level'));
-                    // Reset form
-                    form.reset();
-                } else {
-                    let msg = 'Terjadi kesalahan saat menyimpan data.';
-                    try {
-                        const err = await response.json();
-                        if (err && err.message) msg = err.message;
-                    } catch {}
-                    showErrorLevelModal(msg);
-                }
-            })
-            .catch(() => {
-                btn.disabled = false;
-                text.textContent = 'Ya, Tambahkan';
-                spinner.classList.add('hidden');
-                closeConfirmLevelModal();
-                showErrorLevelModal('Terjadi kesalahan jaringan.');
-            });
+                    if (response.ok) {
+                        const data = await response.json();
+                        showSuccessLevelModal(formData.get('nama_level'));
+                        // Reset form
+                        form.reset();
+                    } else {
+                        let msg = 'Terjadi kesalahan saat menyimpan data.';
+                        try {
+                            const err = await response.json();
+                            if (err && err.message) msg = err.message;
+                        } catch { }
+                        showErrorLevelModal(msg);
+                    }
+                })
+                .catch(() => {
+                    btn.disabled = false;
+                    text.textContent = 'Ya, Tambahkan';
+                    spinner.classList.add('hidden');
+                    closeConfirmLevelModal();
+                    showErrorLevelModal('Terjadi kesalahan jaringan.');
+                });
         };
+
+        document.querySelectorAll('.detail-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const url = this.getAttribute('href');
+                fetch(url, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(async response => {
+                        if (response.ok) {
+                            const json = await response.json();
+                            // Jika responsenya {success: true, data: {...}}
+                            const data = json.data ?? json;
+                            document.getElementById('detailIdLevel').textContent = data.id_level ?? '-';
+                            document.getElementById('detailKodeLevel').textContent = data.kode_level ?? '-';
+                            document.getElementById('detailNamaLevel').textContent = data.nama_level ?? '-';
+                            detailLevelModal = new HSOverlay(document.getElementById('detailLevelModal'));
+                            detailLevelModal.open();
+                        } else {
+                            showErrorLevelModal('Gagal mengambil detail data.');
+                        }
+                    })
+                    .catch(() => showErrorLevelModal('Terjadi kesalahan jaringan.'));
+            });
+        });
+
+        function closeDetailLevelModal() {
+            if (detailLevelModal) {
+                detailLevelModal.close();
+                detailLevelModal = null;
+            }
+        }
+        document.getElementById('closeDetailLevelModalBtn').onclick = closeDetailLevelModal;
+        document.getElementById('detailLevelModal').addEventListener('click', function (e) {
+            const modalContent = this.querySelector('.bg-white');
+            if (!modalContent.contains(e.target)) closeDetailLevelModal();
+        });
 
         // Modal sukses
         function showSuccessLevelModal(nama) {
@@ -344,7 +448,7 @@
         }
         document.getElementById('closeSuccessLevelModalBtn').onclick = closeSuccessLevelModal;
         document.getElementById('closeSuccessLevelBtn').onclick = closeSuccessLevelModal;
-        document.getElementById('successLevelModal').addEventListener('click', function(e) {
+        document.getElementById('successLevelModal').addEventListener('click', function (e) {
             const modalContent = this.querySelector('.bg-white');
             if (!modalContent.contains(e.target)) closeSuccessLevelModal();
         });
@@ -363,13 +467,13 @@
         }
         document.getElementById('closeErrorLevelModalBtn').onclick = closeErrorLevelModal;
         document.getElementById('closeErrorLevelBtn').onclick = closeErrorLevelModal;
-        document.getElementById('errorLevelModal').addEventListener('click', function(e) {
+        document.getElementById('errorLevelModal').addEventListener('click', function (e) {
             const modalContent = this.querySelector('.bg-white');
             if (!modalContent.contains(e.target)) closeErrorLevelModal();
         });
 
         // Escape key close
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeConfirmLevelModal();
                 closeSuccessLevelModal();

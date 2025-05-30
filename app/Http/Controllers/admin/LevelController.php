@@ -63,5 +63,24 @@ class LevelController extends Controller
             ->with('success', 'Data Level Pengguna berhasil ditambahkan.');
     }
 
+    public function detail($id, Request $request)
+    {
+        $level = LevelModel::findOrFail($id);
+
+        // Jika request AJAX (untuk modal), balas JSON saja
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id_level'   => $level->id_level,
+                    'kode_level' => $level->kode_level,
+                    'nama_level' => $level->nama_level,
+                ]
+            ]);
+        }
+
+        // Jika bukan AJAX, bisa redirect atau tampilkan error
+        return abort(404);
+    }
 }
 
