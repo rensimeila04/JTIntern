@@ -20,18 +20,68 @@
                 </div>
 
                 <div class="space-y-4 w-full">
-                    <div class="w-full bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <div class="font-medium text-sm mb-2">Informasi Durasi</div>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex items-center">
-                                <x-lucide-calendar-days class="size-5 text-gray-500 mr-2" />
-                                <span class="text-sm text-gray-600">Durasi: </span>
-                                <span id="durationDays" class="text-sm font-medium text-gray-900 ml-1">-</span>
-                            </div>
-                            <div class="flex items-center">
-                                <x-lucide-calendar-clock class="size-5 text-gray-500 mr-2" />
-                                <span class="text-sm text-gray-600">Setara: </span>
-                                <span id="durationWeeks" class="text-sm font-medium text-gray-900 ml-1">-</span>
+                    <div class="w-full relative">
+                        <label for="tanggal_selesai" class="block text-sm font-medium mb-2 dark:text-white">Tanggal
+                            Selesai</label>
+                        <input id="endDateInput"
+                            class="py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500 cursor-pointer"
+                            type="text" placeholder="Pilih tanggal selesai" readonly>
+                        <input type="hidden" name="tanggal_selesai" id="endDateHidden"
+                            value="{{ old('tanggal_selesai', $periodeMagang->tanggal_selesai) }}">
+                        <span class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 pointer-events-none">
+                            <i class="ph ph-calendar-days text-xl"></i>
+                        </span>
+                        @error('tanggal_selesai')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+
+                        <!-- Custom Date Picker -->
+                        <div id="endDatePicker" class="absolute top-full left-0 mt-2 z-50 hidden">
+                            <div
+                                class="w-80 flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden">
+                                <div class="p-3 space-y-0.5">
+                                    <div class="grid grid-cols-5 items-center gap-x-3 mx-1.5 pb-3">
+                                        <div class="col-span-1">
+                                            <button type="button" id="prevMonthEnd"
+                                                class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
+                                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="m15 18-6-6 6-6" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="col-span-3 flex justify-center items-center gap-x-1">
+                                            <span id="currentMonthEnd"
+                                                class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
+                                            <span class="text-gray-800">/</span>
+                                            <span id="currentYearEnd"
+                                                class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
+                                        </div>
+                                        <div class="col-span-1 flex justify-end">
+                                            <button type="button" id="nextMonthEnd"
+                                                class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
+                                                <svg class="shrink-0 size-4" width="24" height="24" viewBox="0 0 24 24"
+                                                    fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="m9 18 6-6-6-6" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex pb-1.5">
+                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Sen</span>
+                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Sel</span>
+                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Rab</span>
+                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Kam</span>
+                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Jum</span>
+                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Sab</span>
+                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Min</span>
+                                    </div>
+                                    <div id="daysContainerEnd" class="space-y-0">
+                                        <!-- Days will be generated by JavaScript -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -108,68 +158,18 @@
                 </div>
 
                 <div class="space-y-4 w-full">
-                    <div class="w-full relative">
-                        <label for="tanggal_selesai" class="block text-sm font-medium mb-2 dark:text-white">Tanggal
-                            Selesai</label>
-                        <input id="endDateInput"
-                            class="py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500 cursor-pointer"
-                            type="text" placeholder="Pilih tanggal selesai" readonly>
-                        <input type="hidden" name="tanggal_selesai" id="endDateHidden"
-                            value="{{ old('tanggal_selesai', $periodeMagang->tanggal_selesai) }}">
-                        <span class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 pointer-events-none">
-                            <i class="ph ph-calendar-days text-xl"></i>
-                        </span>
-                        @error('tanggal_selesai')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-
-                        <!-- Custom Date Picker -->
-                        <div id="endDatePicker" class="absolute top-full left-0 mt-2 z-50 hidden">
-                            <div
-                                class="w-80 flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden">
-                                <div class="p-3 space-y-0.5">
-                                    <div class="grid grid-cols-5 items-center gap-x-3 mx-1.5 pb-3">
-                                        <div class="col-span-1">
-                                            <button type="button" id="prevMonthEnd"
-                                                class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
-                                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
-                                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path d="m15 18-6-6 6-6" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <div class="col-span-3 flex justify-center items-center gap-x-1">
-                                            <span id="currentMonthEnd"
-                                                class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
-                                            <span class="text-gray-800">/</span>
-                                            <span id="currentYearEnd"
-                                                class="font-medium text-gray-800 cursor-pointer hover:text-primary-600"></span>
-                                        </div>
-                                        <div class="col-span-1 flex justify-end">
-                                            <button type="button" id="nextMonthEnd"
-                                                class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100">
-                                                <svg class="shrink-0 size-4" width="24" height="24" viewBox="0 0 24 24"
-                                                    fill="none" stroke="currentColor" stroke-width="2"
-                                                    stroke-linecap="round" stroke-linejoin="round">
-                                                    <path d="m9 18 6-6-6-6" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="flex pb-1.5">
-                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Sen</span>
-                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Sel</span>
-                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Rab</span>
-                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Kam</span>
-                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Jum</span>
-                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Sab</span>
-                                        <span class="m-px w-10 block text-center text-sm text-gray-500">Min</span>
-                                    </div>
-                                    <div id="daysContainerEnd" class="space-y-0">
-                                        <!-- Days will be generated by JavaScript -->
-                                    </div>
-                                </div>
+                    <div class="w-full bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="font-medium text-sm mb-2">Informasi Durasi</div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center">
+                                <x-lucide-calendar-days class="size-5 text-gray-500 mr-2" />
+                                <span class="text-sm text-gray-600">Durasi: </span>
+                                <span id="durationDays" class="text-sm font-medium text-gray-900 ml-1">-</span>
+                            </div>
+                            <div class="flex items-center">
+                                <x-lucide-calendar-clock class="size-5 text-gray-500 mr-2" />
+                                <span class="text-sm text-gray-600">Setara: </span>
+                                <span id="durationWeeks" class="text-sm font-medium text-gray-900 ml-1">-</span>
                             </div>
                         </div>
                     </div>
@@ -339,24 +339,49 @@
 
             init() {
                 this.bindEvents();
-                this.updateCalendar();
-                this.loadExistingDate();
+                this.loadExistingDate(); // Load existing dates first
+                this.updateCalendar();   // Then update calendar with loaded date
             }
 
             loadExistingDate() {
                 if (this.hiddenInput && this.hiddenInput.value) {
-                    const existingDate = new Date(this.hiddenInput.value);
-                    this.selectedDate = new Date(existingDate);
-                    this.currentDate = new Date(existingDate);
+                    try {
+                        // Fix date parsing issues by ensuring proper format
+                        const dateValue = this.hiddenInput.value;
+                        const existingDate = new Date(dateValue);
+                        
+                        // Check if date is valid
+                        if (!isNaN(existingDate.getTime())) {
+                            this.selectedDate = new Date(existingDate);
+                            this.currentDate = new Date(existingDate);
 
-                    const day = this.selectedDate.getDate();
-                    const monthName = this.monthNames[this.selectedDate.getMonth()];
-                    const year = this.selectedDate.getFullYear();
-                    const displayDate = `${day} ${monthName} ${year}`;
+                            const day = this.selectedDate.getDate();
+                            const monthName = this.monthNames[this.selectedDate.getMonth()];
+                            const year = this.selectedDate.getFullYear();
+                            const displayDate = `${day} ${monthName} ${year}`;
 
-                    this.inputElement.value = displayDate;
-                    this.updateCalendar();
+                            this.inputElement.value = displayDate;
+                            
+                            // Make sure the date is properly formatted in YYYY-MM-DD format
+                            const formattedDate = this.formatDateForInput(this.selectedDate);
+                            this.hiddenInput.value = formattedDate;
+                            
+                            console.log(`Loaded ${this.type} date:`, formattedDate, this.selectedDate);
+                        } else {
+                            console.error(`Invalid date value for ${this.type}:`, dateValue);
+                        }
+                    } catch (error) {
+                        console.error(`Error loading ${this.type} date:`, error);
+                    }
                 }
+            }
+            
+            // Helper function to format date in YYYY-MM-DD format for input value
+            formatDateForInput(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
             }
 
             bindEvents() {
@@ -424,7 +449,10 @@
 
                         const isCurrentMonth = currentDate.getMonth() === month;
                         const isToday = currentDate.toDateString() === today.toDateString();
-                        const isSelected = this.selectedDate && currentDate.toDateString() === this.selectedDate.toDateString();
+                        const isSelected = this.selectedDate && 
+                                          currentDate.getDate() === this.selectedDate.getDate() && 
+                                          currentDate.getMonth() === this.selectedDate.getMonth() && 
+                                          currentDate.getFullYear() === this.selectedDate.getFullYear();
 
                         // Check if date is before minimum date (for end date picker)
                         const isBeforeMinDate = this.minDate && currentDate < this.minDate;
@@ -471,7 +499,13 @@
                 const displayDate = `${day} ${monthName} ${year}`;
 
                 this.inputElement.value = displayDate;
-                this.hiddenInput.value = this.selectedDate.toISOString().split('T')[0];
+                
+                // Format date as YYYY-MM-DD
+                const formattedDate = this.formatDateForInput(this.selectedDate);
+                this.hiddenInput.value = formattedDate;
+                
+                console.log(`Selected ${this.type} date:`, formattedDate);
+                
                 this.pickerElement.classList.add('hidden');
 
                 // Update calendar display
@@ -496,7 +530,7 @@
             }
         }
 
-        // Format date for display
+        // Format date for display (no changes needed)
         function formatDate(dateString) {
             if (!dateString) return '-';
             const date = new Date(dateString);
@@ -513,10 +547,20 @@
         function calculateDuration() {
             const startDate = document.getElementById('startDateHidden').value;
             const endDate = document.getElementById('endDateHidden').value;
+            
+            console.log('Calculating duration with:', { startDate, endDate });
 
             if (startDate && endDate) {
                 const start = new Date(startDate);
                 const end = new Date(endDate);
+
+                // Check if dates are valid
+                if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                    console.error('Invalid date values:', { startDate, endDate });
+                    document.getElementById('durationDays').textContent = "Tanggal tidak valid";
+                    document.getElementById('durationWeeks').textContent = "Tanggal tidak valid";
+                    return false;
+                }
 
                 // Check if end date is before start date
                 if (end < start) {
@@ -645,7 +689,14 @@
 
         // Tunggu DOM selesai dimuat sebelum menambahkan event listener
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize date pickers
+            console.log('DOM loaded, initializing date pickers');
+            
+            // Debug initial values
+            const startDateValue = document.getElementById('startDateHidden').value;
+            const endDateValue = document.getElementById('endDateHidden').value;
+            console.log('Initial date values:', { startDateValue, endDateValue });
+            
+            // Initialize start date picker
             window.startDatePicker = new CustomDatePicker({
                 type: 'start',
                 inputId: 'startDateInput',
@@ -659,10 +710,10 @@
             });
 
             // Initialize end date picker with min date from start date
-            const startDateValue = document.getElementById('startDateHidden').value;
             let minDate = null;
             if (startDateValue) {
                 minDate = new Date(startDateValue);
+                console.log('Setting min date for end picker:', minDate);
             }
 
             window.endDatePicker = new CustomDatePicker({
@@ -770,6 +821,17 @@
             // Add hidden class to both pickers initially to prevent class name mistakes
             document.getElementById('startDatePicker').classList.add('date-picker-container');
             document.getElementById('endDatePicker').classList.add('date-picker-container');
+            
+            // Extra check to ensure form submission is working correctly
+            document.getElementById('editPeriodeForm').addEventListener('submit', function(e) {
+                const startDateValue = document.getElementById('startDateHidden').value;
+                const endDateValue = document.getElementById('endDateHidden').value;
+                
+                console.log('Form submission - date values:', { 
+                    start: startDateValue, 
+                    end: endDateValue 
+                });
+            });
         });
     </script>
 @endsection

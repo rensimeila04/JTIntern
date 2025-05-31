@@ -26,7 +26,7 @@ class PeriodeController extends Controller
         ]);
     }
 
-    public function detail($id) 
+    public function detail($id)
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -38,7 +38,7 @@ class PeriodeController extends Controller
 
         // Load periode_magang with its lowongan relationship
         $periodeMagang = PeriodeMagangModel::with('lowongan.perusahaanMitra', 'lowongan.kompetensi')
-                         ->findOrFail($id);
+            ->findOrFail($id);
 
         return view('admin.detail_periode_magang', [
             'breadcrumb' => $breadcrumb,
@@ -109,9 +109,20 @@ class PeriodeController extends Controller
     }
     public function destroy($id)
     {
-        $periodeMagang = PeriodeMagangModel::findOrFail($id);
-        $periodeMagang->delete();
+        try {
+            $periodeMagang = PeriodeMagangModel::findOrFail($id);
+            $nama = $periodeMagang->nama_periode;
+            $periodeMagang->delete();
 
-        return redirect()->route('admin.periode_magang')->with('success', 'Periode magang berhasil dihapus.');
+            return response()->json([
+                'success' => true,
+                'message' => "Periode magang '{$nama}' berhasil dihapus."
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
