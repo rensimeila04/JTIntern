@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\PeriodeController;
 use App\Http\Controllers\Admin\LowonganController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MagangController;
+use App\Http\Controllers\Mahasiswa\LowonganMhsController;
+use App\Http\Controllers\LowonganController as ControllersLowonganController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 
 /*
@@ -99,5 +101,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
         Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
             ->name('mahasiswa.dashboard');
+        Route::get('/detail_lowongan', [LowonganMhsController::class, 'detailLowongan'])
+            ->name('mahasiswa.detail_lowongan');
+        
     });
 });
