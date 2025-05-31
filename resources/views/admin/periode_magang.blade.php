@@ -37,11 +37,11 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                                @forelse ($periodeMagang as $index => $item)
+                                @forelse ($periodeMagang as $item)
                                     <tr class="hover:bg-gray-100 dark:hover:bg-neutral-700">
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium text-gray-800 dark:text-neutral-200">
-                                            {{ $index + 1 }}
+                                            {{ $item->id_periode_magang }}</td>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                             {{ $item->nama_periode }}
