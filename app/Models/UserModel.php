@@ -63,4 +63,12 @@ class UserModel extends Authenticatable
     public function notifikasi() {
         return $this->hasMany(NotifikasiModel::class, 'id_user', 'id_user');
     }
+
+    public function admin() {
+        return $this->hasOne(AdminModel::class, 'id_user', 'id_user');
+    }
+
+    public function dosenPembimbing() {
+        return $this->hasOne(DosenPembimbingModel::class, 'id_user', 'id_user');
+    }
 }
