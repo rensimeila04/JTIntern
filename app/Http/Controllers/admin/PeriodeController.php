@@ -75,4 +75,43 @@ class PeriodeController extends Controller
 
         return redirect()->route('admin.periode_magang.create')->with('success', 'Periode magang berhasil ditambahkan.');
     }
+
+    public function edit($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Periode Magang', 'url' => route('admin.periode_magang')],
+            ['label' => 'Edit Periode', 'url' => '#'],
+        ];
+
+        $activeMenu = 'periode-magang';
+
+        $periodeMagang = PeriodeMagangModel::findOrFail($id);
+
+        return view('admin.edit_periode_magang', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu,
+            'periodeMagang' => $periodeMagang,
+        ]);
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama_periode' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+        ]);
+
+        $periodeMagang = PeriodeMagangModel::findOrFail($id);
+        $periodeMagang->update($request->all());
+
+        return redirect()->route('admin.periode_magang.edit', $id)->with('success', 'Periode magang berhasil diperbarui.');
+    }
+    public function destroy($id)
+    {
+        $periodeMagang = PeriodeMagangModel::findOrFail($id);
+        $periodeMagang->delete();
+
+        return redirect()->route('admin.periode_magang')->with('success', 'Periode magang berhasil dihapus.');
+    }
 }
