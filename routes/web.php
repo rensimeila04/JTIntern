@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\LowonganController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MagangController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
+use App\Http\Controllers\Mahasiswa\LowonganController as MahasiswaLowonganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_mahasiswa');
         Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])
             ->name('admin.detail_admin');
-        
+
         // Perusahaan routes - reordered for proper route matching
         Route::prefix('perusahaan')->name('admin.perusahaan')->group(function () {
             Route::get('/', [PerusahaanController::class, 'index'])->name('');
@@ -60,10 +61,10 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('.destroy');
             Route::get('/{id}', [PerusahaanController::class, 'detail'])->name('.detail');
         });
-        
+
         Route::get('/periode-magang', [PeriodeController::class, 'index'])
             ->name('admin.periode_magang');
-            
+
         Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
             Route::get('/', [MagangController::class, 'index']);
             Route::get('/permohonan-magang', [MagangController::class, 'permohonanMagang'])->name('.permohonan_magang');
@@ -72,7 +73,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat_magang');
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
         });
-        
+
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
@@ -82,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LowonganController::class, 'updateLowongan'])->name('.update');
             Route::delete('/{id}', [LowonganController::class, 'destroyLowongan'])->name('.destroy');
         });
-        
+
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');
     });
@@ -99,5 +100,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
         Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
             ->name('mahasiswa.dashboard');
+        Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])
+            ->name('mahasiswa.lowongan');
     });
 });
