@@ -43,10 +43,10 @@
                         Aktivitas</div>
                 </a>
                 <a href="{{ route('mahasiswa.feedback') }}"
-                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'log-aktivitas' ? 'bg-primary-100' : '' }}">
-                    <x-lucide-message-square-plus class="size-6 {{ ($activeMenu ?? '') == 'log-aktivitas' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
+                    class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'feedback' ? 'bg-primary-100' : '' }}">
+                    <x-lucide-message-square-plus class="size-6 {{ ($activeMenu ?? '') == 'feedback' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
-                    <div class="{{ ($activeMenu ?? '') == 'log-aktivitas' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Feedback
+                    <div class="{{ ($activeMenu ?? '') == 'feedback' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Feedback
                         Magang</div>
                 </a>
             </div>
