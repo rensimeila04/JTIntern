@@ -91,38 +91,38 @@ class UserController extends Controller
 
         // Build query for mahasiswa bimbingan
         $query = \App\Models\MagangModel::with([
-                'mahasiswa.user',
-                'lowongan.perusahaanMitra'
-            ])
+            'mahasiswa.user',
+            'lowongan.perusahaanMitra'
+        ])
             ->where('id_dosen_pembimbing', $user->dosenPembimbing->id_dosen_pembimbing);
-        
+
         // Filter by status
         if ($request->filled('status') && $request->status != 'all') {
             $query->where('status_magang', $request->status);
         }
-        
+
         // Search functionality
         if ($request->filled('search')) {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 // Search in mahasiswa's name or NIM
-                $q->whereHas('mahasiswa', function($subQ) use ($searchTerm) {
+                $q->whereHas('mahasiswa', function ($subQ) use ($searchTerm) {
                     $subQ->where('nim', 'LIKE', "%{$searchTerm}%")
-                        ->orWhereHas('user', function($userQ) use ($searchTerm) {
+                        ->orWhereHas('user', function ($userQ) use ($searchTerm) {
                             $userQ->where('name', 'LIKE', "%{$searchTerm}%");
                         });
                 })
-                // Or search in lowongan title
-                ->orWhereHas('lowongan', function($subQ) use ($searchTerm) {
-                    $subQ->where('judul_lowongan', 'LIKE', "%{$searchTerm}%")
-                        // Or search in perusahaan name
-                        ->orWhereHas('perusahaanMitra', function($companyQ) use ($searchTerm) {
-                            $companyQ->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
-                        });
-                });
+                    // Or search in lowongan title
+                    ->orWhereHas('lowongan', function ($subQ) use ($searchTerm) {
+                        $subQ->where('judul_lowongan', 'LIKE', "%{$searchTerm}%")
+                            // Or search in perusahaan name
+                            ->orWhereHas('perusahaanMitra', function ($companyQ) use ($searchTerm) {
+                                $companyQ->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
+                            });
+                    });
             });
         }
-        
+
         // Paginate results
         $mahasiswaBimbingan = $query->paginate(10)->appends($request->query());
 
@@ -241,21 +241,21 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->id_level = $request->id_level;
-        
+
         // Handle profile photo if uploaded
         if ($request->hasFile('profile_photo') && $request->file('profile_photo')->isValid()) {
             try {
                 $photo = $request->file('profile_photo');
                 $photoName = time() . '_' . str_replace(' ', '_', $photo->getClientOriginalName());
-                
+
                 // // Pastikan direktori ada
                 // if (!file_exists(public_path('images'))) {
                 //     mkdir(public_path('images'), 0777, true);
                 // }
-                
+
                 // Simpan ke folder public/images
                 $photo->move(public_path('images'), $photoName);
-                
+
                 // Update path pada database
                 $user->profile_photo = $photoName;
             } catch (\Exception $e) {
@@ -265,12 +265,12 @@ class UserController extends Controller
                     ->with('error', 'Gagal mengunggah foto: ' . $e->getMessage());
             }
         }
-        
+
         $user->save();
 
         // Get level name for display in success message
         $levelName = LevelModel::find($request->id_level)->nama_level ?? '';
-        
+
         // Create related model based on level
         $this->createRelatedModelForUser($user, $levelName);
 
@@ -291,14 +291,12 @@ class UserController extends Controller
             $admin = new AdminModel();
             $admin->id_user = $user->id_user;
             $admin->save();
-        } 
-        elseif (stripos($levelName, 'dosen') !== false) {
+        } elseif (stripos($levelName, 'dosen') !== false) {
             // Create Dosen record
             $dosen = new DosenPembimbingModel();
             $dosen->id_user = $user->id_user;
             $dosen->save();
-        } 
-        elseif (stripos($levelName, 'mahasiswa') !== false) {
+        } elseif (stripos($levelName, 'mahasiswa') !== false) {
             // Create Mahasiswa record
             $mahasiswa = new MahasiswaModel();
             $mahasiswa->id_user = $user->id_user;
@@ -314,7 +312,7 @@ class UserController extends Controller
                 'id' => $id,
                 'request_data' => $request->all()
             ]);
-            
+
             // Validate the request
             $request->validate([
                 'name' => 'required|string|max:255',
@@ -337,16 +335,16 @@ class UserController extends Controller
 
                     $photo = $request->file('profile_photo');
                     $photoName = time() . '_' . str_replace(' ', '_', $photo->getClientOriginalName());
-                    
+
                     // Simpan ke folder public/images
                     $photo->move(public_path('images'), $photoName);
-                    
+
                     // Update path pada database
                     $user->profile_photo = $photoName;
                 } catch (\Exception $e) {
                     // Log error
                     Log::error('Error uploading profile photo: ' . $e->getMessage());
-                    
+
                     // For AJAX requests
                     if ($request->expectsJson()) {
                         return response()->json([
@@ -354,7 +352,7 @@ class UserController extends Controller
                             'message' => 'Gagal mengunggah foto: ' . $e->getMessage()
                         ], 422);
                     }
-                    
+
                     return redirect()->back()->withInput()
                         ->with('error', 'Gagal mengunggah foto: ' . $e->getMessage());
                 }
@@ -362,7 +360,7 @@ class UserController extends Controller
 
             // Save the user
             $user->save();
-            
+
             // For AJAX requests
             if ($request->expectsJson()) {
                 return response()->json([
@@ -376,14 +374,13 @@ class UserController extends Controller
             return redirect()->route('admin.pengguna')
                 ->with('success', 'Pengguna berhasil diperbarui.')
                 ->with('user_name', $user->name);
-                
         } catch (\Exception $e) {
             Log::error('Error updating user:', [
                 'id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             // For AJAX requests
             if ($request->expectsJson()) {
                 return response()->json([
@@ -391,9 +388,56 @@ class UserController extends Controller
                     'message' => 'Terjadi kesalahan: ' . $e->getMessage()
                 ], 500);
             }
-            
+
             return redirect()->back()->withInput()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            // Find the user
+            $user = UserModel::findOrFail($id);
+            $userName = $user->name;
+
+            // Get user level for informational purposes
+            $userLevel = $user->level->nama_level ?? 'Pengguna';
+
+            // Delete based on user level
+            // Let the model relationships handle the cascading delete
+            // Model event listeners will fire and trigger database foreign key constraints
+            $user->delete();
+
+            // For AJAX requests
+            if (request()->ajax() || request()->wantsJson() || request()->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "$userLevel \"$userName\" berhasil dihapus."
+                ]);
+            }
+
+            // Return to the users page with success message
+            return redirect()->route('admin.pengguna')
+                ->with('success', "$userLevel berhasil dihapus.")
+                ->with('message', "$userLevel \"$userName\" berhasil dihapus.");
+        } catch (\Exception $e) {
+            Log::error('Error deleting user:', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            // For AJAX requests
+            if (request()->ajax() || request()->wantsJson() || request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menghapus pengguna: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus pengguna: ' . $e->getMessage());
         }
     }
 }
