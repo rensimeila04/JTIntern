@@ -138,5 +138,6 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.lowongan');
         Route::get('/edit', [MahasiswaProfileController::class, 'edit'])
             ->name('mahasiswa.edit_profile');
+        Route::post('/profile/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])->name('mahasiswa.profile.update-preferensi');
     });
 });

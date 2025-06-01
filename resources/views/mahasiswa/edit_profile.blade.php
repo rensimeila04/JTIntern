@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <span class="flex justify-end mt-6">
-                    <button type="button" id="submitBtn" class="btn-primary">
+                    <button type="button" id="updatePreferensiBtn" class="btn-primary">
                         Perbarui Preferensi
                     </button>
                 </span>
@@ -503,6 +503,38 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Enter') {
             e.preventDefault();
         }
+    });
+
+    // Handle update preferensi
+    document.getElementById('updatePreferensiBtn').addEventListener('click', function() {
+        const formData = new FormData();
+        formData.append('jenis_magang', document.getElementById('jenis_magang').value);
+        formData.append('kompetensi', document.getElementById('kompetensi').value);
+        formData.append('jenis_perusahaan', document.getElementById('jenis_perusahaan').value);
+        formData.append('preferensi_lokasi', document.getElementById('preferensi_lokasi').value);
+        formData.append('latitude_preferensi', document.getElementById('latitude-preferensi').value);
+        formData.append('longitude_preferensi', document.getElementById('longitude-preferensi').value);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route("mahasiswa.profile.update-preferensi") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                // Optional: reload page or update UI
+                location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan');
+                console.error('Errors:', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memperbarui preferensi');
+        });
     });
 });
 </script>

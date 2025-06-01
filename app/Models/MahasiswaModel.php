@@ -35,6 +35,8 @@ class MahasiswaModel extends Model
         'id_kompetensi',
         'id_program_studi',
         'preferensi_lokasi',
+        'latitude_preferensi',
+        'longitude_preferensi',
         'id_jenis_perusahaan',
     ];
 
