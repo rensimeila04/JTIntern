@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <a href="#" class="btn-primary">Lihat Perhitungan</a>
+        <a href="{{ route('mahasiswa.mabac.hitung') }}" class="btn-primary">Lihat Perhitungan</a>
     </div>
 
     {{-- Daftar Lowongan --}}

@@ -139,5 +139,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/edit', [MahasiswaProfileController::class, 'edit'])
             ->name('mahasiswa.edit_profile');
         Route::post('/profile/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])->name('mahasiswa.profile.update-preferensi');
+        Route::get('/mabac/hitung', [App\Http\Controllers\Mahasiswa\MabacController::class, 'hitungMabac'])->name('mahasiswa.mabac.hitung');
     });
 });
