@@ -22,21 +22,21 @@ class UserController extends Controller
 
         // Query builder for users
         $query = UserModel::with('level');
-
+        
         // Filter based on level
         if ($request->filled('level_id') && $request->level_id != 'all') {
             $query->where('id_level', $request->level_id);
         }
-
+        
         // Search functionality
         if ($request->filled('search')) {
             $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
+            $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('email', 'LIKE', "%{$searchTerm}%")
-                    ->orWhereHas('level', function ($q) use ($searchTerm) {
-                        $q->where('nama_level', 'LIKE', "%{$searchTerm}%");
-                    });
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%")
+                  ->orWhereHas('level', function($q) use ($searchTerm) {
+                      $q->where('nama_level', 'LIKE', "%{$searchTerm}%");
+                  });
             });
         }
 
@@ -68,6 +68,7 @@ class UserController extends Controller
 
     public function detailDospem(Request $request, $id)
     {
+        // Existing code unchanged
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Pengguna', 'url' => route('admin.pengguna')],
@@ -134,6 +135,7 @@ class UserController extends Controller
 
     public function detailMahasiswa($id)
     {
+        // Existing code unchanged
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Pengguna', 'url' => route('admin.pengguna')],

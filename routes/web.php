@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])->name('.detail_admin');
         });
 
+
         // Perusahaan routes - reordered for proper route matching
         Route::prefix('perusahaan')->name('admin.perusahaan')->group(function () {
             Route::get('/', [PerusahaanController::class, 'index'])->name('');
@@ -71,8 +72,17 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}', [PerusahaanController::class, 'detail'])->name('.detail');
         });
 
-        Route::get('/periode-magang', [PeriodeController::class, 'index'])
-            ->name('admin.periode_magang');
+
+
+        Route::prefix('periode-magang')->name('admin.periode_magang')->group(function () {
+            Route::get('/', [PeriodeController::class, 'index']);
+            Route::get('/tambah', [PeriodeController::class, 'create'])->name('.create');
+            Route::post('/tambah', [PeriodeController::class, 'store'])->name('.store');
+            Route::get('/{id}/edit', [PeriodeController::class, 'edit'])->name('.edit');
+            Route::put('/{id}', [PeriodeController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [PeriodeController::class, 'destroy'])->name('.destroy');
+            Route::get('/{id}', [PeriodeController::class, 'detail'])->name('.detail');
+        });
 
         Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
             Route::get('/', [MagangController::class, 'index']);
@@ -83,6 +93,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
         });
 
+
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
@@ -92,6 +103,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LowonganController::class, 'updateLowongan'])->name('.update');
             Route::delete('/{id}', [LowonganController::class, 'destroyLowongan'])->name('.destroy');
         });
+
 
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');

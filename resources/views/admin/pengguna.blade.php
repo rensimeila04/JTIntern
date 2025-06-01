@@ -95,8 +95,7 @@
             <!-- Search dengan komponen search-input -->
             <div class="flex items-center gap-2">
                 <form method="GET" action="{{ route('admin.pengguna') }}" id="searchForm" class="flex items-center gap-2">
-                    <x-search-input name="search" value="{{ $currentSearch }}" placeholder="Cari pengguna..."
-                        id="searchInput"
+                    <x-search-input name="search" value="{{ $currentSearch }}" placeholder="Cari pengguna..." id="searchInput"
                         class="py-3 px-4 pl-11 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" />
                     <input type="hidden" name="level_id" value="{{ $currentFilter }}">
                 </form>
@@ -236,20 +235,20 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const searchForm = document.getElementById('searchForm');
             let searchTimeout;
 
             if (searchInput && searchForm) {
-                searchInput.addEventListener('input', function () {
+                searchInput.addEventListener('input', function() {
                     clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(function () {
+                    searchTimeout = setTimeout(function() {
                         searchForm.submit();
                     }, 500);
                 });
 
-                searchInput.addEventListener('keypress', function (e) {
+                searchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         clearTimeout(searchTimeout);
