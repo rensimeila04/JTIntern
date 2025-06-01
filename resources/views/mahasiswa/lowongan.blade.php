@@ -27,10 +27,20 @@
                     </button>
                 </nav>
                 <div class="flex justify-end items-center gap-2 flex-1">
-                    <form method="GET" action="" id="searchForm" class="flex items-center gap-2">
+                    <form method="GET" action="{{ route('mahasiswa.lowongan') }}" id="searchForm" class="flex items-center gap-2">
                         <x-search-input name="search" placeholder="Cari lowongan..." id="searchInput"
+                            value="{{ request('search') }}"
                             class="py-3 px-4 pl-11 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" />
-                        <input type="hidden" name="jenis_perusahaan">
+                        {{-- Preserve existing filters --}}
+                        @if(request('jenis_magang'))
+                            <input type="hidden" name="jenis_magang" value="{{ request('jenis_magang') }}">
+                        @endif
+                        @if(request('jenis_perusahaan'))
+                            <input type="hidden" name="jenis_perusahaan" value="{{ request('jenis_perusahaan') }}">
+                        @endif
+                        @if(request('lokasi'))
+                            <input type="hidden" name="lokasi" value="{{ request('lokasi') }}">
+                        @endif
                     </form>
                 </div>
             </div>

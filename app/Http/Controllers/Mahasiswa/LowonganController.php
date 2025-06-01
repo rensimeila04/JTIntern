@@ -38,6 +38,24 @@ class LowonganController extends Controller
             'magang'
         ])->where('status_pendaftaran', true);
 
+        // Search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('judul_lowongan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('persyaratan', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('perusahaanMitra', function ($subQ) use ($searchTerm) {
+                      $subQ->where('nama_perusahaan_mitra', 'like', '%' . $searchTerm . '%')
+                           ->orWhere('bidang_industri', 'like', '%' . $searchTerm . '%')
+                           ->orWhere('alamat', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhereHas('kompetensi', function ($subQ) use ($searchTerm) {
+                      $subQ->where('nama_kompetensi', 'like', '%' . $searchTerm . '%');
+                  });
+            });
+        }
+
         // Filter by jenis magang (tipe magang)
         if ($request->filled('jenis_magang')) {
             $query->where('jenis_magang', $request->jenis_magang);
@@ -65,7 +83,7 @@ class LowonganController extends Controller
             'jenisPerusahaan' => $jenisPerusahaan,
             'lokasiPerusahaan' => $lokasiPerusahaan,
             'lowonganList' => $lowonganList,
-            'filters' => $request->only(['jenis_magang', 'jenis_perusahaan', 'lokasi'])
+            'filters' => $request->only(['jenis_magang', 'jenis_perusahaan', 'lokasi', 'search'])
         ]);
     }
 }

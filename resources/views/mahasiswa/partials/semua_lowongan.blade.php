@@ -106,6 +106,23 @@
         @endif
     </div>
 
+    {{-- Search Results Info --}}
+    @if(isset($filters['search']) && $filters['search'])
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center gap-2">
+                <x-lucide-search class="size-4 text-blue-600" />
+                <span class="text-blue-800 text-sm">
+                    Menampilkan hasil pencarian untuk: <strong>"{{ $filters['search'] }}"</strong>
+                </span>
+                @if($lowonganList->count() > 0)
+                    <span class="text-blue-600 text-sm">
+                        ({{ $lowonganList->count() }} lowongan ditemukan)
+                    </span>
+                @endif
+            </div>
+        </div>
+    @endif
+
     {{-- Daftar Lowongan --}}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
         @forelse ($lowonganList as $lowongan)
@@ -171,8 +188,13 @@
             </div>
         @empty
             <div class="col-span-full text-center py-12">
-                <div class="text-gray-500 text-lg">Tidak ada lowongan yang sesuai dengan filter</div>
-                <div class="text-gray-400 text-sm mt-2">Coba ubah filter atau <a href="{{ route('mahasiswa.lowongan') }}" class="text-primary-500 hover:underline">reset semua filter</a></div>
+                @if(isset($filters['search']) && $filters['search'])
+                    <div class="text-gray-500 text-lg">Tidak ada lowongan yang sesuai dengan pencarian "{{ $filters['search'] }}"</div>
+                    <div class="text-gray-400 text-sm mt-2">Coba kata kunci lain atau <a href="{{ route('mahasiswa.lowongan') }}" class="text-primary-500 hover:underline">lihat semua lowongan</a></div>
+                @else
+                    <div class="text-gray-500 text-lg">Tidak ada lowongan yang sesuai dengan filter</div>
+                    <div class="text-gray-400 text-sm mt-2">Coba ubah filter atau <a href="{{ route('mahasiswa.lowongan') }}" class="text-primary-500 hover:underline">reset semua filter</a></div>
+                @endif
             </div>
         @endforelse
     </div>
