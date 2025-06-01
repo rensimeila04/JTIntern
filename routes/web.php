@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_admin');
         Route::get('/edit', [UserController::class, 'edit'])
             ->name('admin.edit_profile');
-        
+
 
 
         // User management routes
@@ -134,5 +134,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.dashboard');
         Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])
             ->name('mahasiswa.lowongan');
+        Route::get('/edit-profile', [MahasiswaDashboardController::class, 'edit'])
+            ->name('mahasiswa.edit_profile');
     });
 });
