@@ -96,10 +96,17 @@
                     </div>
                     <div>
                         <label for="preferensi_lokasi" class="text-sm font-semibold">Preferensi Lokasi</label>
-                        <input type="text" id="preferensi_lokasi" name="preferensi_lokasi"
-                            value="{{ Auth::user()->mahasiswa->preferensi_lokasi ?? '' }}"
-                            placeholder="Masukkan kota atau wilayah yang diinginkan"
-                            class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
+                        <div class="location-input-container relative">
+                            <input type="text" id="preferensi_lokasi" name="preferensi_lokasi"
+                                value="{{ Auth::user()->mahasiswa->preferensi_lokasi ?? '' }}"
+                                placeholder="Ketik kota atau wilayah yang diinginkan..."
+                                class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
+                                autocomplete="off">
+                            <div id="location-suggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50 hidden">
+                            </div>
+                        </div>
+                        <input type="hidden" id="latitude-preferensi" name="latitude_preferensi" value="{{ Auth::user()->mahasiswa->latitude_preferensi ?? '' }}">
+                        <input type="hidden" id="longitude-preferensi" name="longitude_preferensi" value="{{ Auth::user()->mahasiswa->longitude_preferensi ?? '' }}">
                     </div>
                 </div>
                 <span class="flex justify-end mt-6">
@@ -384,3 +391,118 @@
         </div>
     </div>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let debounceTimer;
+
+    // Fungsi untuk mencari lokasi menggunakan Nominatim API
+    async function searchLocation(query) {
+        if (query.length < 3) {
+            hideSuggestions();
+            return;
+        }
+        
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5&addressdetails=1&accept-language=id`;
+        
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'Accept-Language': 'id-ID,id;q=0.9,en;q=0.8'
+                }
+            });
+            const data = await response.json();
+            
+            showSuggestions(data);
+        } catch (error) {
+            console.error("Error fetching location data:", error);
+            hideSuggestions();
+        }
+    }
+
+    // Menampilkan suggestions
+    function showSuggestions(suggestions) {
+        const suggestionsDiv = document.getElementById('location-suggestions');
+        suggestionsDiv.innerHTML = '';
+        
+        if (suggestions.length > 0) {
+            suggestions.forEach(place => {
+                const item = document.createElement('div');
+                item.className = 'px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0';
+                
+                // Format display name yang lebih bersih dan dalam bahasa Indonesia
+                const displayName = place.display_name;
+                
+                // Mapping tipe dalam bahasa Indonesia
+                const typeMapping = {
+                    'administrative': 'Wilayah Administratif',
+                    'city': 'Kota',
+                    'town': 'Kota',
+                    'village': 'Desa',
+                    'hamlet': 'Dusun',
+                    'suburb': 'Kelurahan',
+                    'neighbourhood': 'Lingkungan',
+                    'road': 'Jalan',
+                    'house': 'Rumah',
+                    'building': 'Bangunan',
+                    'commercial': 'Komersial',
+                    'industrial': 'Industri',
+                    'residential': 'Perumahan'
+                };
+                
+                const typeInIndonesian = typeMapping[place.type] || place.class || 'Lokasi';
+                
+                item.innerHTML = `
+                    <div class="text-sm font-medium text-gray-900">${displayName}</div>
+                    <div class="text-xs text-gray-500">${typeInIndonesian}</div>
+                `;
+                
+                item.onclick = function() {
+                    document.getElementById('preferensi_lokasi').value = displayName;
+                    document.getElementById('latitude-preferensi').value = place.lat;
+                    document.getElementById('longitude-preferensi').value = place.lon;
+                    hideSuggestions();
+                };
+                
+                suggestionsDiv.appendChild(item);
+            });
+            
+            suggestionsDiv.classList.remove('hidden');
+        } else {
+            // Tampilkan pesan tidak ada hasil
+            const noResult = document.createElement('div');
+            noResult.className = 'px-4 py-3 text-sm text-gray-500';
+            noResult.textContent = 'Tidak ada lokasi yang ditemukan';
+            suggestionsDiv.appendChild(noResult);
+            suggestionsDiv.classList.remove('hidden');
+        }
+    }
+
+    // Menyembunyikan suggestions
+    function hideSuggestions() {
+        document.getElementById('location-suggestions').classList.add('hidden');
+    }
+
+    // Event listener untuk input lokasi
+    document.getElementById('preferensi_lokasi').addEventListener('input', function(e) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            searchLocation(e.target.value);
+        }, 500);
+    });
+
+    // Menyembunyikan suggestions ketika klik di luar
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.location-input-container')) {
+            hideSuggestions();
+        }
+    });
+
+    // Mencegah submit form saat menekan Enter di input lokasi
+    document.getElementById('preferensi_lokasi').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    });
+});
+</script>
