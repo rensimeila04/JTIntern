@@ -1,6 +1,6 @@
 <div class="space-y-6">
     {{-- Filter Dropdowns --}}
-    <div class="flex gap-2">
+    <div class="flex gap-2 relative z-50">
         {{-- Tipe Magang Dropdown --}}
         <div class="hs-dropdown relative inline-flex">
             <button id="hs-dropdown-tipe-magang" type="button"
@@ -15,7 +15,7 @@
                 </span>
                 <x-lucide-chevron-down class="hs-dropdown-open:rotate-180 size-4" />
             </button>
-            <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+            <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 shadow-lg border border-gray-200 z-[60] dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
                 role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-tipe-magang">
                 <div class="p-1 space-y-0.5">
                     <a class="filter-tipe-magang flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
@@ -55,7 +55,7 @@
                 </span>
                 <x-lucide-chevron-down class="hs-dropdown-open:rotate-180 size-4" />
             </button>
-            <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+            <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 shadow-lg border border-gray-200 z-[60] dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
                 role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-perusahaan">
                 <div class="p-1 space-y-0.5">
                     <a class="filter-perusahaan flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
@@ -73,7 +73,7 @@
         </div>
 
         {{-- Lokasi Dropdown dengan Search --}}
-        <div class="relative">
+        <div class="relative z-50">
             <select data-hs-select='{
                 "hasSearch": true,
                 "searchPlaceholder": "Cari lokasi...",
@@ -82,7 +82,7 @@
                 "placeholder": "Pilih lokasi",
                 "toggleTag": "<button type=\"button\" aria-expanded=\"false\"><span class=\"text-gray-800 dark:text-neutral-200\" data-title></span></button>",
                 "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-1.5 sm:py-2 pl-4 pr-10 flex gap-x-2 text-nowrap w-auto cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-md font-medium focus:outline-hidden focus:ring-2 focus:ring-primary-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:focus:outline-hidden dark:focus:ring-1 dark:focus:ring-neutral-600 h-[38px]",
-                "dropdownClasses": "mt-2 max-h-72 pb-1 px-1 space-y-0.5 z-20 min-w-max bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
+                "dropdownClasses": "mt-2 max-h-72 pb-1 px-1 space-y-0.5 z-[70] min-w-max bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto shadow-lg [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
                 "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
                 "optionTemplate": "<div class=\"flex items-center\"><div class=\"text-gray-800 dark:text-neutral-200\" data-title></div></div>",
                 "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
@@ -124,7 +124,7 @@
     @endif
 
     {{-- Daftar Lowongan --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 w-full relative z-10">
         @forelse ($lowonganList as $lowongan)
             @php
                 $wibNow = now('Asia/Jakarta');
@@ -134,7 +134,7 @@
                 $applicantCount = $lowongan->magang()->count();
                 $isExpired = $deadline && $deadline->isPast();
             @endphp
-            <div class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 {{ $isExpired ? 'opacity-75' : '' }}">
+            <div class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 relative z-0 {{ $isExpired ? 'opacity-75' : '' }}">
                 <div class="inline-flex items-center gap-6">
                     <img src="{{ $lowongan->perusahaanMitra->logo ? $lowongan->perusahaanMitra->logo_url : asset('images/placeholder_perusahaan.png') }}" 
                          alt="Logo {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
