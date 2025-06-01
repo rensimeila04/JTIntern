@@ -1,72 +1,99 @@
 @extends('layout.template')
 @section('content')
-    <div class="bg-white w-full flex flex-col p-4 gap-6">
-        <span class="font-medium text-xl">
-            <h2>Edit Profil Pengguna</h2>
-        </span>
-        <div class="flex flex-col mt-6 gap-6">
-            <div class="border border-neutral-200 rounded px-4 py-6 w-full">
-                <h3 class="mb-6 font-medium text-xl">Data Pribadi</h3>
-                <div class="flex items-center gap-4">
-                    <div class="flex flex-col gap-4 mt-10">
-                        <img class="size-32 rounded-full items-center"
-                            src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/avatar.svg') }}"
-                            alt="User profile">
-                        <a href="#"
-                            class="btn-outline text-primary-500 border-primary-500 hover:bg-primary-500 hover:text-white">
-                            <x-lucide-pencil-line stroke-width="1.5" class="size-3.5" />
-                            Ganti Foto Profil
-                        </a>
+    <div class="bg-white w-full flex flex-col p-4 space-y-6 rounded-2xl">
+        <h2 class="font-medium text-xl">Edit Profil Pengguna</h2>
+        <div class="border border-neutral-200 rounded-lg px-4 py-6 w-full space-y-6">
+            <h3 class="font-medium text-xl">Data Pribadi</h3>
+            <div class="flex items-start gap-10">
+                <div class="flex flex-col gap-4 w-fit items-center">
+                    <img class="size-32 rounded-full"
+                        src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/avatar.svg') }}"
+                        alt="User profile">
+                    <a href="#"
+                        class="btn-outline w-fit text-primary-500 border-primary-500 hover:bg-primary-500 hover:text-white flex items-center gap-2 whitespace-nowrap px-3 py-2">
+                        <x-lucide-pencil-line stroke-width="1.5" class="size-3.5" />
+                        Ganti Foto Profil
+                    </a>
+                </div>
+                <div class="flex flex-col gap-4  w-full">
+                    <div>
+                        <label for="nama_lengkap" class="text-sm font-semibold">Nama Lengkap</label>
+                        <input type="text" id="nama_lengkap" name="nama_lengkap" value="Siti Aisyah Rahman"
+                            class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
-                    <div class="flex flex-col gap-4 mt-10 w-full">
-                        <div>
-                            <label for="" class="text-sm font-semibold">Nama Lengkap</label>
-                            <input type="text"
-                                class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                            </input>
-                        </div>
-                        <div>
-                            <label for="" class="text-sm font-semibold">NIM</label>
-                            <input type="text"
-                                class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                            </input>
-                        </div>
-                        <div>
-                            <label for="" class="text-sm font-semibold">Program Studi</label>
-                            <input type="text"
-                                class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                            </input>
-                        </div>
+                    <div>
+                        <label for="nim" class="text-sm font-semibold">NIM</label>
+                        <input type="text" id="nim" name="nim" value="2021110001"
+                            class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
+                    </div>
+                    <div>
+                        <label for="program_studi" class="text-sm font-semibold">Program Studi</label>
+                        <select id="program_studi" name="program_studi"
+                            class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="">Pilih Program Studi</option>
+                            @foreach ($programStudi as $prodi)
+                                <option value="{{ $prodi->id_program_studi }}"
+                                    {{ (Auth::user()->mahasiswa->id_program_studi ?? '') == $prodi->id_program_studi ? 'selected' : '' }}>
+                                    {{ $prodi->nama_prodi }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-                <span class="flex justify-end mt-6">
-                    <button type="button" id="submitBtn" class="btn-primary">
-                        Perbarui Data Pribadi
-                    </button>
-                </span>
             </div>
+            <span class="flex justify-end mt-6">
+                <button type="button" id="submitBtn" class="btn-primary">
+                    Perbarui Data Pribadi
+                </button>
+            </span>
         </div>
+        <hr class="border-neutral-200">
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3=2 gap-4 w-full">
-            <div class="border border-neutral-200 rounded px-4 py-6 w-full max-h-max">
+            <div class="border border-neutral-200 rounded-lg px-4 py-6 w-full max-h-max">
                 <h3 class="mb-6 font-medium text-xl">Preferensi Magang</h3>
-                <div class="flex flex-col gap-4 mt-10">
+                <div class="flex flex-col gap-4">
                     <div>
-                        <label for="" class="text-sm font-semibold">Jenis Magang</label>
-                        <input type="text"
+                        <label for="jenis_magang" class="text-sm font-semibold">Jenis Magang</label>
+                        <select id="jenis_magang" name="jenis_magang"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                        </input>
+                            <option value="">Pilih Jenis Magang</option>
+                            <option value="WFO">Work From Office (WFO)</option>
+                            <option value="Remote">Remote</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
                     </div>
                     <div>
-                        <label for="" class="text-sm font-semibold">Kompetensi</label>
-                        <input type="text"
+                        <label for="kompetensi" class="text-sm font-semibold">Kompetensi</label>
+                        <select id="kompetensi" name="kompetensi"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                        </input>
+                            <option value="">Pilih Kompetensi</option>
+                            @foreach ($kompetensi as $komp)
+                                <option value="{{ $komp->id_kompetensi }}"
+                                    {{ (Auth::user()->mahasiswa->id_kompetensi ?? '') == $komp->id_kompetensi ? 'selected' : '' }}>
+                                    {{ $komp->nama_kompetensi }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div>
-                        <label for="" class="text-sm font-semibold">Konfirmasi Kata Sandi</label>
-                        <input type="text"
+                        <label for="jenis_perusahaan" class="text-sm font-semibold">Jenis Perusahaan</label>
+                        <select id="jenis_perusahaan" name="jenis_perusahaan"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                        </input>
+                            <option value="">Pilih Jenis Perusahaan</option>
+                            @foreach ($jenisPerusahaan as $jenis)
+                                <option value="{{ $jenis->id_jenis_perusahaan }}"
+                                    {{ (Auth::user()->mahasiswa->id_jenis_perusahaan ?? '') == $jenis->id_jenis_perusahaan ? 'selected' : '' }}>
+                                    {{ $jenis->nama_jenis_perusahaan }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="preferensi_lokasi" class="text-sm font-semibold">Preferensi Lokasi</label>
+                        <input type="text" id="preferensi_lokasi" name="preferensi_lokasi"
+                            value="Jakarta, Bogor, Depok, Tangerang, Bekasi"
+                            placeholder="Masukkan kota atau wilayah yang diinginkan"
+                            class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
                 </div>
                 <span class="flex justify-end mt-6">
@@ -75,26 +102,24 @@
                     </button>
                 </span>
             </div>
-            <div class="border border-neutral-200 rounded px-4 py-6 w-full max-h-max">
+            <div class="border border-neutral-200 rounded-lg px-4 py-6 w-full max-h-max">
                 <h3 class="mb-6 font-medium text-xl">Akun pengguna</h3>
-                <div class="flex flex-col gap-4 mt-10">
+                <div class="flex flex-col gap-4">
                     <div>
-                        <label for="" class="text-sm font-semibold">Email</label>
-                        <input type="text"
+                        <label for="email" class="text-sm font-semibold">Email</label>
+                        <input type="email" id="email" name="email" value="siti.aisyah@student.univ.ac.id"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                        </input>
                     </div>
                     <div>
-                        <label for="" class="text-sm font-semibold">Kata Sandi</label>
-                        <input type="text"
+                        <label for="password" class="text-sm font-semibold">Kata Sandi</label>
+                        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi baru"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                        </input>
                     </div>
                     <div>
-                        <label for="" class="text-sm font-semibold">Konfirmasi Kata Sandi</label>
-                        <input type="text"
+                        <label for="password_confirmation" class="text-sm font-semibold">Konfirmasi Kata Sandi</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            placeholder="Konfirmasi kata sandi"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
-                        </input>
                     </div>
                 </div>
                 <span class="flex justify-end mt-6">
@@ -104,13 +129,14 @@
                 </span>
             </div>
         </div>
-        <div class="w-full p-6 bg-white rounded-xl flex flex-col gap-6 shadow">
+        <hr class="border-neutral-200">
+        <div class="w-full px-4 py-6 rounded-lg border border-neutral-200 flex flex-col gap-6">
             <div class="flex justify-between items-center w-full">
                 <div class="text-neutral-900 text-xl font-semibold">Dokumen Pendukung</div>
             </div>
             <div class="flex gap-6 w-full">
                 {{-- CV --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 shadow-sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <x-lucide-file class="w-4 h-4 text-primary-600" />
@@ -129,14 +155,20 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
+                    <div class="flex justify-start">
+                        <button type="button"
+                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                            Perbarui Dokumen
+                        </button>
+                    </div>
                 </div>
                 {{-- Portofolio --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 shadow-sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <x-lucide-image class="w-4 h-4 text-primary-600" />
@@ -155,14 +187,20 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
+                    <div class="flex justify-start">
+                        <button type="button"
+                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                            Perbarui Dokumen
+                        </button>
+                    </div>
                 </div>
                 {{-- Sertifikat --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 shadow-sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-medal w-4 h-4 text-primary-600"></i>
@@ -181,14 +219,20 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
+                    <div class="flex justify-start">
+                        <button type="button"
+                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                            Perbarui Dokumen
+                        </button>
+                    </div>
                 </div>
                 {{-- Surat Pengantar --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 shadow-sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-envelope-simple w-4 h-4 text-primary-600"></i>
@@ -207,14 +251,20 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
                         </button>
                     </div>
+                    <div class="flex justify-start">
+                        <button type="button"
+                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                            Perbarui Dokumen
+                        </button>
+                    </div>
                 </div>
                 {{-- Transkip Nilai --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 shadow-sm">
+                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-chart-line w-4 h-4 text-primary-600"></i>
@@ -233,9 +283,15 @@
                     </div>
                     <div class="flex justify-start mt-auto">
                         <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition">
+                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
+                        </button>
+                    </div>
+                    <div class="flex justify-start">
+                        <button type="button"
+                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                            Perbarui Dokumen
                         </button>
                     </div>
                 </div>
