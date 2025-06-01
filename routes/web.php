@@ -49,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_mahasiswa');
         Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])
             ->name('admin.detail_admin');
+        Route::get('/edit', [UserController::class, 'edit'])
+            ->name('admin.edit_profile');
         
         // Perusahaan routes - reordered for proper route matching
         Route::prefix('perusahaan')->name('admin.perusahaan')->group(function () {
