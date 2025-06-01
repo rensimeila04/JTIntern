@@ -109,7 +109,7 @@
                     </div>
                     <div class="p-1 space-y-0.5">
                         <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-neutral-800 hover:bg-neutral-100 focus:outline-hidden focus:bg-neutral-100"
-                            href="{{ route('admin.edit_profile') }}">
+                            href="@if(Auth::user()->level->kode_level === 'MHS'){{ route('mahasiswa.edit_profile') }}@elseif(Auth::user()->level->kode_level === 'ADM'){{ route('admin.edit_profile') }}@else{{ route('admin.edit_profile') }}@endif">
                             <x-lucide-user class="shrink-0 size-4" stroke-width="2" />
                             Profile Pengguna
                         </a>
