@@ -13,7 +13,7 @@
             <div class="flex items-center gap-x-9">
                 <div class="w-30 h-30 rounded-2xl overflow-hidden">
                     @if(isset($user->profile_photo) && $user->profile_photo)
-                        <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Profile Picture"
+                        <img src="{{ asset('Images/' . $user->profile_photo) }}" alt="Profile Picture"
                             class="w-full h-full object-cover">
                     @else
                         <img src="{{ asset('images/avatar.svg') }}" alt="Default Profile" class="w-full h-full object-cover">

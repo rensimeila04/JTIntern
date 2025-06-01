@@ -305,4 +305,95 @@ class UserController extends Controller
             $mahasiswa->save();
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            // Log the request data for debugging
+            Log::info('Update user request:', [
+                'id' => $id,
+                'request_data' => $request->all()
+            ]);
+            
+            // Validate the request
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:user,email,' . $id . ',id_user',
+                'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            // Find the user
+            $user = UserModel::findOrFail($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+
+            // Handle profile photo if uploaded
+            if ($request->hasFile('profile_photo') && $request->file('profile_photo')->isValid()) {
+                try {
+                    // Delete old photo if exists
+                    if ($user->profile_photo && file_exists(public_path('images/' . $user->profile_photo))) {
+                        unlink(public_path('images/' . $user->profile_photo));
+                    }
+
+                    $photo = $request->file('profile_photo');
+                    $photoName = time() . '_' . str_replace(' ', '_', $photo->getClientOriginalName());
+                    
+                    // Simpan ke folder public/images
+                    $photo->move(public_path('images'), $photoName);
+                    
+                    // Update path pada database
+                    $user->profile_photo = $photoName;
+                } catch (\Exception $e) {
+                    // Log error
+                    Log::error('Error uploading profile photo: ' . $e->getMessage());
+                    
+                    // For AJAX requests
+                    if ($request->expectsJson()) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Gagal mengunggah foto: ' . $e->getMessage()
+                        ], 422);
+                    }
+                    
+                    return redirect()->back()->withInput()
+                        ->with('error', 'Gagal mengunggah foto: ' . $e->getMessage());
+                }
+            }
+
+            // Save the user
+            $user->save();
+            
+            // For AJAX requests
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Pengguna berhasil diperbarui',
+                    'user_name' => $user->name
+                ]);
+            }
+
+            // Return to the pengguna page with success message
+            return redirect()->route('admin.pengguna')
+                ->with('success', 'Pengguna berhasil diperbarui.')
+                ->with('user_name', $user->name);
+                
+        } catch (\Exception $e) {
+            Log::error('Error updating user:', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // For AJAX requests
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return redirect()->back()->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }
