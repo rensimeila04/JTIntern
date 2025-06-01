@@ -117,4 +117,19 @@ class UserController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function edit() 
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Edit Pengguna', 'url' => '#'],
+        ];
+
+        $activeMenu = '';
+
+        return view('admin.edit_profile', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu
+        ]);
+    }
 }
