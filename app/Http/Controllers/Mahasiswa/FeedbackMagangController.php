@@ -14,7 +14,7 @@ class FeedbackMagangController extends Controller
             ['label' => 'Feedback Magang', 'url' => route('mahasiswa.feedback')],
         ];
 
-        $activeMenu = 'feedback_magang';
+        $activeMenu = 'feedback';
         
         return view('mahasiswa.feedback_magang', [
             'breadcrumb' => $breadcrumb,
