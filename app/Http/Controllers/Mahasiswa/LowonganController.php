@@ -6,10 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\JenisPerusahaanModel;
 use App\Models\PerusahaanMitraModel;
 use App\Models\LowonganModel;
+use App\Services\MabacService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LowonganController extends Controller
 {
+    protected $mabacService;
+
+    public function __construct(MabacService $mabacService)
+    {
+        $this->mabacService = $mabacService;
+    }
+
     public function index(Request $request)
     {
         $breadcrumb = [
@@ -77,12 +86,40 @@ class LowonganController extends Controller
 
         $lowonganList = $query->orderBy('created_at', 'desc')->get();
 
+        // Get MABAC recommendations
+        $mabacRecommendations = [];
+        try {
+            if (Auth::user()->mahasiswa) {
+                $hasilMabac = $this->mabacService->hitungRekomendasiMabac();
+                
+                // Extract lowongan IDs in ranking order
+                $lowonganIds = [];
+                foreach ($hasilMabac['ranking'] as $rank) {
+                    $alternatif = $hasilMabac['alternatif'][$rank['alternatif_index']];
+                    $lowonganIds[] = $alternatif['lowongan']->id_lowongan;
+                }
+                
+                // Get lowongan in MABAC ranking order
+                $mabacRecommendations = collect();
+                foreach ($lowonganIds as $id) {
+                    $lowongan = $lowonganList->where('id_lowongan', $id)->first();
+                    if ($lowongan) {
+                        $mabacRecommendations->push($lowongan);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Handle case where MABAC calculation fails (e.g., incomplete profile)
+            $mabacRecommendations = collect();
+        }
+
         return view('mahasiswa.lowongan', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'jenisPerusahaan' => $jenisPerusahaan,
             'lokasiPerusahaan' => $lokasiPerusahaan,
             'lowonganList' => $lowonganList,
+            'mabacRecommendations' => $mabacRecommendations,
             'filters' => $request->only(['jenis_magang', 'jenis_perusahaan', 'lokasi', 'search'])
         ]);
     }

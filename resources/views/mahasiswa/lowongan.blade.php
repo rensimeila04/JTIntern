@@ -55,7 +55,7 @@
 
             {{-- Rekomendasi MABAC Tab Content --}}
             <div id="content-rekomendasi-mabac" class="hidden" role="tabpanel" aria-labelledby="tab-rekomendasi-mabac">
-                @include('mahasiswa.partials.mabac')
+                @include('mahasiswa.partials.mabac', ['mabacRecommendations' => $mabacRecommendations])
             </div>
 
             {{-- Rekomendasi Topsis Tab Content --}}
