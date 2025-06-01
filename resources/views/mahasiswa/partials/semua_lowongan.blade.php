@@ -81,46 +81,71 @@
     </div>
 
     {{-- Daftar Lowongan --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3=2 gap-4 w-full">
-        @for ($i = 1; $i <= 6; $i++)
-            <div class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
+        @forelse ($lowonganList as $lowongan)
+            @php
+                $deadline = $lowongan->deadline_pendaftaran ? \Carbon\Carbon::parse($lowongan->deadline_pendaftaran) : null;
+                $daysLeft = $deadline ? $deadline->diffInDays(now(), false) : null;
+                $applicantCount = $lowongan->magang()->count();
+                $isExpired = $deadline && $deadline->isPast();
+            @endphp
+            <div class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 {{ $isExpired ? 'opacity-75' : '' }}">
                 <div class="inline-flex items-center gap-6">
-                    <img src="https://placehold.co/80x80?text=Logo" alt="Logo"
-                        class="w-20 h-20 rounded-lg object-contain bg-gray-50">
+                    <img src="{{ $lowongan->perusahaanMitra->logo ? $lowongan->perusahaanMitra->logo_url : asset('images/placeholder_perusahaan.png') }}" 
+                         alt="Logo {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
+                         class="w-20 h-20 rounded-lg object-contain bg-gray-50">
                     <div class="flex flex-col flex-1 justify-start items-start gap-2 h-fill">
                         <div class="self-stretch inline-flex justify-start items-center gap-4">
                             <div class="justify-start text-black text-lg font-medium leading-none">
-                                UI UX Designer</div>
+                                {{ $lowongan->judul_lowongan }}
+                            </div>
                         </div>
                         <div class="inline-flex justify-start items-center gap-2">
-                            <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                                PT. Quantum</a>
-                            <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
-                            <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                                Jakarta Pusat</a>
+                            <span class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[120px]">
+                                {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}
+                            </span>
+                            <div class="w-1 h-1 bg-neutral-400 rounded-full flex-shrink-0"></div>
+                            <span class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[150px]">
+                                {{ $lowongan->perusahaanMitra->alamat }}
+                            </span>
                         </div>
                         <div class="inline-flex justify-start items-start gap-2">
-                            <span
-                                class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">WFO</span>
-                            <span
-                                class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">Software
-                                House</span>
+                            <span class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                {{ strtoupper($lowongan->jenis_magang) }}
+                            </span>
+                            <span class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                {{ $lowongan->perusahaanMitra->jenisPerusahaan->nama_jenis_perusahaan }}
+                            </span>
                         </div>
                     </div>
                     <button type="button"
-                        class="ml-auto py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none">
-                        Ajukan Magang
+                        class="ml-auto py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none {{ $isExpired ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : '' }}"
+                        {{ $isExpired ? 'disabled' : '' }}>
+                        {{ $isExpired ? 'Tutup' : 'Ajukan Magang' }}
                     </button>
                 </div>
                 <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
                 <div class="self-stretch inline-flex justify-start items-center gap-2">
-                    <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                        23 hari tersisa</a>
-                    <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
-                    <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                        30 Pelamar</a>
+                    @if($lowongan->deadline_pendaftaran)
+                        <span class="justify-start text-neutral-400 text-sm font-normal leading-none">
+                            @if($isExpired)
+                                Pendaftaran ditutup
+                            @else
+                                {{ abs($daysLeft) }} hari tersisa
+                            @endif
+                        </span>
+                        <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
+                    @endif
+                    <span class="justify-start text-neutral-400 text-sm font-normal leading-none">
+                        {{ $applicantCount }} Pelamar
+                    </span>
                 </div>
             </div>
-        @endfor
+        @empty
+            <div class="col-span-full text-center py-12">
+                <div class="text-gray-500 text-lg">Belum ada lowongan tersedia</div>
+                <div class="text-gray-400 text-sm mt-2">Silakan cek kembali nanti</div>
+            </div>
+        @endforelse
     </div>
 </div>
