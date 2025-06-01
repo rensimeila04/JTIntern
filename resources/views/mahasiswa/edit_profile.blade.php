@@ -18,12 +18,12 @@
                 <div class="flex flex-col gap-4  w-full">
                     <div>
                         <label for="nama_lengkap" class="text-sm font-semibold">Nama Lengkap</label>
-                        <input type="text" id="nama_lengkap" name="nama_lengkap" value="Siti Aisyah Rahman"
+                        <input type="text" id="nama_lengkap" name="nama_lengkap" value="{{ Auth::user()->name }}"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
                     <div>
                         <label for="nim" class="text-sm font-semibold">NIM</label>
-                        <input type="text" id="nim" name="nim" value="2021110001"
+                        <input type="text" id="nim" name="nim" value="{{ Auth::user()->mahasiswa->nim ?? '' }}"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
                     <div>
@@ -57,9 +57,15 @@
                         <select id="jenis_magang" name="jenis_magang"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                             <option value="">Pilih Jenis Magang</option>
-                            <option value="WFO">Work From Office (WFO)</option>
-                            <option value="Remote">Remote</option>
-                            <option value="Hybrid">Hybrid</option>
+                            <option value="wfo"
+                                {{ (Auth::user()->mahasiswa->jenis_magang ?? '') == 'wfo' ? 'selected' : '' }}>Work From
+                                Office (WFO)</option>
+                            <option value="remote"
+                                {{ (Auth::user()->mahasiswa->jenis_magang ?? '') == 'remote' ? 'selected' : '' }}>Remote
+                            </option>
+                            <option value="hybrid"
+                                {{ (Auth::user()->mahasiswa->jenis_magang ?? '') == 'hybrid' ? 'selected' : '' }}>Hybrid
+                            </option>
                         </select>
                     </div>
                     <div>
@@ -91,7 +97,7 @@
                     <div>
                         <label for="preferensi_lokasi" class="text-sm font-semibold">Preferensi Lokasi</label>
                         <input type="text" id="preferensi_lokasi" name="preferensi_lokasi"
-                            value="Jakarta, Bogor, Depok, Tangerang, Bekasi"
+                            value="{{ Auth::user()->mahasiswa->preferensi_lokasi ?? '' }}"
                             placeholder="Masukkan kota atau wilayah yang diinginkan"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
@@ -107,7 +113,7 @@
                 <div class="flex flex-col gap-4">
                     <div>
                         <label for="email" class="text-sm font-semibold">Email</label>
-                        <input type="email" id="email" name="email" value="siti.aisyah@student.univ.ac.id"
+                        <input type="email" id="email" name="email" value="{{ Auth::user()->email }}"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
                     <div>
@@ -143,30 +149,46 @@
                         </div>
                         <div class="text-neutral-900 text-base font-medium">Curriculum Vitae</div>
                     </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
+                    <div class="flex flex-col gap-1 text-xs ">
+                        @php $cv = $dokumen['curriculum vitae'] ?? null; @endphp
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
+                            <span class="text-neutral-500">
+                                {{ $cv ? $cv->created_at->format('d M Y') : '-' }}
+                            </span>
                         </div>
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
+                            <span class="text-neutral-500">
+                                {{ $cv && $cv->path_dokumen ? number_format(Storage::size($cv->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </button>
-                    </div>
-                    <div class="flex justify-start">
-                        <button type="button"
-                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                            Perbarui Dokumen
-                        </button>
-                    </div>
+                    @if ($cv)
+                        <div class="flex justify-start ">
+                            <a href="{{ asset('storage/' . $cv->path_dokumen) }}" target="_blank"
+                                class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-eye class="w-4 h-4 mr-2" />
+                                Lihat Dokumen
+                            </a>
+                        </div>
+                        <div class="flex justify-start">
+                            <button type="button"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                                Perbarui Dokumen
+                            </button>
+                        </div>
+                    @else
+                        <div class="flex items-center">
+                            <button type="button"
+                                class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-upload class="w-4 h-4 mr-2" />
+                                Unggah
+                            </button>
+                        </div>
+                    @endif
                 </div>
+
                 {{-- Portofolio --}}
                 <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
@@ -175,30 +197,46 @@
                         </div>
                         <div class="text-neutral-900 text-base font-medium">Portofolio</div>
                     </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
+                    <div class="flex flex-col gap-1 text-xs ">
+                        @php $portofolio = $dokumen['portofolio'] ?? null; @endphp
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
+                            <span class="text-neutral-500">
+                                {{ $portofolio ? $portofolio->created_at->format('d M Y') : '-' }}
+                            </span>
                         </div>
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
+                            <span class="text-neutral-500">
+                                {{ $portofolio && $portofolio->path_dokumen ? number_format(Storage::size($portofolio->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </button>
-                    </div>
-                    <div class="flex justify-start">
-                        <button type="button"
-                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                            Perbarui Dokumen
-                        </button>
-                    </div>
+                    @if ($portofolio)
+                        <div class="flex justify-start ">
+                            <a href="{{ asset('storage/' . $portofolio->path_dokumen) }}" target="_blank"
+                                class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-eye class="w-4 h-4 mr-2" />
+                                Lihat Dokumen
+                            </a>
+                        </div>
+                        <div class="flex justify-start">
+                            <button type="button"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                                Perbarui Dokumen
+                            </button>
+                        </div>
+                    @else
+                        <div class="flex items-center">
+                            <button type="button"
+                                class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-upload class="w-4 h-4 mr-2" />
+                                Unggah
+                            </button>
+                        </div>
+                    @endif
                 </div>
+
                 {{-- Sertifikat --}}
                 <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
@@ -207,30 +245,46 @@
                         </div>
                         <div class="text-neutral-900 text-base font-medium">Sertifikat</div>
                     </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
+                    <div class="flex flex-col gap-1 text-xs ">
+                        @php $sertifikat = $dokumen['sertifikat'] ?? null; @endphp
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
+                            <span class="text-neutral-500">
+                                {{ $sertifikat ? $sertifikat->created_at->format('d M Y') : '-' }}
+                            </span>
                         </div>
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
+                            <span class="text-neutral-500">
+                                {{ $sertifikat && $sertifikat->path_dokumen ? number_format(Storage::size($sertifikat->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </button>
-                    </div>
-                    <div class="flex justify-start">
-                        <button type="button"
-                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                            Perbarui Dokumen
-                        </button>
-                    </div>
+                    @if ($sertifikat)
+                        <div class="flex justify-start ">
+                            <a href="{{ asset('storage/' . $sertifikat->path_dokumen) }}" target="_blank"
+                                class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-eye class="w-4 h-4 mr-2" />
+                                Lihat Dokumen
+                            </a>
+                        </div>
+                        <div class="flex justify-start">
+                            <button type="button"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                                Perbarui Dokumen
+                            </button>
+                        </div>
+                    @else
+                        <div class="flex items-center">
+                            <button type="button"
+                                class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-upload class="w-4 h-4 mr-2" />
+                                Unggah
+                            </button>
+                        </div>
+                    @endif
                 </div>
+
                 {{-- Surat Pengantar --}}
                 <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
@@ -239,30 +293,46 @@
                         </div>
                         <div class="text-neutral-900 text-base font-medium">Surat Pengantar</div>
                     </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
+                    <div class="flex flex-col gap-1 text-xs ">
+                        @php $suratPengantar = $dokumen['surat pengantar'] ?? null; @endphp
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
+                            <span class="text-neutral-500">
+                                {{ $suratPengantar ? $suratPengantar->created_at->format('d M Y') : '-' }}
+                            </span>
                         </div>
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
+                            <span class="text-neutral-500">
+                                {{ $suratPengantar && $suratPengantar->path_dokumen ? number_format(Storage::size($suratPengantar->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </button>
-                    </div>
-                    <div class="flex justify-start">
-                        <button type="button"
-                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                            Perbarui Dokumen
-                        </button>
-                    </div>
+                    @if ($suratPengantar)
+                        <div class="flex justify-start ">
+                            <a href="{{ asset('storage/' . $suratPengantar->path_dokumen) }}" target="_blank"
+                                class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-eye class="w-4 h-4 mr-2" />
+                                Lihat Dokumen
+                            </a>
+                        </div>
+                        <div class="flex justify-start">
+                            <button type="button"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                                Perbarui Dokumen
+                            </button>
+                        </div>
+                    @else
+                        <div class="flex items-center">
+                            <button type="button"
+                                class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-upload class="w-4 h-4 mr-2" />
+                                Unggah
+                            </button>
+                        </div>
+                    @endif
                 </div>
+
                 {{-- Transkip Nilai --}}
                 <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
@@ -271,29 +341,44 @@
                         </div>
                         <div class="text-neutral-900 text-base font-medium">Transkip Nilai</div>
                     </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
+                    <div class="flex flex-col gap-1 text-xs ">
+                        @php $transkip = $dokumen['transkip nilai'] ?? null; @endphp
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
+                            <span class="text-neutral-500">
+                                {{ $transkip ? $transkip->created_at->format('d M Y') : '-' }}
+                            </span>
                         </div>
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
+                            <span class="text-neutral-500">
+                                {{ $transkip && $transkip->path_dokumen ? number_format(Storage::size($transkip->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </button>
-                    </div>
-                    <div class="flex justify-start">
-                        <button type="button"
-                            class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                            Perbarui Dokumen
-                        </button>
-                    </div>
+                    @if ($transkip)
+                        <div class="flex justify-start ">
+                            <a href="{{ asset('storage/' . $transkip->path_dokumen) }}" target="_blank"
+                                class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-eye class="w-4 h-4 mr-2" />
+                                Lihat Dokumen
+                            </a>
+                        </div>
+                        <div class="flex justify-start">
+                            <button type="button"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
+                                Perbarui Dokumen
+                            </button>
+                        </div>
+                    @else
+                        <div class="flex items-center">
+                            <button type="button"
+                                class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
+                                <x-lucide-upload class="w-4 h-4 mr-2" />
+                                Unggah
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
