@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('dosen_pembimbing', function (Blueprint $table) {
             $table->id('id_dosen_pembimbing');
             $table->unsignedBigInteger('id_user')->index();
-            $table->string('nip')->unique();
-            $table->string('bidang_minat');
+            $table->string('nip')->unique()->nullable();
+            $table->string('bidang_minat')->nullable();
             $table->timestamps();
 
             $table->foreign('id_user')->references('id_user')->on('user');

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->bigIncrements('id_mahasiswa');
             $table->unsignedBigInteger('id_user')->index();
-            $table->string('nim')->unique();
+            $table->string('nim')->unique()->nullable();
             $table->enum('jenis_magang', ['wfo', 'remote', 'hybrid'])->nullable();
-            $table->unsignedBigInteger('id_kompetensi')->index();
-            $table->unsignedBigInteger('id_program_studi')->index();
-            $table->string('preferensi_lokasi');
-            $table->unsignedBigInteger('id_jenis_perusahaan')->index();
+            $table->unsignedBigInteger('id_kompetensi')->index()->nullable();
+            $table->unsignedBigInteger('id_program_studi')->index()->nullable();
+            $table->string('preferensi_lokasi')->nullable();
+            $table->unsignedBigInteger('id_jenis_perusahaan')->index()->nullable();
             $table->timestamps();
 
 

@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\UserModel;
 use App\Models\LevelModel;
 use App\Models\DokumenModel;
+use App\Models\AdminModel;
+use App\Models\DosenPembimbingModel;
+use App\Models\MahasiswaModel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
 
@@ -198,5 +203,106 @@ class UserController extends Controller
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
         ]);
+    }
+
+    public function create()
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Pengguna', 'url' => route('admin.pengguna')],
+            ['label' => 'Tambah Pengguna', 'url' => '#'],
+        ];
+
+        $activeMenu = 'pengguna';
+
+        $levels = LevelModel::all();
+
+        return view('admin.tambah_pengguna', [
+            'breadcrumb' => $breadcrumb,
+            'levels' => $levels,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:user,email',
+            'password' => 'required|string|min:8|confirmed',
+            'id_level' => 'required|exists:level,id_level',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Create new user
+        $user = new UserModel();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->id_level = $request->id_level;
+        
+        // Handle profile photo if uploaded
+        if ($request->hasFile('profile_photo') && $request->file('profile_photo')->isValid()) {
+            try {
+                $photo = $request->file('profile_photo');
+                $photoName = time() . '_' . str_replace(' ', '_', $photo->getClientOriginalName());
+                
+                // // Pastikan direktori ada
+                // if (!file_exists(public_path('images'))) {
+                //     mkdir(public_path('images'), 0777, true);
+                // }
+                
+                // Simpan ke folder public/images
+                $photo->move(public_path('images'), $photoName);
+                
+                // Update path pada database
+                $user->profile_photo = $photoName;
+            } catch (\Exception $e) {
+                // Log error
+                Log::error('Error uploading profile photo: ' . $e->getMessage());
+                return redirect()->back()->withInput()
+                    ->with('error', 'Gagal mengunggah foto: ' . $e->getMessage());
+            }
+        }
+        
+        $user->save();
+
+        // Get level name for display in success message
+        $levelName = LevelModel::find($request->id_level)->nama_level ?? '';
+        
+        // Create related model based on level
+        $this->createRelatedModelForUser($user, $levelName);
+
+        // Redirect with success message and user name for the confirmation modal
+        return redirect()->route('admin.pengguna.create')
+            ->with('success', 'Pengguna berhasil ditambahkan.')
+            ->with('user_name', $request->name);
+    }
+
+    /**
+     * Create related model based on user level (Admin, Dosen, Mahasiswa)
+     */
+    private function createRelatedModelForUser($user, $levelName)
+    {
+        // Create related model based on level
+        if (stripos($levelName, 'admin') !== false) {
+            // Create Admin record
+            $admin = new AdminModel();
+            $admin->id_user = $user->id_user;
+            $admin->save();
+        } 
+        elseif (stripos($levelName, 'dosen') !== false) {
+            // Create Dosen record
+            $dosen = new DosenPembimbingModel();
+            $dosen->id_user = $user->id_user;
+            $dosen->save();
+        } 
+        elseif (stripos($levelName, 'mahasiswa') !== false) {
+            // Create Mahasiswa record
+            $mahasiswa = new MahasiswaModel();
+            $mahasiswa->id_user = $user->id_user;
+            $mahasiswa->save();
+        }
     }
 }
