@@ -39,8 +39,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:ADM'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('admin.dashboard');
-        Route::get('/pengguna', [UserController::class, 'index'])
-            ->name('admin.pengguna');
         Route::get('/level', [LevelController::class, 'index'])
             ->name('admin.level');
         Route::get('/dospem/{id}', [UserController::class, 'detailDospem'])
@@ -52,6 +50,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/edit', [UserController::class, 'edit'])
             ->name('admin.edit_profile');
         
+
+
+        // User management routes
+        Route::prefix('pengguna')->name('admin.pengguna')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('');
+            Route::get('/dospem/{id}', [UserController::class, 'detailDospem'])->name('.detail_dospem');
+            Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])->name('.detail_mahasiswa');
+            Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])->name('.detail_admin');
+        });
+
         // Perusahaan routes - reordered for proper route matching
         Route::prefix('perusahaan')->name('admin.perusahaan')->group(function () {
             Route::get('/', [PerusahaanController::class, 'index'])->name('');
@@ -62,10 +70,10 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('.destroy');
             Route::get('/{id}', [PerusahaanController::class, 'detail'])->name('.detail');
         });
-        
+
         Route::get('/periode-magang', [PeriodeController::class, 'index'])
             ->name('admin.periode_magang');
-            
+
         Route::prefix('kelola-magang')->name('admin.kelola-magang')->group(function () {
             Route::get('/', [MagangController::class, 'index']);
             Route::get('/permohonan-magang', [MagangController::class, 'permohonanMagang'])->name('.permohonan_magang');
@@ -74,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat_magang');
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
         });
-        
+
         Route::prefix('lowongan')->name('admin.lowongan')->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
@@ -84,7 +92,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LowonganController::class, 'updateLowongan'])->name('.update');
             Route::delete('/{id}', [LowonganController::class, 'destroyLowongan'])->name('.destroy');
         });
-        
+
         Route::get('/program-studi', [ProgramStudiController::class, 'index'])
             ->name('admin.program_studi');
 

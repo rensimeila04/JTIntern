@@ -95,7 +95,8 @@
             <!-- Search dengan komponen search-input -->
             <div class="flex items-center gap-2">
                 <form method="GET" action="{{ route('admin.pengguna') }}" id="searchForm" class="flex items-center gap-2">
-                    <x-search-input name="search" value="{{ $currentSearch }}" placeholder="Cari pengguna..." id="searchInput"
+                    <x-search-input name="search" value="{{ $currentSearch }}" placeholder="Cari pengguna..."
+                        id="searchInput"
                         class="py-3 px-4 pl-11 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" />
                     <input type="hidden" name="level_id" value="{{ $currentFilter }}">
                 </form>
@@ -149,32 +150,49 @@
                                         </td>
                                         @if ($item->level->kode_level == 'ADM')
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            <span
-                                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-blue-600 text-blue-600 dark:text-blue-500">{{ $item->level->nama_level }}</span>
-                                        </td>
+                                                <span
+                                                    class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-blue-600 text-blue-600 dark:text-blue-500">{{ $item->level->nama_level }}</span>
+                                            </td>
                                         @elseif ($item->level->kode_level == 'DSP')
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        <span
-                                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-teal-500 text-teal-500">{{ $item->level->nama_level }}</span>
-                                        </td>
+                                                <span
+                                                    class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-teal-500 text-teal-500">{{ $item->level->nama_level }}</span>
+                                            </td>
                                         @else
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                 <span
                                                     class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-yellow-500 text-yellow-500">{{ $item->level->nama_level }}</span>
                                             </td>
-                                        @endif 
-                                        
-                                        
+                                        @endif
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            {{ $item->email }}</td>
+                                            {{ $item->email }}
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-800 dark:text-neutral-200">
-                                            {{ $item->name }}</td>
+                                            {{ $item->name }}
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-end">
                                             <div class="flex justify-end gap-2">
-                                                <a href="#"
-                                                    class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
-                                                    <x-lucide-files class="w-4 h-4 text-primary-500" />
-                                                </a>
+                                                @if ($item->level->kode_level == 'MHS')
+                                                    <a href="{{ route('admin.pengguna.detail_mahasiswa', $item->id_user) }}"
+                                                        class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                        <x-lucide-files class="w-4 h-4 text-primary-500" />
+                                                    </a>
+                                                @elseif ($item->level->kode_level == 'DSP')
+                                                    <a href="{{ route('admin.pengguna.detail_dospem', $item->id_user) }}"
+                                                        class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                        <x-lucide-files class="w-4 h-4 text-primary-500" />
+                                                    </a>
+                                                @elseif ($item->level->kode_level == 'ADM')
+                                                    <a href="{{ route('admin.pengguna.detail_admin', $item->id_user) }}"
+                                                        class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                                                        <x-lucide-files class="w-4 h-4 text-primary-500" />
+                                                    </a>
+                                                @else
+                                                    <a href="#"
+                                                        class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none opacity-50 pointer-events-none">
+                                                        <x-lucide-files class="w-4 h-4 text-primary-500" />
+                                                    </a>
+                                                @endif
                                                 <a href="#"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
@@ -218,20 +236,20 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('searchInput');
             const searchForm = document.getElementById('searchForm');
             let searchTimeout;
 
             if (searchInput && searchForm) {
-                searchInput.addEventListener('input', function() {
+                searchInput.addEventListener('input', function () {
                     clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(function() {
+                    searchTimeout = setTimeout(function () {
                         searchForm.submit();
                     }, 500);
                 });
 
-                searchInput.addEventListener('keypress', function(e) {
+                searchInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         clearTimeout(searchTimeout);
