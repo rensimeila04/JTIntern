@@ -172,9 +172,19 @@ class MabacService
         $matriksG = [];
         $jumlahAlternatif = count($matriksV);
         
+        // Menggunakan rumus geometric mean: gi = (∏vij)^(1/m)
+        // dimana m adalah jumlah alternatif
         for ($j = 0; $j < count($this->kriteria); $j++) {
             $kolom = array_column($matriksV, $j);
-            $g = array_sum($kolom) / $jumlahAlternatif;
+            
+            // Hitung perkalian semua elemen dalam kolom
+            $perkalian = 1;
+            foreach ($kolom as $nilai) {
+                $perkalian *= $nilai;
+            }
+            
+            // Hitung akar pangkat m (geometric mean)
+            $g = pow($perkalian, 1 / $jumlahAlternatif);
             $matriksG[] = round($g, 4);
         }
         
