@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class LowonganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -30,23 +30,42 @@ class LowonganController extends Controller
             ->orderBy('alamat')
             ->pluck('alamat');
 
-        // Fetch lowongan data with related models, ordered by newest first
-        $lowonganList = LowonganModel::with([
+        // Build query with filters
+        $query = LowonganModel::with([
             'perusahaanMitra.jenisPerusahaan',
             'kompetensi',
             'periodeMagang',
             'magang'
-        ])
-        ->where('status_pendaftaran', true)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        ])->where('status_pendaftaran', true);
+
+        // Filter by jenis magang (tipe magang)
+        if ($request->filled('jenis_magang')) {
+            $query->where('jenis_magang', $request->jenis_magang);
+        }
+
+        // Filter by jenis perusahaan
+        if ($request->filled('jenis_perusahaan')) {
+            $query->whereHas('perusahaanMitra', function ($q) use ($request) {
+                $q->where('id_jenis_perusahaan', $request->jenis_perusahaan);
+            });
+        }
+
+        // Filter by lokasi
+        if ($request->filled('lokasi')) {
+            $query->whereHas('perusahaanMitra', function ($q) use ($request) {
+                $q->where('alamat', 'like', '%' . $request->lokasi . '%');
+            });
+        }
+
+        $lowonganList = $query->orderBy('created_at', 'desc')->get();
 
         return view('mahasiswa.lowongan', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'jenisPerusahaan' => $jenisPerusahaan,
             'lokasiPerusahaan' => $lokasiPerusahaan,
-            'lowonganList' => $lowonganList
+            'lowonganList' => $lowonganList,
+            'filters' => $request->only(['jenis_magang', 'jenis_perusahaan', 'lokasi'])
         ]);
     }
 }

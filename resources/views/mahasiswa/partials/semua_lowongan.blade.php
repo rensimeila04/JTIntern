@@ -6,26 +6,32 @@
             <button id="hs-dropdown-tipe-magang" type="button"
                 class="hs-dropdown-toggle py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-md font-medium rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 h-[38px]"
                 aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                Semua Tipe Magang
+                <span id="selected-tipe-magang">
+                    @if(isset($filters['jenis_magang']))
+                        {{ strtoupper($filters['jenis_magang']) }}
+                    @else
+                        Semua Tipe Magang
+                    @endif
+                </span>
                 <x-lucide-chevron-down class="hs-dropdown-open:rotate-180 size-4" />
             </button>
             <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
                 role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-tipe-magang">
                 <div class="p-1 space-y-0.5">
-                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="filter-tipe-magang flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                        href="#" data-value="">
                         Semua Tipe Magang
                     </a>
-                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="filter-tipe-magang flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                        href="#" data-value="wfo">
                         WFO
                     </a>
-                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="filter-tipe-magang flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                        href="#" data-value="remote">
                         Remote
                     </a>
-                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="filter-tipe-magang flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                        href="#" data-value="hybrid">
                         Hybrid
                     </a>
                 </div>
@@ -37,18 +43,27 @@
             <button id="hs-dropdown-perusahaan" type="button"
                 class="hs-dropdown-toggle py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-md font-medium rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 h-[38px]"
                 aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                Semua Perusahaan
+                <span id="selected-perusahaan">
+                    @if(isset($filters['jenis_perusahaan']))
+                        @php
+                            $selectedJenis = $jenisPerusahaan->where('id_jenis_perusahaan', $filters['jenis_perusahaan'])->first();
+                        @endphp
+                        {{ $selectedJenis ? $selectedJenis->nama_jenis_perusahaan : 'Semua Perusahaan' }}
+                    @else
+                        Semua Perusahaan
+                    @endif
+                </span>
                 <x-lucide-chevron-down class="hs-dropdown-open:rotate-180 size-4" />
             </button>
             <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
                 role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-perusahaan">
                 <div class="p-1 space-y-0.5">
-                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="filter-perusahaan flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                        href="#" data-value="">
                         Semua Perusahaan
                     </a>
                     @foreach($jenisPerusahaan as $jenis)
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                        <a class="filter-perusahaan flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
                             href="#" data-value="{{ $jenis->id_jenis_perusahaan }}">
                             {{ $jenis->nama_jenis_perusahaan }}
                         </a>
@@ -74,18 +89,31 @@
             }' class="hidden" name="lokasi" id="lokasi-filter">
                 <option value="">Semua Lokasi</option>
                 @foreach($lokasiPerusahaan as $lokasi)
-                    <option value="{{ $lokasi }}">{{ $lokasi }}</option>
+                    <option value="{{ $lokasi }}" {{ isset($filters['lokasi']) && $filters['lokasi'] == $lokasi ? 'selected' : '' }}>
+                        {{ $lokasi }}
+                    </option>
                 @endforeach
             </select>
         </div>
+
+        {{-- Reset Button --}}
+        @if(array_filter($filters ?? []))
+            <a href="{{ route('mahasiswa.lowongan') }}" 
+               class="py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-md font-medium rounded-lg border border-gray-200 bg-white text-red-600 hover:bg-red-50 focus:outline-hidden focus:bg-red-50 h-[38px]">
+                <x-lucide-x class="size-4" />
+                Reset Filter
+            </a>
+        @endif
     </div>
 
     {{-- Daftar Lowongan --}}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
         @forelse ($lowonganList as $lowongan)
             @php
-                $deadline = $lowongan->deadline_pendaftaran ? \Carbon\Carbon::parse($lowongan->deadline_pendaftaran) : null;
-                $daysLeft = $deadline ? $deadline->diffInDays(now(), false) : null;
+                $wibNow = now('Asia/Jakarta');
+                $deadline = $lowongan->deadline_pendaftaran ? 
+                    \Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->setTimezone('Asia/Jakarta') : null;
+                $daysLeft = $deadline ? $deadline->diffInDays($wibNow, false) : null;
                 $applicantCount = $lowongan->magang()->count();
                 $isExpired = $deadline && $deadline->isPast();
             @endphp
@@ -143,9 +171,61 @@
             </div>
         @empty
             <div class="col-span-full text-center py-12">
-                <div class="text-gray-500 text-lg">Belum ada lowongan tersedia</div>
-                <div class="text-gray-400 text-sm mt-2">Silakan cek kembali nanti</div>
+                <div class="text-gray-500 text-lg">Tidak ada lowongan yang sesuai dengan filter</div>
+                <div class="text-gray-400 text-sm mt-2">Coba ubah filter atau <a href="{{ route('mahasiswa.lowongan') }}" class="text-primary-500 hover:underline">reset semua filter</a></div>
             </div>
         @endforelse
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle Tipe Magang filter
+    document.querySelectorAll('.filter-tipe-magang').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.getAttribute('data-value');
+            const text = this.textContent.trim();
+            
+            // Update button text
+            document.getElementById('selected-tipe-magang').textContent = text;
+            
+            // Apply filter
+            applyFilter('jenis_magang', value);
+        });
+    });
+
+    // Handle Perusahaan filter
+    document.querySelectorAll('.filter-perusahaan').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.getAttribute('data-value');
+            const text = this.textContent.trim();
+            
+            // Update button text
+            document.getElementById('selected-perusahaan').textContent = text;
+            
+            // Apply filter
+            applyFilter('jenis_perusahaan', value);
+        });
+    });
+
+    // Handle Lokasi filter
+    document.getElementById('lokasi-filter').addEventListener('change', function() {
+        const value = this.value;
+        applyFilter('lokasi', value);
+    });
+
+    function applyFilter(filterName, filterValue) {
+        const url = new URL(window.location);
+        
+        if (filterValue) {
+            url.searchParams.set(filterName, filterValue);
+        } else {
+            url.searchParams.delete(filterName);
+        }
+        
+        window.location.href = url.toString();
+    }
+});
+</script>
