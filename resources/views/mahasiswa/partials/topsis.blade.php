@@ -1,130 +1,183 @@
 <div class="space-y-6">
-    {{-- Filter Dropdowns --}}
-    <div class="flex justify-between items-center">
-        <div class="flex gap-2">
-            {{-- Tipe Magang Dropdown --}}
-            <div class="hs-dropdown relative inline-flex">
-                <button id="hs-dropdown-tipe-magang" type="button"
-                    class="hs-dropdown-toggle py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-md font-medium rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 h-[38px]"
-                    aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                    Semua Tipe Magang
-                    <x-lucide-chevron-down class="hs-dropdown-open:rotate-180 size-4" />
-                </button>
-                <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                    role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-tipe-magang">
-                    <div class="p-1 space-y-0.5">
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                            href="#">
-                            Semua Tipe Magang
-                        </a>
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                            href="#">
-                            WFO
-                        </a>
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                            href="#">
-                            Remote
-                        </a>
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                            href="#">
-                            Hybrid
-                        </a>
-                    </div>
-                </div>
+    {{-- TOPSIS Info Section --}}
+    <div class="bg-white rounded-lg p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                <i class="ph ph-chart-line text-primary-600 text-xl"></i>
             </div>
-
-            {{-- Perusahaan Dropdown --}}
-            <div class="hs-dropdown relative inline-flex">
-                <button id="hs-dropdown-perusahaan" type="button"
-                    class="hs-dropdown-toggle py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-md font-medium rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 h-[38px]"
-                    aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                    Semua Perusahaan
-                    <x-lucide-chevron-down class="hs-dropdown-open:rotate-180 size-4" />
-                </button>
-                <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                    role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-perusahaan">
-                    <div class="p-1 space-y-0.5">
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                            href="#">
-                            Semua Perusahaan
-                        </a>
-                        @foreach($jenisPerusahaan as $jenis)
-                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                                href="#" data-value="{{ $jenis->id_jenis_perusahaan }}">
-                                {{ $jenis->nama_jenis_perusahaan }}
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            {{-- Lokasi Dropdown dengan Search --}}
-            <div class="relative">
-                <select data-hs-select='{
-                    "hasSearch": true,
-                    "searchPlaceholder": "Cari lokasi...",
-                    "searchClasses": "block w-full text-sm border-gray-200 rounded-lg focus:border-primary-500 focus:ring-primary-500 py-2 px-3 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500",
-                    "searchWrapperClasses": "bg-white p-2 -mx-1 sticky top-0 dark:bg-neutral-900",
-                    "placeholder": "Pilih lokasi",
-                    "toggleTag": "<button type=\"button\" aria-expanded=\"false\"><span class=\"text-gray-800 dark:text-neutral-200\" data-title></span></button>",
-                    "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-1.5 sm:py-2 pl-4 pr-10 flex gap-x-2 text-nowrap w-auto cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-md font-medium focus:outline-hidden focus:ring-2 focus:ring-primary-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:focus:outline-hidden dark:focus:ring-1 dark:focus:ring-neutral-600 h-[38px]",
-                    "dropdownClasses": "mt-2 max-h-72 pb-1 px-1 space-y-0.5 z-20 min-w-max bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
-                    "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
-                    "optionTemplate": "<div class=\"flex items-center\"><div class=\"text-gray-800 dark:text-neutral-200\" data-title></div></div>",
-                    "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
-                }' class="hidden" name="lokasi" id="lokasi-filter">
-                    <option value="">Semua Lokasi</option>
-                    @foreach($lokasiPerusahaan as $lokasi)
-                        <option value="{{ $lokasi }}">{{ $lokasi }}</option>
-                    @endforeach
-                </select>
+            <div>
+                <h3 class="text-lg font-semibold text-primary-900">Rekomendasi TOPSIS</h3>
+                <p class="text-sm text-primary-700">Lowongan diurutkan berdasarkan analisis ideal positif dan negatif
+                </p>
             </div>
         </div>
 
-        <a href="#" class="btn-primary">Lihat Perhitungan</a>
+        @if ($topsisRecommendations->isEmpty())
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <p class="text-yellow-800 text-sm">
+                        Lengkapi profil Anda untuk mendapatkan rekomendasi yang akurat.
+                    </p>
+                </div>
+            </div>
+        @else
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div class="bg-white rounded-lg p-4 border border-primary-200">
+                    <div class="text-2xl font-bold text-neutral-900">{{ $topsisRecommendations->count() }}</div>
+                    <div class="text-sm text-neutral-400">Lowongan Tersedia</div>
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-primary-200">
+                    <div class="text-2xl font-bold text-primary-500">
+                        {{ $topsisRecommendations->where('deadline_pendaftaran', '>=', now())->count() }}
+                    </div>
+                    <div class="text-sm text-neutral-400">Masih Terbuka</div>
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-primary-200">
+                    <div class="text-2xl font-bold text-yellow-500">TOP 3</div>
+                    <div class="text-sm text-neutral-400">Rekomendasi Terbaik</div>
+                </div>
+            </div>
+        @endif
+
+        <div class="mt-4 flex justify-center">
+            <a href="{{ route('mahasiswa.topsis.hitung') }}" class="btn-primary">
+                Lihat Perhitungan Detail
+            </a>
+        </div>
     </div>
 
-    {{-- Daftar Lowongan --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3=2 gap-4 w-full">
-        @for ($i = 1; $i <= 6; $i++)
-            <div class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4">
-                <div class="inline-flex items-center gap-6">
-                    <img src="https://placehold.co/80x80?text=Logo" alt="Logo"
+    {{-- Daftar Lowongan Berdasarkan TOPSIS --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 w-full relative z-10">
+        @forelse ($topsisRecommendations as $index => $lowongan)
+            @php
+                $wibNow = now('Asia/Jakarta');
+                $deadline = $lowongan->deadline_pendaftaran
+                    ? \Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->setTimezone('Asia/Jakarta')
+                    : null;
+                $daysLeft = $deadline ? $deadline->diffInDays($wibNow, false) : null;
+                $applicantCount = $lowongan->magang()->count();
+                $isExpired = $deadline && $deadline->isPast();
+                $isTopRecommendation = $index < 3; // Top 3 recommendations
+            @endphp
+            <div
+                class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 relative z-0 {{ $isExpired ? 'opacity-75' : '' }} {{ $isTopRecommendation ? 'ring-2 ring-primary-200 bg-primary-50' : '' }}">
+                {{-- Ranking Badge --}}
+                @if ($isTopRecommendation)
+                    <div class="absolute -top-2 -right-2 z-10">
+                        <div
+                            class="bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg">
+                            {{ $index + 1 }}
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Recommendation Badge for Top 3 --}}
+                @if ($index === 0)
+                    <div class="absolute top-4 left-4 z-10">
+                        <span
+                            class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                </path>
+                            </svg>
+                            BEST CHOICE
+                        </span>
+                    </div>
+                @elseif($isTopRecommendation)
+                    <div class="absolute top-4 left-4 z-10">
+                        <span class="bg-primary-100 text-primary-600 px-2 py-1 rounded-full text-xs font-semibold">
+                            TOP {{ $index + 1 }}
+                        </span>
+                    </div>
+                @endif
+
+                <div class="inline-flex items-center gap-6 {{ $isTopRecommendation ? 'mt-2' : '' }}">
+                    <img src="{{ $lowongan->perusahaanMitra->logo ? $lowongan->perusahaanMitra->logo_url : asset('images/placeholder_perusahaan.png') }}"
+                        alt="Logo {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
                         class="w-20 h-20 rounded-lg object-contain bg-gray-50">
                     <div class="flex flex-col flex-1 justify-start items-start gap-2 h-fill">
                         <div class="self-stretch inline-flex justify-start items-center gap-4">
                             <div class="justify-start text-black text-lg font-medium leading-none">
-                                UI UX Designer</div>
+                                {{ $lowongan->judul_lowongan }}
+                            </div>
                         </div>
                         <div class="inline-flex justify-start items-center gap-2">
-                            <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                                PT. Quantum</a>
-                            <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
-                            <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                                Jakarta Pusat</a>
+                            <span
+                                class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[120px]">
+                                {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}
+                            </span>
+                            <div class="w-1 h-1 bg-neutral-400 rounded-full flex-shrink-0"></div>
+                            <span
+                                class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[150px]">
+                                {{ $lowongan->perusahaanMitra->alamat }}
+                            </span>
                         </div>
                         <div class="inline-flex justify-start items-start gap-2">
                             <span
-                                class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">WFO</span>
+                                class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                {{ strtoupper($lowongan->jenis_magang) }}
+                            </span>
                             <span
-                                class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">Software
-                                House</span>
+                                class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                {{ $lowongan->perusahaanMitra->jenisPerusahaan->nama_jenis_perusahaan }}
+                            </span>
                         </div>
                     </div>
                     <button type="button"
-                        class="ml-auto py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none">
-                        Ajukan Magang
+                        class="ml-auto py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent {{ $isTopRecommendation ? 'bg-primary-500 hover:bg-primary-600' : 'bg-primary-500 hover:bg-primary-600' }} text-white focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none {{ $isExpired ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : '' }}"
+                        {{ $isExpired ? 'disabled' : '' }}>
+                        {{ $isExpired ? 'Tutup' : 'Ajukan Magang' }}
                     </button>
                 </div>
                 <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
                 <div class="self-stretch inline-flex justify-start items-center gap-2">
-                    <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                        23 hari tersisa</a>
-                    <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
-                    <a class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                        30 Pelamar</a>
+                    @if ($lowongan->deadline_pendaftaran)
+                        <span class="justify-start text-neutral-400 text-sm font-normal leading-none">
+                            @if ($isExpired)
+                                Pendaftaran ditutup
+                            @else
+                                {{ abs($daysLeft) }} hari tersisa
+                            @endif
+                        </span>
+                        <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
+                    @endif
+                    <span class="justify-start text-neutral-400 text-sm font-normal leading-none">
+                        {{ $applicantCount }} Pelamar
+                    </span>
+                    {{-- Match Score Indicator --}}
+                    @if ($isTopRecommendation)
+                        <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
+                        <span class="text-primary-400 text-sm font-medium">
+                            {{ $index === 0 ? '🎯 Perfect Match' : ($index === 1 ? '⭐ Great Match' : '👍 Good Match') }}
+                        </span>
+                    @endif
                 </div>
             </div>
-        @endfor
+        @empty
+            <div class="col-span-full text-center py-12">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                </div>
+                <div class="text-gray-500 text-lg mb-2">Tidak ada rekomendasi tersedia</div>
+                <div class="text-gray-400 text-sm">
+                    Silakan lengkapi profil Anda untuk mendapatkan rekomendasi yang sesuai.
+                </div>
+                <div class="mt-4">
+                    <a href="#" class="text-primary-600 hover:text-primary-800 font-medium">
+                        Lengkapi Profil →
+                    </a>
+                </div>
+            </div>
+        @endforelse
     </div>
 </div>

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\MagangController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\LowonganController as MahasiswaLowonganController;
 use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController;
+use App\Http\Controllers\Mahasiswa\TopsisController;
 
 
 /*
@@ -140,5 +141,6 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.edit_profile');
         Route::post('/profile/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])->name('mahasiswa.profile.update-preferensi');
         Route::get('/mabac/hitung', [App\Http\Controllers\Mahasiswa\MabacController::class, 'hitungMabac'])->name('mahasiswa.mabac.hitung');
+        Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])->name('mahasiswa.topsis.hitung');
     });
 });

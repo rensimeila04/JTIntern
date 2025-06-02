@@ -60,7 +60,7 @@
 
             {{-- Rekomendasi Topsis Tab Content --}}
             <div id="content-rekomendasi-topsis" class="hidden" role="tabpanel" aria-labelledby="tab-rekomendasi-topsis">
-                @include('mahasiswa.partials.topsis')
+                @include('mahasiswa.partials.topsis', ['topsisRecommendations' => $topsisRecommendations])
             </div>
         </div>
     </div>

@@ -7,16 +7,19 @@ use App\Models\JenisPerusahaanModel;
 use App\Models\PerusahaanMitraModel;
 use App\Models\LowonganModel;
 use App\Services\MabacService;
+use App\Services\TopsisService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LowonganController extends Controller
 {
     protected $mabacService;
+    protected $topsisService;
 
-    public function __construct(MabacService $mabacService)
+    public function __construct(MabacService $mabacService, TopsisService $topsisService)
     {
         $this->mabacService = $mabacService;
+        $this->topsisService = $topsisService;
     }
 
     public function index(Request $request)
@@ -113,6 +116,33 @@ class LowonganController extends Controller
             $mabacRecommendations = collect();
         }
 
+        // Get TOPSIS recommendations
+        $topsisRecommendations = [];
+        try {
+            if (Auth::user()->mahasiswa) {
+                $hasilTopsis = $this->topsisService->hitungRekomendasiTopsis();
+                
+                // Extract lowongan IDs in ranking order
+                $lowonganIds = [];
+                foreach ($hasilTopsis['ranking'] as $rank) {
+                    $alternatif = $hasilTopsis['alternatif'][$rank['alternatif_index']];
+                    $lowonganIds[] = $alternatif['lowongan']->id_lowongan;
+                }
+                
+                // Get lowongan in TOPSIS ranking order
+                $topsisRecommendations = collect();
+                foreach ($lowonganIds as $id) {
+                    $lowongan = $lowonganList->where('id_lowongan', $id)->first();
+                    if ($lowongan) {
+                        $topsisRecommendations->push($lowongan);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Handle case where TOPSIS calculation fails (e.g., incomplete profile)
+            $topsisRecommendations = collect();
+        }
+
         return view('mahasiswa.lowongan', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
@@ -120,6 +150,7 @@ class LowonganController extends Controller
             'lokasiPerusahaan' => $lokasiPerusahaan,
             'lowonganList' => $lowonganList,
             'mabacRecommendations' => $mabacRecommendations,
+            'topsisRecommendations' => $topsisRecommendations,
             'filters' => $request->only(['jenis_magang', 'jenis_perusahaan', 'lokasi', 'search'])
         ]);
     }
