@@ -23,6 +23,17 @@ class MabacService
         }
 
         $mahasiswa = MahasiswaModel::with(['kompetensi', 'jenisPerusahaan'])->find($mahasiswaId);
+        
+        // Check if profile is complete
+        if (!$this->isProfileComplete($mahasiswa)) {
+            return [
+                'profile_incomplete' => true,
+                'mahasiswa' => $mahasiswa,
+                'missing_fields' => $this->getMissingFields($mahasiswa),
+                'kriteria' => $this->kriteria
+            ];
+        }
+
         $lowonganList = LowonganModel::with([
             'perusahaanMitra.jenisPerusahaan',
             'perusahaanMitra.fasilitasPerusahaan',
@@ -51,6 +62,7 @@ class MabacService
         $ranking = $this->perangkinganAlternatif($matriksQ);
 
         return [
+            'profile_incomplete' => false,
             'mahasiswa' => $mahasiswa,
             'alternatif' => $alternatif,
             'matriksX' => $matriksX,
@@ -61,6 +73,76 @@ class MabacService
             'ranking' => $ranking,
             'kriteria' => $this->kriteria
         ];
+    }
+
+    private function isProfileComplete($mahasiswa)
+    {
+        return !is_null($mahasiswa->id_kompetensi) &&
+               !is_null($mahasiswa->id_jenis_perusahaan) &&
+               !is_null($mahasiswa->jenis_magang) &&
+               !is_null($mahasiswa->preferensi_lokasi) &&
+               !is_null($mahasiswa->latitude_preferensi) &&
+               !is_null($mahasiswa->longitude_preferensi);
+    }
+
+    private function getMissingFields($mahasiswa)
+    {
+        $missing = [];
+        
+        if (is_null($mahasiswa->id_kompetensi)) {
+            $missing[] = 'Kompetensi';
+        }
+        if (is_null($mahasiswa->id_jenis_perusahaan)) {
+            $missing[] = 'Jenis Perusahaan';
+        }
+        if (is_null($mahasiswa->jenis_magang)) {
+            $missing[] = 'Jenis Magang';
+        }
+        if (is_null($mahasiswa->preferensi_lokasi) || is_null($mahasiswa->latitude_preferensi) || is_null($mahasiswa->longitude_preferensi)) {
+            $missing[] = 'Lokasi Preferensi';
+        }
+        
+        return $missing;
+    }
+
+    // Method to get MABAC recommendations for lowongan tab
+    public function getMabacRecommendations($mahasiswaId = null)
+    {
+        if (!$mahasiswaId) {
+            $mahasiswaId = Auth::user()->mahasiswa->id_mahasiswa;
+        }
+
+        $mahasiswa = MahasiswaModel::with(['kompetensi', 'jenisPerusahaan'])->find($mahasiswaId);
+        
+        // Check if profile is complete
+        if (!$this->isProfileComplete($mahasiswa)) {
+            return collect(); // Return empty collection if profile incomplete
+        }
+
+        $lowonganList = LowonganModel::with([
+            'perusahaanMitra.jenisPerusahaan',
+            'perusahaanMitra.fasilitasPerusahaan',
+            'kompetensi'
+        ])->where('status_pendaftaran', true)->get();
+
+        // Get MABAC calculation results
+        $alternatif = $this->penilaianAlternatif($mahasiswa, $lowonganList);
+        $matriksX = $this->pembentukanMatriksX($alternatif);
+        $matriksNormalisasi = $this->normalisasiMatriks($matriksX);
+        $matriksV = $this->elemenMatriksTertimbang($matriksNormalisasi);
+        $matriksG = $this->matriksAreaPerkiraanBatas($matriksV);
+        $matriksQ = $this->elemenMatriksJarak($matriksV, $matriksG);
+        $ranking = $this->perangkinganAlternatif($matriksQ);
+
+        // Map ranking back to lowongan objects
+        $rankedLowongan = collect();
+        foreach ($ranking as $rank) {
+            $lowongan = $alternatif[$rank['alternatif_index']]['lowongan'];
+            $lowongan->mabac_score = $rank['nilai_s'];
+            $rankedLowongan->push($lowongan);
+        }
+
+        return $rankedLowongan;
     }
 
     private function penilaianAlternatif($mahasiswa, $lowonganList)
