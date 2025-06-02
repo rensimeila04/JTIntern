@@ -20,6 +20,7 @@ class MabacController extends Controller
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Lowongan', 'url' => route('mahasiswa.lowongan')],
+            ['label' => 'Hitung Rekomendasi Mabac', 'url' => route('mahasiswa.mabac.hitung')],
         ];
 
         $activeMenu = 'lowongan';

@@ -20,6 +20,7 @@ class TopsisController extends Controller
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Lowongan', 'url' => route('mahasiswa.lowongan')],
+            ['label' => 'Hitung Rekomendasi Topsis', 'url' => route('mahasiswa.topsis.hitung')]
         ];
 
         $activeMenu = 'lowongan';
