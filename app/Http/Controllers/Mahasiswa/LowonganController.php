@@ -117,29 +117,31 @@ class LowonganController extends Controller
         }
 
         // Get TOPSIS recommendations
-        $topsisRecommendations = [];
+        $topsisRecommendations = collect();
         try {
             if (Auth::user()->mahasiswa) {
                 $hasilTopsis = $this->topsisService->hitungRekomendasiTopsis();
                 
-                // Extract lowongan IDs in ranking order
-                $lowonganIds = [];
-                foreach ($hasilTopsis['ranking'] as $rank) {
-                    $alternatif = $hasilTopsis['alternatif'][$rank['alternatif_index']];
-                    $lowonganIds[] = $alternatif['lowongan']->id_lowongan;
-                }
-                
-                // Get lowongan in TOPSIS ranking order
-                $topsisRecommendations = collect();
-                foreach ($lowonganIds as $id) {
-                    $lowongan = $lowonganList->where('id_lowongan', $id)->first();
-                    if ($lowongan) {
-                        $topsisRecommendations->push($lowongan);
+                // Check if TOPSIS calculation is successful
+                if (!isset($hasilTopsis['error']) || !$hasilTopsis['error']) {
+                    // Extract lowongan IDs in ranking order
+                    $lowonganIds = [];
+                    foreach ($hasilTopsis['ranking'] as $rank) {
+                        $alternatif = $hasilTopsis['alternatif'][$rank['alternatif_index']];
+                        $lowonganIds[] = $alternatif['lowongan']->id_lowongan;
+                    }
+                    
+                    // Get lowongan in TOPSIS ranking order
+                    foreach ($lowonganIds as $id) {
+                        $lowongan = $lowonganList->where('id_lowongan', $id)->first();
+                        if ($lowongan) {
+                            $topsisRecommendations->push($lowongan);
+                        }
                     }
                 }
             }
         } catch (\Exception $e) {
-            // Handle case where TOPSIS calculation fails (e.g., incomplete profile)
+            // Handle case where TOPSIS calculation fails
             $topsisRecommendations = collect();
         }
 

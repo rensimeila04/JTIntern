@@ -9,11 +9,11 @@
         <div class="mb-6 bg-blue-50 p-4 rounded-lg">
             <h3 class="text-lg font-semibold mb-2">Profil Mahasiswa</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <p><strong>Nama:</strong> {{ $hasil['mahasiswa']->user->name }}</p>
+                <p><strong>Nama:</strong> {{ $hasil['mahasiswa']->user->nama }}</p>
                 <p><strong>NIM:</strong> {{ $hasil['mahasiswa']->nim }}</p>
                 <p><strong>Kompetensi:</strong> {{ $hasil['mahasiswa']->kompetensi->nama_kompetensi ?? 'Tidak ada' }}</p>
                 <p><strong>Jenis Perusahaan:</strong> {{ $hasil['mahasiswa']->jenisPerusahaan->nama_jenis_perusahaan ?? 'Tidak ada' }}</p>
-                <p><strong>Jenis Magang:</strong> {{ ucfirst($hasil['mahasiswa']->jenis_magang) }}</p>
+                <p><strong>Jenis Magang:</strong> {{ ucfirst($hasil['mahasiswa']->jenis_magang) ?? 'Tidak ada' }}</p>
                 <p><strong>Lokasi Preferensi:</strong> {{ $hasil['mahasiswa']->preferensi_lokasi ?? 'Tidak ada' }}</p>
             </div>
         </div>
@@ -160,7 +160,7 @@
             </div>
         </div>
 
-        <!-- 5. Solusi Ideal Positif (A+) dan Negatif (A-) -->
+        <!-- 5. Solusi Ideal Positif (A+) dan Negatif (A-)</div>
         <div class="mb-6">
             <h3 class="text-lg font-semibold mb-4">5. Solusi Ideal Positif (A+) dan Negatif (A-)</h3>
             <div class="overflow-x-auto">
@@ -265,6 +265,15 @@
         </div>
         @endif
 
+        <!-- Tombol Kembali -->
+        <div class="mt-6 text-center">
+            <a href="{{ route('mahasiswa.lowongan') }}" class="inline-flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Kembali ke Lowongan
+            </a>
+        </div>
     </div>
 </div>
 @endsection

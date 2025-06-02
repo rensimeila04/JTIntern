@@ -23,11 +23,32 @@ class TopsisService
         }
 
         $mahasiswa = MahasiswaModel::with(['kompetensi', 'jenisPerusahaan'])->find($mahasiswaId);
+        
+        // Validasi kelengkapan profil
+        $profilLengkap = $this->validateProfilMahasiswa($mahasiswa);
+        if (!$profilLengkap['valid']) {
+            return [
+                'error' => true,
+                'message' => 'Profil belum lengkap',
+                'missing_fields' => $profilLengkap['missing_fields'],
+                'mahasiswa' => $mahasiswa
+            ];
+        }
+
         $lowonganList = LowonganModel::with([
             'perusahaanMitra.jenisPerusahaan',
             'perusahaanMitra.fasilitasPerusahaan',
             'kompetensi'
         ])->where('status_pendaftaran', true)->get();
+
+        // Jika tidak ada lowongan
+        if ($lowonganList->isEmpty()) {
+            return [
+                'error' => true,
+                'message' => 'Tidak ada lowongan yang tersedia',
+                'mahasiswa' => $mahasiswa
+            ];
+        }
 
         // 1. Penilaian Alternatif
         $alternatif = $this->penilaianAlternatif($mahasiswa, $lowonganList);
@@ -60,6 +81,7 @@ class TopsisService
         $ranking = $this->perangkinganAlternatif($nilaiPreferensi);
 
         return [
+            'error' => false,
             'mahasiswa' => $mahasiswa,
             'alternatif' => $alternatif,
             'matriksX' => $matriksX,
@@ -72,6 +94,31 @@ class TopsisService
             'nilaiPreferensi' => $nilaiPreferensi,
             'ranking' => $ranking,
             'kriteria' => $this->kriteria
+        ];
+    }
+
+    private function validateProfilMahasiswa($mahasiswa)
+    {
+        $requiredFields = [
+            'id_kompetensi' => 'Kompetensi',
+            'id_jenis_perusahaan' => 'Jenis Perusahaan',
+            'jenis_magang' => 'Jenis Magang',
+            'preferensi_lokasi' => 'Preferensi Lokasi',
+            'latitude_preferensi' => 'Koordinat Lokasi',
+            'longitude_preferensi' => 'Koordinat Lokasi'
+        ];
+
+        $missingFields = [];
+        
+        foreach ($requiredFields as $field => $label) {
+            if (empty($mahasiswa->$field)) {
+                $missingFields[] = $label;
+            }
+        }
+
+        return [
+            'valid' => empty($missingFields),
+            'missing_fields' => $missingFields
         ];
     }
 

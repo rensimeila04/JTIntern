@@ -20,12 +20,17 @@ class TopsisController extends Controller
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Lowongan', 'url' => route('mahasiswa.lowongan')],
-            ['label' => 'Hitung Rekomendasi Topsis', 'url' => route('mahasiswa.topsis.hitung')]
+            ['label' => 'Hitung Rekomendasi TOPSIS', 'url' => route('mahasiswa.topsis.hitung')],
         ];
 
         $activeMenu = 'lowongan';
 
         $hasil = $this->topsisService->hitungRekomendasiTopsis();
+        
+        // Check if there's an error (incomplete profile or no data)
+        if (isset($hasil['error']) && $hasil['error']) {
+            return view('mahasiswa.hitung_topsis_error', compact('hasil', 'breadcrumb', 'activeMenu'));
+        }
         
         return view('mahasiswa.hitung_topsis', compact('hasil', 'breadcrumb', 'activeMenu'));
     }
