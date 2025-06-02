@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PeriodeController;
 use App\Http\Controllers\Admin\LowonganController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MagangController;
+use App\Http\Controllers\mahasiswa\LogAktivitasController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\LowonganController as MahasiswaLowonganController;
 
@@ -136,5 +137,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.lowongan');
         Route::get('/edit-profile', [MahasiswaDashboardController::class, 'edit'])
             ->name('mahasiswa.edit_profile');
+        Route::get('/log_aktivitas', [LogAktivitasController::class, 'index'])
+            ->name('mahasiswa.log_aktivitas');
     });
 });

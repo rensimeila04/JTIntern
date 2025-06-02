@@ -35,7 +35,7 @@
                     <div class="{{ ($activeMenu ?? '') == 'rincian-magang' ? 'text-primary-600' : 'text-neutral-500' }} text-base font-normal group-hover:text-primary-600">Rincian
                         Magang</div>
                 </a>
-                <a href="#"
+                <a href="{{ route('mahasiswa.log_aktivitas')}}"
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'log-aktivitas' ? 'bg-primary-100' : '' }}">
                     <x-lucide-activity class="size-6 {{ ($activeMenu ?? '') == 'log-aktivitas' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
