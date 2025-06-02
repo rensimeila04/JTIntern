@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_magang');
             $table->unsignedBigInteger('id_mahasiswa')->index();
             $table->unsignedBigInteger('id_lowongan')->index();
-            $table->unsignedBigInteger('id_dosen_pembimbing')->index();
+            $table->unsignedBigInteger('id_dosen_pembimbing')->index()->nullable();
             $table->enum('status_magang', ['menunggu', 'diterima', 'ditolak', 'magang', 'selesai'])->default('menunggu');
             $table->string('path_sertifikat')->nullable();
             $table->timestamps();
