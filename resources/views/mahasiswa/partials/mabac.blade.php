@@ -1,13 +1,13 @@
 <div class="space-y-6">
     {{-- MABAC Info Section --}}
-    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
+    <div class="bg-white rounded-lg p-6">
         <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <i class="ph ph-medal text-blue-600 text-xl"></i>
+            <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                <i class="ph ph-medal text-primary-600 text-xl"></i>
             </div>
             <div>
-                <h3 class="text-lg font-semibold text-blue-900">Rekomendasi MABAC</h3>
-                <p class="text-sm text-blue-700">Lowongan diurutkan berdasarkan kesesuaian dengan profil Anda</p>
+                <h3 class="text-lg font-semibold text-primary-900">Rekomendasi MABAC</h3>
+                <p class="text-sm text-primary-700">Lowongan diurutkan berdasarkan kesesuaian dengan profil Anda</p>
             </div>
         </div>
 
@@ -26,19 +26,19 @@
             </div>
         @else
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                <div class="bg-white rounded-lg p-4 border border-blue-200">
-                    <div class="text-2xl font-bold text-blue-600">{{ $mabacRecommendations->count() }}</div>
-                    <div class="text-sm text-gray-600">Lowongan Tersedia</div>
+                <div class="bg-white rounded-lg p-4 border border-primary-200">
+                    <div class="text-2xl font-bold text-neutral-900">{{ $mabacRecommendations->count() }}</div>
+                    <div class="text-sm text-neutral-400">Lowongan Tersedia</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                <div class="bg-white rounded-lg p-4 border border-primary-200">
                     <div class="text-2xl font-bold text-primary-500">
                         {{ $mabacRecommendations->where('deadline_pendaftaran', '>=', now())->count() }}
                     </div>
-                    <div class="text-sm text-gray-600">Masih Terbuka</div>
+                    <div class="text-sm text-neutral-400">Masih Terbuka</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                <div class="bg-white rounded-lg p-4 border border-primary-200">
                     <div class="text-2xl font-bold text-yellow-500">TOP 3</div>
-                    <div class="text-sm text-gray-600">Rekomendasi Terbaik</div>
+                    <div class="text-sm text-neutral-400">Rekomendasi Terbaik</div>
                 </div>
             </div>
         @endif
@@ -64,7 +64,7 @@
                 $isTopRecommendation = $index < 3; // Top 3 recommendations
             @endphp
             <div
-                class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 relative z-0 {{ $isExpired ? 'opacity-75' : '' }} {{ $isTopRecommendation ? 'ring-2 ring-primary-200 bg-blue-50' : '' }}">
+                class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 relative z-0 {{ $isExpired ? 'opacity-75' : '' }} {{ $isTopRecommendation ? 'ring-2 ring-primary-200 bg-primary-50' : '' }}">
                 {{-- Ranking Badge --}}
                 @if ($isTopRecommendation)
                     <div class="absolute -top-2 -right-2 z-10">
@@ -172,7 +172,7 @@
                     Silakan lengkapi profil Anda untuk mendapatkan rekomendasi yang sesuai.
                 </div>
                 <div class="mt-4">
-                    <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">
+                    <a href="#" class="text-primary-600 hover:text-primary-800 font-medium">
                         Lengkapi Profil →
                     </a>
                 </div>
