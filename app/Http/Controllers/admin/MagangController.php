@@ -103,15 +103,48 @@ class MagangController extends Controller
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Kelola Magang', 'url' => '#'],
+            ['label' => 'Kelola Magang', 'url' => route('admin.kelola-magang')],
             ['label' => 'Pengajuan Ditolak', 'url' => '#'],
         ];
+
+        // Query builder for magang - FIXED relationship name
+        $query = MagangModel::with([
+            'mahasiswa.user',
+            'lowongan.perusahaanMitra', // Correct relationship name
+            'dosenPembimbing.user'
+        ])->where('status_magang', 'ditolak');
+
+        // Search functionality - FIXED field names
+        if (request()->filled('search')) {
+            $search = request()->search;
+            $query->whereHas('mahasiswa.user', function($q) use ($search) {
+                $q->where('name', 'like', "%$search%");
+            })
+            ->orWhereHas('lowongan', function($q) use ($search) {
+                $q->where('judul_lowongan', 'like', "%$search%"); // Fixed field name
+            })
+            ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($search) { // Fixed relationship name
+                $q->where('nama_perusahaan_mitra', 'like', "%$search%");
+            });
+        }
+
+        // Get magang data with pagination
+        $magangDitolak = $query->latest()->paginate(10)->appends(request()->query());
+        $lowonganList = LowonganModel::select('id_lowongan', 'judul_lowongan')->orderBy('judul_lowongan')->get();
+        $currentSearch = request()->search ?? '';
+        $currentLowongan = request()->lowongan_id ?? 'all';
+
+
 
         $activeMenu = 'kelola-magang';
         
         return view('admin.pengajuan_ditolak', [
             'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu
+            'activeMenu' => $activeMenu,
+            'magangDitolak' => $magangDitolak,
+            'currentSearch' => $currentSearch,
+            'currentLowongan' => $currentLowongan,
+            'lowonganList' => $lowonganList,
         ]);
     }
 
@@ -119,15 +152,47 @@ class MagangController extends Controller
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Kelola Magang', 'url' => '#'],
+            ['label' => 'Kelola Magang', 'url' => route('admin.kelola-magang')],
             ['label' => 'Riwayat Magang', 'url' => '#'],
         ];
 
         $activeMenu = 'kelola-magang';
         
+        // Query builder for magang - FIXED relationship name
+        $query = MagangModel::with([
+            'mahasiswa.user',
+            'lowongan.perusahaanMitra', // Correct relationship name
+            'dosenPembimbing.user'
+        ])->where('status_magang', 'selesai');
+
+        // Search functionality - FIXED field names
+        if (request()->filled('search')) {
+            $search = request()->search;
+            $query->whereHas('mahasiswa.user', function($q) use ($search) {
+                $q->where('name', 'like', "%$search%");
+            })
+            ->orWhereHas('lowongan', function($q) use ($search) {
+                $q->where('judul_lowongan', 'like', "%$search%"); // Fixed field name
+            })
+            ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($search) { // Fixed relationship name
+                $q->where('nama_perusahaan_mitra', 'like', "%$search%");
+            });
+        }
+
+        // Get magang data with pagination
+        $riwayatMagang = $query->latest()->paginate(10)->appends(request()->query());
+        $lowonganList = LowonganModel::select('id_lowongan', 'judul_lowongan')->orderBy('judul_lowongan')->get();
+        $currentSearch = request()->search ?? '';
+        $currentLowongan = request()->lowongan_id ?? 'all';
+        
+
         return view('admin.riwayat_magang', [
             'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu
+            'activeMenu' => $activeMenu,
+            'riwayatMagang' => $riwayatMagang,
+            'currentSearch' => $currentSearch,
+            'currentLowongan' => $currentLowongan,
+            'lowonganList' => $lowonganList,
         ]);
     }
 
