@@ -77,10 +77,11 @@
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                 </a>
-                                                <a href="#"
+                                                <button type="button"
+                                                    onclick="openEditModal({{ $log->id }}, '{{ $log->tanggal }}', '{{ $log->waktu_awal }}', '{{ $log->waktu_akhir }}', `{{ $log->deskripsi }}`)"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
-                                                </a>
+                                                </button>
                                                 <a href="#"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-trash-2 class="w-4 h-4 text-red-500" />
@@ -140,6 +141,53 @@ document.getElementById('formTambahLog').addEventListener('submit', function(e) 
         if(res.success) {
             closeModal();
             location.reload(); // Atau update tabel via JS tanpa reload
+        } else {
+            errorDiv.textContent = res.message || 'Terjadi kesalahan.';
+            errorDiv.classList.remove('hidden');
+        }
+    })
+    .catch(err => {
+        errorDiv.textContent = 'Terjadi kesalahan.';
+        errorDiv.classList.remove('hidden');
+    });
+});
+
+function openEditModal(id, tanggal, waktuAwal, waktuAkhir, deskripsi) {
+    document.getElementById('modalEditLog').classList.remove('hidden');
+    document.getElementById('editId').value = id;
+    document.getElementById('editTanggal').value = tanggal;
+    document.getElementById('editWaktuAwal').value = waktuAwal;
+    document.getElementById('editWaktuAkhir').value = waktuAkhir;
+    document.getElementById('editDeskripsi').value = deskripsi;
+}
+function closeEditModal() {
+    document.getElementById('modalEditLog').classList.add('hidden');
+    document.getElementById('formEditLog').reset();
+    document.getElementById('editFormError').classList.add('hidden');
+}
+
+// AJAX submit edit
+document.getElementById('formEditLog').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let form = this;
+    let id = document.getElementById('editId').value;
+    let data = new FormData(form);
+    let errorDiv = document.getElementById('editFormError');
+    errorDiv.classList.add('hidden');
+    fetch('/mahasiswa/log_aktivitas/' + id, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+            'X-HTTP-Method-Override': 'PUT'
+        },
+        body: data
+    })
+    .then(res => res.json())
+    .then(res => {
+        if(res.success) {
+            closeEditModal();
+            location.reload();
         } else {
             errorDiv.textContent = res.message || 'Terjadi kesalahan.';
             errorDiv.classList.remove('hidden');
