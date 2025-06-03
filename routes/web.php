@@ -15,6 +15,7 @@ use App\Http\Controllers\Mahasiswa\LowonganController as MahasiswaLowonganContro
 use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController;
 use App\Http\Controllers\Mahasiswa\TopsisController;
 
+use App\Http\Controllers\Mahasiswa\RincianController as MahasiswaRincianController;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,5 +143,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/profile/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])->name('mahasiswa.profile.update-preferensi');
         Route::get('/mabac/hitung', [App\Http\Controllers\Mahasiswa\MabacController::class, 'hitungMabac'])->name('mahasiswa.mabac.hitung');
         Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])->name('mahasiswa.topsis.hitung');
+        Route::get('/rincian', [MahasiswaRincianController::class, 'index'])
+            ->name('mahasiswa.rincian');
+        Route::get('/rincian-diterima', [MahasiswaRincianController::class, 'rincianDiterima'])
+            ->name('mahasiswa.rincian_diterima');
+        Route::get('/rincian-ditolak', [MahasiswaRincianController::class, 'rincianDitolak'])
+            ->name('mahasiswa.rincian_ditolak');
+        Route::get('/rincian-magang', [MahasiswaRincianController::class, 'rincianMagang'])
+            ->name('mahasiswa.rincian_magang');
+        Route::get('/rincian-selesai', [MahasiswaRincianController::class, 'rincianSelesai'])
+            ->name('mahasiswa.rincian_selesai');
     });
 });
