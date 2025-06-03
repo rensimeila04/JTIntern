@@ -110,8 +110,6 @@ Route::middleware(['auth'])->group(function () {
         });
 
 
-        Route::get('/program-studi', [ProgramStudiController::class, 'index'])
-            ->name('admin.program_studi');
 
         Route::prefix('level')->name('admin.level')->group(function () {
             Route::get('/', [LevelController::class, 'index'])->name('');
@@ -121,6 +119,16 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LevelController::class, 'update'])->name('.update');
             Route::delete('/{id}', [LevelController::class, 'destroy'])->name('.destroy');
             Route::get('/{id}', [LevelController::class, 'detail'])->name('.detail');
+        });
+        
+        Route::prefix('program-studi')->name('admin.program_studi')->group(function () {
+            Route::get('/', [ProgramStudiController::class, 'index'])->name('');
+            Route::get('/tambah', [ProgramStudiController::class, 'create'])->name('.create');
+            Route::post('/tambah', [ProgramStudiController::class, 'store'])->name('.store');
+            Route::get('/{id}/edit', [ProgramStudiController::class, 'edit'])->name('.edit');
+            Route::put('/{id}', [ProgramStudiController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('.destroy');
+            Route::get('/{id}', [ProgramStudiController::class, 'detail'])->name('.detail');
         });
     });
 
