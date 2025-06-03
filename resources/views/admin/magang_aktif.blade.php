@@ -28,6 +28,10 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-default">
                         <div class="p-1 space-y-0.5">
                             <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                                href="{{ route('admin.kelola-magang.magang_aktif') }}">
+                                Semua Status
+                            </a>
+                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
                                 href="{{ route('admin.kelola-magang.magang_aktif', ['status' => 'magang']) }}">
                                 Magang
                             </a>
@@ -51,6 +55,10 @@
                     <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700"
                         role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-default1">
                         <div class="p-1 space-y-0.5">
+                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                                href="{{ route('admin.kelola-magang.magang_aktif') }}">
+                                Semua Magang
+                            </a>
                             <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
                                 href="{{ route('admin.kelola-magang.magang_aktif', ['pembimbing' => 'dengan']) }}">
                                 Dengan Dosen Pembimbing
