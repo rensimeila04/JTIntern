@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MagangController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\LowonganController as MahasiswaLowonganController;
+use App\Http\Controllers\Mahasiswa\RincianController as MahasiswaRincianController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,5 +137,15 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.lowongan');
         Route::get('/edit-profile', [MahasiswaDashboardController::class, 'edit'])
             ->name('mahasiswa.edit_profile');
+        Route::get('/rincian', [MahasiswaRincianController::class, 'index'])
+            ->name('mahasiswa.rincian');
+        Route::get('/rincian-diterima', [MahasiswaRincianController::class, 'rincianDiterima'])
+            ->name('mahasiswa.rincian_diterima');
+        Route::get('/rincian-ditolak', [MahasiswaRincianController::class, 'rincianDitolak'])
+            ->name('mahasiswa.rincian_ditolak');
+        Route::get('/rincian-magang', [MahasiswaRincianController::class, 'rincianMagang'])
+            ->name('mahasiswa.rincian_magang');
+        Route::get('/rincian-selesai', [MahasiswaRincianController::class, 'rincianSelesai'])
+            ->name('mahasiswa.rincian_selesai');
     });
 });
