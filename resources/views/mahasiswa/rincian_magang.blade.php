@@ -1,23 +1,23 @@
 @extends('layout.template')
 @section('content')
-    <div class="space-y-4 mt-5 w-full bg-white p-4 rounded-md">
+    <div class="flex flex-col gap-6 w-full bg-white p-4 rounded-md">
         <div class="flex gap-2 mb-4">
             <a href="{{ route('mahasiswa.rincian_diterima') }}"
                 class="px-4 py-2 rounded-lg text-sm font-medium border border-primary-500 bg-primary-50 text-primary-600">
-                Lihat Rincian Diterima
+                Diterima
             </a>
             <a href="{{ route('mahasiswa.rincian_ditolak') }}"
                 class="px-4 py-2 rounded-lg text-sm font-medium border border-red-500 text-red-600 bg-red-50 hover:bg-red-100 transition">
-                Lihat Rincian Ditolak
+                Ditolak
             </a>
             <a href="{{ route('mahasiswa.rincian_magang') }}"
                 class="px-4 py-2 rounded-lg text-sm font-medium border border-blue-500 text-blue-600 bg-blue-50 hover:bg-blue-100 transition">
-                Lihat Rincian Magang
+                Magang
             </a>
         </div>
         <div class="flex flex-col justify-start ">
             <div class="mb-4">
-                <h2 class="text-xl font-medium text-black mb-3">Rincian Magang</h2>
+                <h2 class="text-xl font-medium text-black">Rincian Magang</h2>
             </div>
             <div class="flex gap-9">
                 <img class="w-30 h-30" src="{{ asset('Images/LOGOPT.png') }}">
@@ -222,6 +222,5 @@
                 }
             });
         </script>
-    </div>
     </div>
 @endsection
