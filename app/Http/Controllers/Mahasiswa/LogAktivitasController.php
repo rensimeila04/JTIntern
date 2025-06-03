@@ -23,7 +23,7 @@ class LogAktivitasController extends Controller
             ['label' => 'Log Aktivitas', 'url' => 'mahasiswa.log_aktivitas'],
         ];
 
-        $activeMenu = 'log_aktivitas';
+        $activeMenu = 'log-aktivitas';
 
         return view('mahasiswa.log_aktivitas', [
             'breadcrumb' => $breadcrumb,
