@@ -9,6 +9,7 @@
                 <h2>Log Aktivitas</h2>
             </span>
             <button type="button"
+                onclick="openModal()"
                 class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700">
                 <i class="ph ph-plus"></i>
                 Tambah Log Aktivitas
@@ -104,4 +105,49 @@
             </div>
         @endif
     </div>
+
+    @include('mahasiswa.tambah_log_aktivitas')
+    
 @endsection
+
+<script>
+function openModal() {
+    document.getElementById('modalTambahLog').classList.remove('hidden');
+}
+function closeModal() {
+    document.getElementById('modalTambahLog').classList.add('hidden');
+    document.getElementById('formTambahLog').reset();
+    document.getElementById('formError').classList.add('hidden');
+}
+
+// AJAX submit
+document.getElementById('formTambahLog').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let form = this;
+    let data = new FormData(form);
+    let errorDiv = document.getElementById('formError');
+    errorDiv.classList.add('hidden');
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: data
+    })
+    .then(res => res.json())
+    .then(res => {
+        if(res.success) {
+            closeModal();
+            location.reload(); // Atau update tabel via JS tanpa reload
+        } else {
+            errorDiv.textContent = res.message || 'Terjadi kesalahan.';
+            errorDiv.classList.remove('hidden');
+        }
+    })
+    .catch(err => {
+        errorDiv.textContent = 'Terjadi kesalahan.';
+        errorDiv.classList.remove('hidden');
+    });
+});
+</script>

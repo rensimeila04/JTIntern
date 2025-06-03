@@ -139,5 +139,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.edit_profile');
         Route::get('/log_aktivitas', [LogAktivitasController::class, 'index'])
             ->name('mahasiswa.log_aktivitas');
+        Route::post('/mahasiswa/log_aktivitas', [LogAktivitasController::class, 'store'])
+            ->name('mahasiswa.log_aktivitas.store');
     });
 });
