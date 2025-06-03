@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\LowonganController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MagangController;
 use App\Http\Controllers\mahasiswa\FeedbackMagangController;
+use App\Http\Controllers\mahasiswa\LogAktivitasController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\LowonganController as MahasiswaLowonganController;
 use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController;
@@ -164,5 +165,11 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.rincian_selesai');
         Route::get('/feedback', [FeedbackMagangController::class, 'index'])
             ->name('mahasiswa.feedback');
+        Route::get('/log_aktivitas', [LogAktivitasController::class, 'index'])
+            ->name('mahasiswa.log_aktivitas');
+        Route::post('/mahasiswa/log_aktivitas', [LogAktivitasController::class, 'store'])
+            ->name('mahasiswa.log_aktivitas.store');
+        Route::put('/mahasiswa/log_aktivitas/{id}', [LogAktivitasController::class, 'update'])
+            ->name('mahasiswa.log_aktivitas.update');
     });
 });
