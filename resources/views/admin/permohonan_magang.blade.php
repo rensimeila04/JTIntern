@@ -31,11 +31,19 @@
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                             <thead class="bg-gray-50 dark:bg-neutral-700">
                                 <tr>
-                                    <th scope="col" class="w-4 px-6 py-6 text-start text-xs font-medium text-gray-500">ID</th>
-                                    <th scope="col" class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500">Nama Mahasiswa</th>
-                                    <th scope="col" class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500">Judul Lowongan</th>
-                                    <th scope="col" class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500">Nama Perusahaan</th>
-                                    <th scope="col" class="w-4 px-5 py-3 text-start text-xs font-medium text-gray-500">Aksi</th>
+                                    <th scope="col" class="w-4 px-6 py-6 text-start text-xs font-medium text-gray-500">ID
+                                    </th>
+                                    <th scope="col"
+                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500">Nama Mahasiswa
+                                    </th>
+                                    <th scope="col"
+                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500">Judul Lowongan
+                                    </th>
+                                    <th scope="col"
+                                        class="w-auto px-6 py-3 text-start text-xs font-medium text-gray-500">Nama
+                                        Perusahaan</th>
+                                    <th scope="col" class="w-4 px-5 py-3 text-start text-xs font-medium text-gray-500">
+                                        Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
@@ -59,7 +67,7 @@
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500">
                                                     <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                 </a>
-                                                <button type="button" 
+                                                <button type="button"
                                                     onclick="confirmDeleteMagang('{{ $item->id_magang }}', '{{ $item->mahasiswa->user->name }}')"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500">
                                                     <x-lucide-trash-2 class="w-4 h-4 text-red-500" />
@@ -88,13 +96,10 @@
     </div>
 
     @push('scripts')
-    <script>
-        function confirmDeleteMagang(id, name) {
-            if (confirm('Apakah Anda yakin ingin menghapus data permohonan magang dari ' + name + '?')) {
-                // Add your delete logic here
-                // You can use AJAX or form submission to handle the delete
+        <script>
+            function confirmDeleteMagang(id, name) {
+                if (confirm('Apakah Anda yakin ingin menghapus data permohonan magang dari ' + name + '?')) {}
             }
-        }
-    </script>
+        </script>
     @endpush
 @endsection

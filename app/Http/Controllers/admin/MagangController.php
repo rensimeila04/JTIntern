@@ -187,18 +187,60 @@ class MagangController extends Controller
         ]);
     }
 
-    public function magangAktif()
+    public function magangAktif(Request $request)
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Kelola Magang', 'url' => '#'],
+            ['label' => 'Magang Aktif', 'url' => '#'],
         ];
 
         $activeMenu = 'kelola-magang';
 
+        // Query for active internships (status: magang or diterima)
+        $query = MagangModel::with([
+            'mahasiswa.user',
+            'lowongan.perusahaanMitra',
+            'dosenPembimbing.user'
+        ])->whereIn('status_magang', ['magang', 'diterima']);
+
+        // Filter by status if specified
+        if ($request->filled('status') && in_array($request->status, ['magang', 'diterima'])) {
+            $query->where('status_magang', $request->status);
+        }
+
+        // Filter by pembimbing status
+        if ($request->filled('pembimbing')) {
+            if ($request->pembimbing === 'dengan') {
+                $query->whereNotNull('id_dosen_pembimbing');
+            } elseif ($request->pembimbing === 'tanpa') {
+                $query->whereNull('id_dosen_pembimbing');
+            }
+        }
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('mahasiswa.user', function ($q) use ($search) {
+                    $q->where('name', 'like', "%$search%");
+                })
+                    ->orWhereHas('lowongan', function ($q) use ($search) {
+                        $q->where('judul_lowongan', 'like', "%$search%");
+                    })
+                    ->orWhereHas('lowongan.perusahaanMitra', function ($q) use ($search) {
+                        $q->where('nama_perusahaan_mitra', 'like', "%$search%");
+                    });
+            });
+        }
+
+        // Get data with pagination
+        $aktiveMagang = $query->latest()->paginate(10)->appends($request->query());
+
         return view('admin.magang_aktif', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
+            'aktiveMagang' => $aktiveMagang
         ]);
     }
 }
