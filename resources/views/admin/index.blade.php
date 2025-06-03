@@ -12,7 +12,7 @@
                     <span class="text-base text-neutral-400 font-medium">Mahasiswa Magang</span>
                 </div>
                 <div class="flex-1 flex items-center justify-center">
-                    <span class="text-4xl font-medium text-gray-800">260</span>
+                    <span class="text-4xl font-medium text-gray-800">{{ $countMahasiswa }}</span>
                 </div>
             </div>
             <!-- Card 2 -->
@@ -24,7 +24,7 @@
                     <span class="text-base text-neutral-400 font-medium">Dosen Pembimbing</span>
                 </div>
                 <div class="flex-1 flex items-center justify-center">
-                    <span class="text-4xl font-medium text-gray-800">65</span>
+                    <span class="text-4xl font-medium text-gray-800">{{ $countDosenPembimbing }}</span>
                 </div>
             </div>
             <!-- Card 3 -->
@@ -36,7 +36,7 @@
                     <span class="text-base text-neutral-400 font-medium">Perusahaan</span>
                 </div>
                 <div class="flex-1 flex items-center justify-center">
-                    <span class="text-4xl font-medium text-gray-800">35</span>
+                    <span class="text-4xl font-medium text-gray-800">{{ $countPerusahaanMitra }}</span>
                 </div>
             </div>
             <!-- Card 4 -->
@@ -48,13 +48,13 @@
                     <span class="text-base text-neutral-400 font-medium">Lowongan</span>
                 </div>
                 <div class="flex-1 flex items-center justify-center">
-                    <span class="text-4xl font-medium text-gray-800">85</span>
+                    <span class="text-4xl font-medium text-gray-800">{{ $countLowongan }}</span>
                 </div>
             </div>
         </div>
         <div class="flex flex-col lg:flex-row gap-4">
             <!-- Chart 1 -->
-            <div class="bg-white rounded-[8px] flex flex-col items-center w-[456px] h-[324px] p-4">
+            <div class="bg-white rounded-[8px] flex flex-col items-center w-[600px] h-[324px] p-4">
                 <h2 class="text-lg font-medium text-Neutral-700 self-start mb-6">Rasio Dosen & Mahasiswa</h2>
                 <div class="flex flex-col items-center justify-center flex-1 w-full h-full">
                     <div class="w-[200px] h-[200px] flex items-center justify-center">
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <!-- Chart 2 -->
-            <div class="bg-white rounded-[8px] flex flex-col items-center w-[752px] h-[324px] p-4">
+            <div class="bg-white rounded-[8px] flex flex-col items-center w-[870px] h-[324px] p-4">
                 <h2 class="text-lg font-medium text-Neutral-700 self-start">Tren Peminatan Mahasiswa</h2>
                 <div class="w-full h-[240px]" id="hs-single-bar-chart"></div>
             </div>
@@ -90,75 +90,22 @@
             <div class="bg-white rounded-[8px] flex flex-col items-center w-full h-fit p-4">
                 <h2 class="text-lg font-medium text-Neutral-700 self-start pb-6">Tren Peminatan Mahasiswa</h2>
                 <div class="space-y-5 w-full">
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Sangat Puas</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">50%</span>
+                    @foreach ($feedbackKepuasanData as $nilai => $data)
+                        <!-- Progress -->
+                        <div>
+                            <div class="mb-2 flex justify-between items-center">
+                                <h3 class="text-sm font-medium text-neutral-800 dark:text-white">{{ $data['label'] }} </h3>
+                                <span class="text-sm text-neutral-800 dark:text-white">{{ $data['persentase'] }}%</span>
+                            </div>
+                            <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
+                                role="progressbar" aria-valuenow="{{ $data['persentase'] }}%" aria-valuemin="0"
+                                aria-valuemax="100">
+                                <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
+                                    style="width: {{ $data['persentase'] }}%"></div>
+                            </div>
                         </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 50%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Puas</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">20%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 20%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-memdium text-neutral-800 dark:text-white">Netral</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">10%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 10%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Tidak Puas</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">10%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 10%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Sangat Tidak Puas</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">10%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 10%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
+                        <!-- End Progress -->
+                    @endforeach
                 </div>
             </div>
 
@@ -168,75 +115,21 @@
                     Kebutuhan/Minat
                 </h2>
                 <div class="space-y-5 w-full">
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Sangat Sesuai</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">50%</span>
+                    @foreach ($feedbackKesesuaianData as $nilai => $data)
+                        <!-- Progress -->
+                        <div>
+                            <div class="mb-2 flex justify-between items-center">
+                                <h3 class="text-sm font-medium text-neutral-800 dark:text-white">{{ $data['label'] }}</h3>
+                                <span class="text-sm text-neutral-800 dark:text-white">{{ $data['persentase'] }}%</span>
+                            </div>
+                            <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
+                                role="progressbar" aria-valuenow="{{ $data['persentase'] }}%" aria-valuemin="0" aria-valuemax="100">
+                                <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-300 text-xs text-white text-center whitespace-nowrap transition duration-500"
+                                    style="width: {{ $data['persentase'] }}%"></div>
+                            </div>
                         </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-300 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 50%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Sesuai</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">20%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-300 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 20%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Cukup Sesuai</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">10%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-300 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 10%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Kurang Sesuai</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">10%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-300 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 10%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
-
-                    <!-- Progress -->
-                    <div>
-                        <div class="mb-2 flex justify-between items-center">
-                            <h3 class="text-sm font-medium text-neutral-800 dark:text-white">Tidak Sesuai</h3>
-                            <span class="text-sm text-neutral-800 dark:text-white">10%</span>
-                        </div>
-                        <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
-                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-300 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                                style="width: 10%"></div>
-                        </div>
-                    </div>
-                    <!-- End Progress -->
+                        <!-- End Progress -->
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -247,7 +140,7 @@
     <script>
         window.addEventListener('load', () => {
             // Apex Doughnut Chart
-            (function() {
+            (function () {
                 buildChart('#hs-doughnut-chart', (mode) => ({
                     chart: {
                         height: 200,
@@ -264,8 +157,8 @@
                             }
                         }
                     },
-                    series: [25, 75],
-                    labels: ['Mahasiswa Magang', 'Dosen Pembimbing'],
+                    series: @json([$countDosenPembimbing, $countMahasiswa]),
+                    labels: ['Dosen Pembimbing', 'Mahasiswa Magang'],
                     legend: {
                         show: false
                     },
@@ -292,7 +185,7 @@
                     },
                     tooltip: {
                         enabled: true,
-                        custom: function(props) {
+                        custom: function (props) {
                             return buildTooltipForDonut(
                                 props,
                                 mode === 'dark' ? ['#fff', '#fff'] : ['#fff', '#fff']
@@ -300,7 +193,7 @@
                         }
                     }
                 }), {
-                    colors: ['#BEDCC6', '#4C956C'],
+                    colors: ['#BEDCC6', '#4C956C',],
                     stroke: {
                         colors: ['rgb(255, 255, 255)']
                     }
@@ -316,7 +209,7 @@
     <script>
         window.addEventListener('load', () => {
             // Apex Single Bar Charts
-            (function() {
+            (function () {
                 buildChart('#hs-single-bar-chart', (mode) => ({
                     chart: {
                         type: 'bar',
@@ -332,7 +225,7 @@
                     },
                     series: [{
                         name: 'Jumlah',
-                        data: [80, 110, 130, 55, 150]
+                        data: @json($trenPeminatanData)
                     }],
                     plotOptions: {
                         bar: {
@@ -354,13 +247,7 @@
                         colors: ['transparent']
                     },
                     xaxis: {
-                        categories: [
-                            'Data\nScience',
-                            'Game\nDev',
-                            'Software\nDev',
-                            'UI/UX\nDesign',
-                            'Lainnya'
-                        ],
+                        categories: @json($trenPeminatanLabel),
                         axisBorder: {
                             show: false
                         },
@@ -377,9 +264,19 @@
                                 fontFamily: 'Inter, ui-sans-serif',
                                 fontWeight: 400
                             },
-                            formatter: function(value) {
-                                // Pecah label menjadi dua baris jika ada spasi
-                                return value.split(' ').join('\n');
+                            formatter: function (value) {
+                                // Jika nilai bukan string, kembalikan nilai asli
+                                if (typeof value !== 'string') return value;
+
+                                // Pecah string berdasarkan spasi
+                                var words = value.split(' ');
+
+                                // Jika hanya satu kata, kembalikan kata tersebut
+                                if (words.length <= 1) return value;
+
+                                // Jika ada dua kata atau lebih, pisahkan menjadi 2 baris
+                                // Kata pertama di baris pertama, sisanya di baris kedua
+                                return words[0] + '\n' + words.slice(1).join(' ');
                             }
                         },
                         axisBorder: {
@@ -411,10 +308,11 @@
                         }
                     },
                     tooltip: {
+                        enabled: true,
                         y: {
                             formatter: (value) => `$${value >= 1000 ? `${value / 1000}k` : value}`
                         },
-                        custom: function(props) {
+                        custom: function (props) {
                             const {
                                 categories
                             } = props.ctx.opts.xaxis;
@@ -422,7 +320,8 @@
                                 dataPointIndex
                             } = props;
                             const title = categories[dataPointIndex];
-                            const newTitle = `${title}`;
+                            const value = props.series[props.seriesIndex][dataPointIndex];
+                            const newTitle = `${title}: ${value}`;
 
                             return buildTooltip(props, {
                                 title: newTitle,
