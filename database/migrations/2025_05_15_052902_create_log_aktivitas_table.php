@@ -14,19 +14,12 @@ return new class extends Migration
         Schema::create('log_aktivitas', function (Blueprint $table) {
             $table->id('id_log_aktivitas');
             $table->unsignedBigInteger('id_magang')->index();
-            $table->text('deskripsi');
-            $table->text('feedback')->nullable();
-            $table->text('laporan')->nullable();
-            $table->text('sikap_penyampaian')->nullable();
-            $table->integer('q1')->nullable();
-            $table->integer('q2')->nullable();
-            $table->integer('q3')->nullable();
-            $table->integer('q4')->nullable();
-            $table->integer('q5')->nullable();
-            $table->integer('q6')->nullable();
-            $table->integer('q7')->nullable();
-            $table->integer('q8')->nullable();
-            $table->date('tanggal')->default(now()->toDateString());
+            $table->date('tanggal');
+            $table->time('jam_masuk');
+            $table->time('jam_pulang');
+            $table->text('kegiatan');
+            $table->text('feedback_dospem')->nullable();
+            $table->enum('status_feedback', ['belum_ada', 'sudah_ada'])->default('belum_ada');
             $table->timestamps();
 
             $table->foreign('id_magang')->references('id_magang')->on('magang');

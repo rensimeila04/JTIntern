@@ -15,22 +15,28 @@ class LogAktivitasModel extends Model
 
     protected $fillable = [
         'id_magang',
-        'deskripsi',
-        'feedback',
-        'laporan',
-        'sikap_penyampaian',
-        'q1',
-        'q2',
-        'q3',
-        'q4',
-        'q5',
-        'q6',
-        'q7',
-        'q8',
         'tanggal',
+        'jam_masuk',
+        'jam_pulang',
+        'kegiatan',
+        'feedback_dospem',
+        'status_feedback',
     ];
 
-    public function magang(){
+    protected $casts = [
+        'tanggal' => 'date',
+        'jam_masuk' => 'datetime:H:i',
+        'jam_pulang' => 'datetime:H:i',
+    ];
+
+    public function magang()
+    {
         return $this->belongsTo(MagangModel::class, 'id_magang', 'id_magang');
+    }
+
+    // Accessor untuk format tanggal dengan hari
+    public function getTanggalFormatAttribute()
+    {
+        return $this->tanggal->isoFormat('dddd, DD MMMM YYYY');
     }
 }
