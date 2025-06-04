@@ -165,6 +165,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.rincian_selesai');
         Route::get('/feedback', [FeedbackMagangController::class, 'index'])
             ->name('mahasiswa.feedback');
+        Route::post('/feedback/store', [FeedbackMagangController::class, 'store'])
+            ->name('mahasiswa.feedback.store');
         Route::get('/log_aktivitas', [LogAktivitasController::class, 'index'])
             ->name('mahasiswa.log_aktivitas');
         Route::post('/mahasiswa/log_aktivitas', [LogAktivitasController::class, 'store'])
