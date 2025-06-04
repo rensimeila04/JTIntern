@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// Auth Controllers
 use App\Http\Controllers\AuthController;
+
+// Admin Controllers
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -10,11 +14,16 @@ use App\Http\Controllers\Admin\PeriodeController;
 use App\Http\Controllers\Admin\LowonganController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MagangController;
+
+// Mahasiswa Controllers
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\LowonganController as MahasiswaLowonganController;
 use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController;
 use App\Http\Controllers\Mahasiswa\TopsisController;
-
+use App\Http\Controllers\Mahasiswa\MabacController;
+use App\Http\Controllers\Mahasiswa\RincianController as MahasiswaRincianController;
+use App\Http\Controllers\mahasiswa\FeedbackMagangController;
+use App\Http\Controllers\mahasiswa\LogAktivitasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,8 +118,6 @@ Route::middleware(['auth'])->group(function () {
         });
 
 
-        Route::get('/program-studi', [ProgramStudiController::class, 'index'])
-            ->name('admin.program_studi');
 
         Route::prefix('level')->name('admin.level')->group(function () {
             Route::get('/', [LevelController::class, 'index'])->name('');
@@ -120,6 +127,16 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LevelController::class, 'update'])->name('.update');
             Route::delete('/{id}', [LevelController::class, 'destroy'])->name('.destroy');
             Route::get('/{id}', [LevelController::class, 'detail'])->name('.detail');
+        });
+        
+        Route::prefix('program-studi')->name('admin.program_studi')->group(function () {
+            Route::get('/', [ProgramStudiController::class, 'index'])->name('');
+            Route::get('/tambah', [ProgramStudiController::class, 'create'])->name('.create');
+            Route::post('/tambah', [ProgramStudiController::class, 'store'])->name('.store');
+            Route::get('/{id}/edit', [ProgramStudiController::class, 'edit'])->name('.edit');
+            Route::put('/{id}', [ProgramStudiController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('.destroy');
+            Route::get('/{id}', [ProgramStudiController::class, 'detail'])->name('.detail');
         });
     });
 
@@ -133,14 +150,56 @@ Route::middleware(['auth'])->group(function () {
 
     // Mahasiswa Routes
     Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
+        // Dashboard
         Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
             ->name('mahasiswa.dashboard');
+        
+        // Lowongan
         Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])
             ->name('mahasiswa.lowongan');
-        Route::get('/edit', [MahasiswaProfileController::class, 'edit'])
-            ->name('mahasiswa.edit_profile');
-        Route::post('/profile/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])->name('mahasiswa.profile.update-preferensi');
-        Route::get('/mabac/hitung', [App\Http\Controllers\Mahasiswa\MabacController::class, 'hitungMabac'])->name('mahasiswa.mabac.hitung');
-        Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])->name('mahasiswa.topsis.hitung');
+        
+        // Profile Management
+        Route::prefix('profile')->group(function () {
+            Route::get('/edit', [MahasiswaProfileController::class, 'edit'])
+                ->name('mahasiswa.edit_profile');
+            Route::post('/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])
+                ->name('mahasiswa.profile.update-preferensi');
+        });
+        
+        // Decision Support System
+        Route::prefix('decision')->group(function () {
+            Route::get('/mabac/hitung', [MabacController::class, 'hitungMabac'])
+                ->name('mahasiswa.mabac.hitung');
+            Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])
+                ->name('mahasiswa.topsis.hitung');
+        });
+        
+        // Rincian Management
+        Route::prefix('rincian')->group(function () {
+            Route::get('/', [MahasiswaRincianController::class, 'index'])
+                ->name('mahasiswa.rincian');
+            Route::get('/diterima', [MahasiswaRincianController::class, 'rincianDiterima'])
+                ->name('mahasiswa.rincian_diterima');
+            Route::get('/ditolak', [MahasiswaRincianController::class, 'rincianDitolak'])
+                ->name('mahasiswa.rincian_ditolak');
+            Route::get('/magang', [MahasiswaRincianController::class, 'rincianMagang'])
+                ->name('mahasiswa.rincian_magang');
+            Route::get('/selesai', [MahasiswaRincianController::class, 'rincianSelesai'])
+                ->name('mahasiswa.rincian_selesai');
+        });
+        
+        // Feedback
+        Route::get('/feedback', [FeedbackMagangController::class, 'index'])
+            ->name('mahasiswa.feedback');
+        
+        // Log Aktivitas
+        Route::prefix('log-aktivitas')->group(function () {
+            Route::get('/', [LogAktivitasController::class, 'index'])
+                ->name('mahasiswa.log_aktivitas');
+            Route::post('/', [LogAktivitasController::class, 'store'])
+                ->name('mahasiswa.log_aktivitas.store');
+            Route::put('/{id}', [LogAktivitasController::class, 'update'])
+                ->name('mahasiswa.log_aktivitas.update');
+        });
     });
 });
