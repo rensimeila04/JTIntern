@@ -31,7 +31,7 @@
                 <div class="flex flex-row gap-2.5">
                     <div class="flex flex-row gap-4 w-full items-center">
                         <div class="bg-orange-100 rounded-lg p-4">
-                            <x-lucide-book-open class="w-8 h-8 text-orange-600"/>
+                            <x-lucide-book-open class="w-8 h-8 text-orange-600" />
                         </div>
                         <div class="flex flex-col gap-2.5">
                             <div class="flex gap-2.5 font-medium text-base">
@@ -43,9 +43,10 @@
                             </div>
                             <p class="text-neutral-400 text-xs">Catat kegiatan magangmu</p>
                         </div>
-                        <span class="text-sm font-medium text-primary-500 underline ml-auto" href="#">
+                        <a class="text-sm font-medium text-primary-500 underline ml-auto"
+                            href="{{ route('mahasiswa.log_aktivitas') }}">
                             Detail
-                        </span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -65,9 +66,10 @@
                             </div>
                             <p class="text-neutral-400 text-xs">Bagikan pengalamanmu!</p>
                         </div>
-                        <span class="text-sm font-medium text-primary-500 underline ml-auto" href="#">
+                        <a class="text-sm font-medium text-primary-500 underline ml-auto"
+                            href="{{ route('mahasiswa.feedback') }}">
                             Detail
-                        </span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -102,8 +104,7 @@
                         </div>
                     </div>
                     <div class="justify-end ml-auto">
-                        <a href="#"
-                            class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
+                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
                             Ajukan Magang
                         </a>
                     </div>
@@ -144,8 +145,7 @@
                         </div>
                     </div>
                     <div class="justify-end ml-auto">
-                        <a href="#"
-                            class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
+                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
                             Ajukan Magang
                         </a>
                     </div>
@@ -186,8 +186,7 @@
                         </div>
                     </div>
                     <div class="justify-end ml-auto">
-                        <a href="#"
-                            class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
+                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
                             Ajukan Magang
                         </a>
                     </div>
@@ -228,8 +227,7 @@
                         </div>
                     </div>
                     <div class="justify-end ml-auto">
-                        <a href="#"
-                            class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
+                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
                             Ajukan Magang
                         </a>
                     </div>
