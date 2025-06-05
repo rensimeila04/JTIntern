@@ -224,6 +224,94 @@
 
     </div>
 
+    <!-- Success Modal -->
+    <div id="success-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="success-modal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="success-modal-label" class="font-bold text-green-800 dark:text-white">
+                        <div class="flex items-center gap-2">
+                            Dokumen Lengkap
+                        </div>
+                    </h3>
+                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#success-modal">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="h-8 w-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <p id="success-message" class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                            Semua dokumen telah lengkap. Anda dapat melanjutkan proses pendaftaran magang.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#success-modal">
+                        Tutup
+                    </button>
+                    <button id="continue-application-btn" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                        Lanjutkan Pendaftaran
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="error-modal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="error-modal-label" class="font-bold text-red-800 dark:text-white">
+                        <div class="flex items-center gap-2">
+                            Dokumen Belum Lengkap
+                        </div>
+                    </h3>
+                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#error-modal">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="h-8 w-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div id="error-message" class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                            <p class="mb-3">Dokumen Anda belum lengkap untuk mendaftar magang ini.</p>
+                            <div id="missing-documents-list" class="bg-red-50 border border-red-200 rounded-lg p-3 text-left">
+                                <!-- Missing documents will be populated here -->
+                            </div>
+                            <p class="mt-3 text-sm text-gray-600">Silakan lengkapi dokumen di halaman profil terlebih dahulu.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#error-modal">
+                        Tutup
+                    </button>
+                    <button id="go-to-profile-btn" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                        Ke Halaman Profil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const checkDocumentsBtn = document.getElementById('check-documents-btn');
@@ -244,23 +332,32 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Success Alert - Documents Complete
-                            showAlert('success', data.message);
+                            // Success Modal - Documents Complete
+                            document.getElementById('success-message').textContent = data.message;
+                            showModal('success-modal');
                         } else {
-                            // Error Alert - Documents Incomplete
-                            let errorMessage = data.message;
+                            // Error Modal - Documents Incomplete
+                            document.getElementById('error-message').querySelector('p').textContent = data.message;
                             
+                            const missingDocsList = document.getElementById('missing-documents-list');
                             if (data.missing_documents && data.missing_documents.length > 0) {
-                                errorMessage += '\n\nDokumen yang masih diperlukan:';
-                                errorMessage += '\n• ' + data.missing_documents.join('\n• ');
-                                errorMessage += '\n\nSilakan lengkapi dokumen di halaman profil.';
+                                missingDocsList.innerHTML = `
+                                    <p class="font-medium text-red-800 mb-2">Dokumen yang masih diperlukan:</p>
+                                    <ul class="list-disc list-inside text-red-700 space-y-1">
+                                        ${data.missing_documents.map(doc => `<li>${doc}</li>`).join('')}
+                                    </ul>
+                                `;
+                            } else {
+                                missingDocsList.innerHTML = '';
                             }
                             
-                            showAlert('error', errorMessage);
+                            showModal('error-modal');
                         }
                     })
                     .catch(error => {
-                        showAlert('error', 'Terjadi kesalahan saat memeriksa dokumen. Silakan coba lagi.');
+                        document.getElementById('error-message').querySelector('p').textContent = 'Terjadi kesalahan saat memeriksa dokumen. Silakan coba lagi.';
+                        document.getElementById('missing-documents-list').innerHTML = '';
+                        showModal('error-modal');
                     })
                     .finally(() => {
                         this.innerHTML = originalText;
@@ -269,43 +366,34 @@
                 });
             }
 
-            function showAlert(type, message) {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `fixed top-4 right-4 max-w-sm p-4 rounded-lg shadow-lg z-50 ${
-                    type === 'success' 
-                        ? 'bg-green-100 border border-green-400 text-green-700' 
-                        : 'bg-red-100 border border-red-400 text-red-700'
-                }`;
-                
-                alertDiv.innerHTML = `
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            ${type === 'success' 
-                                ? '<svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>'
-                                : '<svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>'
-                            }
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium whitespace-pre-line">${message}</p>
-                        </div>
-                        <div class="ml-auto pl-3">
-                            <button class="inline-flex text-gray-400 hover:text-gray-600" onclick="this.parentElement.parentElement.parentElement.remove()">
-                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(alertDiv);
-                
-                // Auto remove after 5 seconds
-                setTimeout(() => {
-                    if (alertDiv.parentNode) {
-                        alertDiv.remove();
-                    }
-                }, 5000);
+            // Handle continue application button
+            document.getElementById('continue-application-btn').addEventListener('click', function() {
+                // Close modal first
+                const successModal = document.getElementById('success-modal');
+                if (successModal.classList.contains('hs-overlay-open')) {
+                    // You can add logic here to proceed with the application
+                    // For now, just close the modal
+                    HSOverlay.close(successModal);
+                }
+                // Add your application logic here
+                console.log('Proceeding with application...');
+            });
+
+            // Handle go to profile button
+            document.getElementById('go-to-profile-btn').addEventListener('click', function() {
+                // Redirect to profile page
+                window.location.href = '{{ route("mahasiswa.edit_profile") }}';
+            });
+
+            function showModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal && window.HSOverlay) {
+                    HSOverlay.open(modal);
+                } else {
+                    // Fallback if HSOverlay is not available
+                    modal.classList.remove('hidden');
+                    modal.classList.add('hs-overlay-open');
+                }
             }
         });
     </script>
