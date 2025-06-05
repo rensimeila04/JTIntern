@@ -119,9 +119,10 @@
                         <img src="{{ $lowongan->perusahaanMitra->logo ? $lowongan->perusahaanMitra->logo_url : asset('images/placeholder_perusahaan.png') }}"
                             alt="Logo {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
                             class="w-20 h-20 rounded-lg object-contain bg-gray-50">
-                        <div class="flex flex-col flex-1 justify-start items-start gap-2 h-fill">
+                        <div class="flex flex-col flex-1 justify-start items-start gap-2 h-fill cursor-pointer" 
+                             onclick="window.location.href='{{ route('mahasiswa.lowongan.detail', $lowongan->id_lowongan) }}'">
                             <div class="self-stretch inline-flex justify-start items-center gap-4">
-                                <div class="justify-start text-black text-lg font-medium leading-none">
+                                <div class="justify-start text-black text-lg font-medium leading-none hover:text-primary-600 transition-colors">
                                     {{ $lowongan->judul_lowongan }}
                                 </div>
                             </div>
@@ -147,11 +148,10 @@
                                 </span>
                             </div>
                         </div>
-                        <button type="button"
-                            class="ml-auto py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent {{ $isTopRecommendation ? 'bg-primary-500 hover:bg-primary-600' : 'bg-primary-500 hover:bg-primary-600' }} text-white focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none {{ $isExpired ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : '' }}"
-                            {{ $isExpired ? 'disabled' : '' }}>
-                            {{ $isExpired ? 'Tutup' : 'Ajukan Magang' }}
-                        </button>
+                        <a href="{{ route('mahasiswa.lowongan.detail', $lowongan->id_lowongan) }}"
+                            class="ml-auto py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent {{ $isTopRecommendation ? 'bg-primary-500 hover:bg-primary-600' : 'bg-primary-500 hover:bg-primary-600' }} text-white focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none {{ $isExpired ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed pointer-events-none' : '' }}">
+                            {{ $isExpired ? 'Tutup' : 'Lihat Detail' }}
+                        </a>
                     </div>
                     <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
                     <div class="self-stretch inline-flex justify-start items-center gap-2">

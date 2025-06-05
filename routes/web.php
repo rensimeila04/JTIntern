@@ -157,6 +157,8 @@ Route::middleware(['auth'])->group(function () {
         // Lowongan
         Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])
             ->name('mahasiswa.lowongan');
+        Route::get('/lowongan/{id}', [MahasiswaLowonganController::class, 'detail'])
+            ->name('mahasiswa.lowongan.detail');
         
         // Profile Management
         Route::prefix('profile')->group(function () {

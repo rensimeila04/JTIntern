@@ -156,4 +156,42 @@ class LowonganController extends Controller
             'filters' => $request->only(['jenis_magang', 'jenis_perusahaan', 'lokasi', 'search'])
         ]);
     }
+
+    public function detail($id)
+    {
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Lowongan', 'url' => route('mahasiswa.lowongan')],
+            ['label' => 'Detail Lowongan', 'url' => ''],
+        ];
+
+        $activeMenu = 'lowongan';
+        
+        $lowongan = LowonganModel::with([
+            'perusahaanMitra.jenisPerusahaan',
+            'kompetensi',
+            'periodeMagang',
+            'magang'
+        ])->findOrFail($id);
+
+        // Get other lowongan (exclude current one) with limit 4
+        $lowonganList = LowonganModel::with([
+            'perusahaanMitra.jenisPerusahaan',
+            'kompetensi',
+            'periodeMagang',
+            'magang'
+        ])
+        ->where('status_pendaftaran', true)
+        ->where('id_lowongan', '!=', $id) // Exclude current lowongan
+        ->orderBy('created_at', 'desc')
+        ->limit(4) // Limit to 4 items
+        ->get();
+
+        return view('mahasiswa.detail_lowongan', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu,
+            'lowongan' => $lowongan,
+            'lowonganList' => $lowonganList,
+        ]);
+    }
 }
