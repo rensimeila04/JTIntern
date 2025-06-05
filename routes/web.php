@@ -170,6 +170,12 @@ Route::middleware(['auth'])->group(function () {
                 ->name('mahasiswa.profile.upload-dokumen');
             Route::delete('/hapus-dokumen', [MahasiswaProfileController::class, 'hapusDokumen'])
                 ->name('mahasiswa.profile.hapus-dokumen');
+            Route::post('/upload-profile-photo', [MahasiswaProfileController::class, 'uploadProfilePhoto'])
+                ->name('mahasiswa.profile.upload-profile-photo');
+            Route::post('/update-data-pribadi', [MahasiswaProfileController::class, 'updateDataPribadi'])
+                ->name('mahasiswa.profile.update-data-pribadi');
+            Route::post('/update-akun', [MahasiswaProfileController::class, 'updateAkun'])
+                ->name('mahasiswa.profile.update-akun');
         });
         
         // Decision Support System

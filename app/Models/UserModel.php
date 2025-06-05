@@ -35,6 +35,7 @@ class UserModel extends Authenticatable
         'email',
         'password',
         'id_level',
+        'profile_photo',
         'remember_token'
     ];
 

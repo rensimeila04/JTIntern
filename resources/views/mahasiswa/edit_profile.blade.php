@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                    <button type="button" data-hs-overlay="#success-modal" onclick="location.reload()"
+                    <button type="button" id="success-ok-btn"
                         class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
                         OK
                     </button>
@@ -127,14 +127,15 @@
             <h3 class="font-medium text-xl">Data Pribadi</h3>
             <div class="flex items-start gap-10">
                 <div class="flex flex-col gap-4 w-fit items-center">
-                    <img class="size-32 rounded-full"
+                    <img id="profile-image" class="size-32 rounded-full object-cover"
                         src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/avatar.svg') }}"
                         alt="User profile">
-                    <a href="#"
+                    <input type="file" id="profile-photo-upload" class="hidden" accept="image/*">
+                    <button type="button" onclick="document.getElementById('profile-photo-upload').click()"
                         class="btn-outline w-fit text-primary-500 border-primary-500 hover:bg-primary-500 hover:text-white flex items-center gap-2 whitespace-nowrap px-3 py-2">
                         <x-lucide-pencil-line stroke-width="1.5" class="size-3.5" />
                         Ganti Foto Profil
-                    </a>
+                    </button>
                 </div>
                 <div class="flex flex-col gap-4  w-full">
                     <div>
@@ -164,7 +165,7 @@
                 </div>
             </div>
             <span class="flex justify-end mt-6">
-                <button type="button" id="submitBtn" class="btn-primary">
+                <button type="button" id="updateDataPribadiBtn" class="btn-primary">
                     Perbarui Data Pribadi
                 </button>
             </span>
@@ -250,7 +251,7 @@
                     </div>
                     <div>
                         <label for="password" class="text-sm font-semibold">Kata Sandi</label>
-                        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi baru"
+                        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi baru (kosongkan jika tidak ingin mengubah)"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
                     <div>
@@ -261,7 +262,7 @@
                     </div>
                 </div>
                 <span class="flex justify-end mt-6">
-                    <button type="button" id="submitBtn" class="btn-primary">
+                    <button type="button" id="updateAkunBtn" class="btn-primary">
                         Perbarui Akun
                     </button>
                 </span>
@@ -621,10 +622,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     let debounceTimer;
     let currentDeleteAction = null;
+    let shouldReloadOnClose = false;
 
     // Modal functions
-    function showSuccessModal(message) {
+    function showSuccessModal(message, noReload = false) {
         document.getElementById('success-message').textContent = message;
+        shouldReloadOnClose = !noReload;
         HSOverlay.open(document.getElementById('success-modal'));
     }
 
@@ -651,6 +654,14 @@ document.addEventListener('DOMContentLoaded', function() {
         HSOverlay.open(document.getElementById('confirm-delete-modal'));
     }
 
+    // Success Modal OK Button Handler
+    document.getElementById('success-ok-btn').addEventListener('click', function() {
+        HSOverlay.close(document.getElementById('success-modal'));
+        if (shouldReloadOnClose) {
+            location.reload();
+        }
+    });
+
     // Confirm delete button handler
     document.getElementById('confirm-delete-btn').addEventListener('click', function() {
         if (currentDeleteAction) {
@@ -660,16 +671,196 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ...existing location search code...
+    // Profile Photo Upload - Langsung upload dan tampilkan
+    document.getElementById('profile-photo-upload').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            
+            // Validasi ukuran file (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                showErrorModal('Ukuran file tidak boleh lebih dari 2MB');
+                e.target.value = ''; // Reset input
+                return;
+            }
+            
+            // Validasi tipe file
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                showErrorModal('Format file harus JPEG, PNG, JPG, atau GIF');
+                e.target.value = ''; // Reset input
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('profile_photo', file);
+            formData.append('_token', '{{ csrf_token() }}');
+
+            // Preview image immediately
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-image').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            // Upload to server
+            fetch('{{ route("mahasiswa.profile.upload-profile-photo") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update image with server URL to ensure it's the saved version
+                    document.getElementById('profile-image').src = data.photo_url;
+                    // Show success modal tanpa reload untuk foto profil
+                    showSuccessModal(data.message, true);
+                } else {
+                    showErrorModal(data.message || 'Terjadi kesalahan saat mengunggah foto', data.errors);
+                    // Restore original image if upload failed
+                    document.getElementById('profile-image').src = '{{ Auth::user()->profile_photo ? asset("storage/" . Auth::user()->profile_photo) : asset("images/avatar.svg") }}';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorModal('Terjadi kesalahan saat mengunggah foto');
+                // Restore original image if upload failed
+                document.getElementById('profile-image').src = '{{ Auth::user()->profile_photo ? asset("storage/" . Auth::user()->profile_photo) : asset("images/avatar.svg") }}';
+            });
+            
+            // Reset input untuk memungkinkan upload file yang sama
+            e.target.value = '';
+        }
+    });
+
+    // Update Data Pribadi
+    document.getElementById('updateDataPribadiBtn').addEventListener('click', function() {
+        const button = this;
+        const originalText = button.textContent;
+        
+        // Disable button and show loading
+        button.disabled = true;
+        button.textContent = 'Memperbarui...';
+        
+        const formData = new FormData();
+        formData.append('nama_lengkap', document.getElementById('nama_lengkap').value);
+        formData.append('nim', document.getElementById('nim').value);
+        formData.append('program_studi', document.getElementById('program_studi').value);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route("mahasiswa.profile.update-data-pribadi") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessModal(data.message);
+            } else {
+                showErrorModal(data.message || 'Terjadi kesalahan', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorModal('Terjadi kesalahan saat memperbarui data pribadi');
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.textContent = originalText;
+        });
+    });
+
+    // Update Akun
+    document.getElementById('updateAkunBtn').addEventListener('click', function() {
+        const button = this;
+        const originalText = button.textContent;
+        
+        // Disable button and show loading
+        button.disabled = true;
+        button.textContent = 'Memperbarui...';
+        
+        const formData = new FormData();
+        formData.append('email', document.getElementById('email').value);
+        formData.append('password', document.getElementById('password').value);
+        formData.append('password_confirmation', document.getElementById('password_confirmation').value);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route("mahasiswa.profile.update-akun") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessModal(data.message);
+                // Clear password fields
+                document.getElementById('password').value = '';
+                document.getElementById('password_confirmation').value = '';
+            } else {
+                showErrorModal(data.message || 'Terjadi kesalahan', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorModal('Terjadi kesalahan saat memperbarui akun');
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.textContent = originalText;
+        });
+    });
+
+    // Update Preferensi
+    document.getElementById('updatePreferensiBtn').addEventListener('click', function() {
+        const button = this;
+        const originalText = button.textContent;
+        
+        // Disable button and show loading
+        button.disabled = true;
+        button.textContent = 'Memperbarui...';
+        
+        const formData = new FormData();
+        formData.append('jenis_magang', document.getElementById('jenis_magang').value);
+        formData.append('kompetensi', document.getElementById('kompetensi').value);
+        formData.append('jenis_perusahaan', document.getElementById('jenis_perusahaan').value);
+        formData.append('preferensi_lokasi', document.getElementById('preferensi_lokasi').value);
+        formData.append('latitude_preferensi', document.getElementById('latitude-preferensi').value);
+        formData.append('longitude_preferensi', document.getElementById('longitude-preferensi').value);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route('mahasiswa.profile.update-preferensi') }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessModal(data.message);
+            } else {
+                showErrorModal(data.message || 'Terjadi kesalahan', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorModal('Terjadi kesalahan saat memperbarui preferensi');
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.textContent = originalText;
+        });
+    });
+
+    // Location search functions...
     async function searchLocation(query) {
         if (query.length < 3) {
             hideSuggestions();
             return;
         }
-
-        const url =
-            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5&addressdetails=1&accept-language=id`;
-
+        
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5&addressdetails=1&accept-language=id`;
+        
         try {
             const response = await fetch(url, {
                 headers: {
@@ -677,7 +868,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             const data = await response.json();
-
+            
             showSuggestions(data);
         } catch (error) {
             console.error("Error fetching location data:", error);
@@ -687,16 +878,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showSuggestions(suggestions) {
         const suggestionsDiv = document.getElementById('location-suggestions');
+        if (!suggestionsDiv) return;
+        
         suggestionsDiv.innerHTML = '';
-
+        
         if (suggestions.length > 0) {
             suggestions.forEach(place => {
                 const item = document.createElement('div');
-                item.className =
-                    'px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0';
-
+                item.className = 'px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0';
+                
                 const displayName = place.display_name;
-
+                
                 const typeMapping = {
                     'administrative': 'Wilayah Administratif',
                     'city': 'Kota',
@@ -712,24 +904,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     'industrial': 'Industri',
                     'residential': 'Perumahan'
                 };
-
+                
                 const typeInIndonesian = typeMapping[place.type] || place.class || 'Lokasi';
-
+                
                 item.innerHTML = `
-                <div class="text-sm font-medium text-gray-900">${displayName}</div>
-                <div class="text-xs text-gray-500">${typeInIndonesian}</div>
-            `;
-
+                    <div class="text-sm font-medium text-gray-900">${displayName}</div>
+                    <div class="text-xs text-gray-500">${typeInIndonesian}</div>
+                `;
+                
                 item.onclick = function() {
                     document.getElementById('preferensi_lokasi').value = displayName;
                     document.getElementById('latitude-preferensi').value = place.lat;
                     document.getElementById('longitude-preferensi').value = place.lon;
                     hideSuggestions();
                 };
-
+                
                 suggestionsDiv.appendChild(item);
             });
-
+            
             suggestionsDiv.classList.remove('hidden');
         } else {
             const noResult = document.createElement('div');
@@ -741,145 +933,115 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function hideSuggestions() {
-        document.getElementById('location-suggestions').classList.add('hidden');
+        const suggestionsDiv = document.getElementById('location-suggestions');
+        if (suggestionsDiv) {
+            suggestionsDiv.classList.add('hidden');
+        }
     }
 
-    // Event listeners
-    document.getElementById('preferensi_lokasi').addEventListener('input', function(e) {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            searchLocation(e.target.value);
-        }, 500);
-    });
+    // Event listeners for location search
+    const locationInput = document.getElementById('preferensi_lokasi');
+    if (locationInput) {
+        locationInput.addEventListener('input', function(e) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                searchLocation(e.target.value);
+            }, 500);
+        });
 
+        locationInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Hide suggestions when clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.location-input-container')) {
             hideSuggestions();
         }
     });
 
-    document.getElementById('preferensi_lokasi').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-        }
-    });
-
-    // Handle update preferensi
-    document.getElementById('updatePreferensiBtn').addEventListener('click', function() {
-        const formData = new FormData();
-        formData.append('jenis_magang', document.getElementById('jenis_magang').value);
-        formData.append('kompetensi', document.getElementById('kompetensi').value);
-        formData.append('jenis_perusahaan', document.getElementById('jenis_perusahaan').value);
-        formData.append('preferensi_lokasi', document.getElementById('preferensi_lokasi').value);
-        formData.append('latitude_preferensi', document.getElementById('latitude-preferensi')
-        .value);
-        formData.append('longitude_preferensi', document.getElementById('longitude-preferensi')
-            .value);
-        formData.append('_token', '{{ csrf_token() }}');
-
-        fetch('{{ route('mahasiswa.profile.update-preferensi') }}', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccessModal(data.message);
-                } else {
-                    showErrorModal(data.message || 'Terjadi kesalahan', data.errors);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showErrorModal('Terjadi kesalahan saat memperbarui preferensi');
-            });
-    });
-
-    // Fungsi untuk upload dokumen
+    // Document upload handlers
     function uploadDokumen(jenisDokumen, file) {
         const formData = new FormData();
         formData.append('dokumen', file);
         formData.append('jenis_dokumen', jenisDokumen);
         formData.append('_token', '{{ csrf_token() }}');
 
-        fetch('{{ route('mahasiswa.profile.upload-dokumen') }}', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccessModal(data.message);
-                } else {
-                    showErrorModal(data.message || 'Terjadi kesalahan saat mengunggah dokumen', data
-                        .errors);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showErrorModal('Terjadi kesalahan saat mengunggah dokumen');
-            });
+        fetch('{{ route("mahasiswa.profile.upload-dokumen") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessModal(data.message);
+            } else {
+                showErrorModal(data.message || 'Terjadi kesalahan saat mengunggah dokumen', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorModal('Terjadi kesalahan saat mengunggah dokumen');
+        });
     }
 
     // Event listeners untuk upload file
-    document.getElementById('cv-upload').addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            uploadDokumen('curriculum vitae', e.target.files[0]);
-        }
-    });
+    const fileUploads = [
+        'cv-upload',
+        'portofolio-upload', 
+        'sertifikat-upload',
+        'surat-pengantar-upload',
+        'transkip-nilai-upload'
+    ];
 
-    document.getElementById('portofolio-upload').addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            uploadDokumen('portofolio', e.target.files[0]);
-        }
-    });
+    const documentTypes = {
+        'cv-upload': 'curriculum vitae',
+        'portofolio-upload': 'portofolio',
+        'sertifikat-upload': 'sertifikat',
+        'surat-pengantar-upload': 'surat pengantar',
+        'transkip-nilai-upload': 'transkip nilai'
+    };
 
-    document.getElementById('sertifikat-upload').addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            uploadDokumen('sertifikat', e.target.files[0]);
-        }
-    });
-
-    document.getElementById('surat-pengantar-upload').addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            uploadDokumen('surat pengantar', e.target.files[0]);
-        }
-    });
-
-    document.getElementById('transkip-nilai-upload').addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            uploadDokumen('transkip nilai', e.target.files[0]);
+    fileUploads.forEach(uploadId => {
+        const element = document.getElementById(uploadId);
+        if (element) {
+            element.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    uploadDokumen(documentTypes[uploadId], e.target.files[0]);
+                }
+            });
         }
     });
 
     // Global function for delete confirmation
     window.hapusDokumen = function(jenisDokumen) {
         showConfirmDeleteModal(function() {
-            fetch('{{ route('mahasiswa.profile.hapus-dokumen') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        jenis_dokumen: jenisDokumen,
-                        _method: 'DELETE'
-                    })
+            fetch('{{ route("mahasiswa.profile.hapus-dokumen") }}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    jenis_dokumen: jenisDokumen
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showSuccessModal(data.message);
-                    } else {
-                        showErrorModal(data.message ||
-                            'Terjadi kesalahan saat menghapus dokumen', data.errors);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showErrorModal('Terjadi kesalahan saat menghapus dokumen');
-                });
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessModal(data.message);
+                } else {
+                    showErrorModal(data.message || 'Terjadi kesalahan saat menghapus dokumen', data.errors);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorModal('Terjadi kesalahan saat menghapus dokumen');
+            });
         });
     };
 });

@@ -9,10 +9,12 @@ use App\Models\JenisPerusahaanModel;
 use App\Models\DokumenModel;
 use App\Models\JenisDokumenModel;
 use App\Models\MahasiswaModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -49,6 +51,142 @@ class ProfileController extends Controller
             'jenisPerusahaan' => $jenisPerusahaan,
             'dokumen' => $dokumen,
         ]);
+    }
+
+    public function uploadProfilePhoto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File foto tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $user = Auth::user();
+
+            // Hapus foto lama jika ada
+            if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+                Storage::disk('public')->delete($user->profile_photo);
+            }
+
+            // Upload foto baru
+            $file = $request->file('profile_photo');
+            $fileName = time() . '_profile_' . $user->id_user . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('profile_photos', $fileName, 'public');
+
+            // Update user profile photo
+            $user->update(['profile_photo' => $filePath]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Foto profil berhasil diperbarui!',
+                'photo_url' => asset('storage/' . $filePath)
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengunggah foto: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateDataPribadi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama_lengkap' => 'required|string|max:255',
+            'nim' => 'required|string|max:20|unique:mahasiswa,nim,' . (Auth::user()->mahasiswa->id_mahasiswa ?? 'NULL') . ',id_mahasiswa',
+            'program_studi' => 'required|exists:program_studi,id_program_studi'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $user = Auth::user();
+
+            // Update user name
+            $user->update([
+                'name' => $request->nama_lengkap
+            ]);
+
+            $mahasiswa = $user->mahasiswa;
+
+            if (!$mahasiswa) {
+                // Jika belum ada data mahasiswa, buat baru
+                MahasiswaModel::create([
+                    'id_user' => $user->id_user,
+                    'nim' => $request->nim,
+                    'id_program_studi' => $request->program_studi,
+                ]);
+            } else {
+                // Update data yang sudah ada
+                $mahasiswa->update([
+                    'nim' => $request->nim,
+                    'id_program_studi' => $request->program_studi,
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data pribadi berhasil diperbarui!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateAkun(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:user,email,' . Auth::id() . ',id_user',
+            'password' => 'nullable|min:6|confirmed'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $user = Auth::user();
+            $updateData = ['email' => $request->email];
+
+            if ($request->password) {
+                $updateData['password'] = Hash::make($request->password);
+            }
+
+            $user->update($updateData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Akun berhasil diperbarui!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui akun: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function updatePreferensi(Request $request)
