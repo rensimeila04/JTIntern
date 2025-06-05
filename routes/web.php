@@ -153,6 +153,8 @@ Route::middleware(['auth'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
             ->name('mahasiswa.dashboard');
+        Route::get('/semua-lowongan', [MahasiswaDashboardController::class, 'show'])
+            ->name('mahasiswa.semua-lowongan');
         
         // Lowongan
         Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])

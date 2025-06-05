@@ -21,9 +21,10 @@
                             </div>
                             <p class="text-neutral-400 text-xs">PT. Quantum Technology Nusantara</p>
                         </div>
-                        <span class="text-sm font-medium text-primary-500 underline ml-auto" href="#">
+                        <a class="text-sm font-medium text-primary-500 underline ml-auto"
+                            href="{{ route('mahasiswa.rincian_magang') }}">
                             Detail
-                        </span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -76,173 +77,91 @@
         </div>
         <div class="flex flex-row justify-between">
             <p class="text-xl font-medium">Lowongan Terbaru</p>
-            <p class="text-base font-semibold text-primary-500">Lihat semua</p>
+            <a href="#" id="lihat-semua-lowongan" class="text-base font-semibold text-primary-500 underline">
+                Lihat Semua Lowongan
+            </a>
         </div>
-        <div class="grid grid-cols-2 gap-5">
-            <div class="flex flex-col bg-white rounded-md px-4 py-6">
-                <div class="flex flex-row gap-6 items-center">
-                    <img src="{{asset('Images/LOGOPT.png') }}" class="w-20 h-20">
-                    <div class="flex flex-col gap-2">
-                        <div class="flex gap-4 items-center">
-                            <h4 class="font-medium text-lg">UI UX DESIGNER</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 w-full relative z-10">
+        @forelse ($lowonganList as $lowongan)
+            @php
+                $wibNow = now('Asia/Jakarta');
+                $deadline = $lowongan->deadline_pendaftaran ? 
+                    \Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->setTimezone('Asia/Jakarta') : null;
+                $daysLeft = $deadline ? $deadline->diffInDays($wibNow, false) : null;
+                $applicantCount = $lowongan->magang()->count();
+                $isExpired = $deadline && $deadline->isPast();
+            @endphp
+            <div class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 relative z-0 {{ $isExpired ? 'opacity-75' : '' }}">
+                <div class="inline-flex items-center gap-6">
+                    <img src="{{ $lowongan->perusahaanMitra->logo ? $lowongan->perusahaanMitra->logo_url : asset('images/placeholder_perusahaan.png') }}" 
+                         alt="Logo {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
+                         class="w-20 h-20 rounded-lg object-contain bg-gray-50">
+                    <div class="flex flex-col flex-1 justify-start items-start gap-2 h-fill">
+                        <div class="self-stretch inline-flex justify-start items-center gap-4">
+                            <div class="justify-start text-black text-lg font-medium leading-none">
+                                {{ $lowongan->judul_lowongan }}
+                            </div>
                         </div>
-                        <div class="flex flex-row items-center gap-2">
-                            <p class="text-sm font-normal text-neutral-400">PT. Quantum</p>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                                    <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                                </svg>
+                        <div class="inline-flex justify-start items-center gap-2">
+                            <span class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[120px]">
+                                {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}
                             </span>
-                            <p class="text-sm font-normal text-neutral-400">Jakarta Pusat</p>
+                            <div class="w-1 h-1 bg-neutral-400 rounded-full flex-shrink-0"></div>
+                            <span class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[150px]">
+                                {{ $lowongan->perusahaanMitra->alamat }}
+                            </span>
                         </div>
-                        <div class="flex flex-row gap-2">
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">WFO</span>
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">Software
-                                House</span>
+                        <div class="inline-flex justify-start items-start gap-2">
+                            <span class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                {{ strtoupper($lowongan->jenis_magang) }}
+                            </span>
+                            <span class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                {{ $lowongan->perusahaanMitra->jenisPerusahaan->nama_jenis_perusahaan }}
+                            </span>
                         </div>
                     </div>
-                    <div class="justify-end ml-auto">
-                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
-                            Ajukan Magang
-                        </a>
-                    </div>
+                    <button type="button"
+                        class="ml-auto py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none {{ $isExpired ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : '' }}"
+                        {{ $isExpired ? 'disabled' : '' }}>
+                        {{ $isExpired ? 'Tutup' : 'Ajukan Magang' }}
+                    </button>
                 </div>
-                <hr class="w-full my-4 mx-auto border-t-2 border-neutral-200">
-                <div class="flex flex-row items-center gap-2">
-                    <p class="text-sm font-normal text-neutral-400">23 hari tersisa</p>
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                            <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                        </svg>
+                <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
+                <div class="self-stretch inline-flex justify-start items-center gap-2">
+                    @if($lowongan->deadline_pendaftaran)
+                        <span class="justify-start text-neutral-400 text-sm font-normal leading-none">
+                            @if($isExpired)
+                                Pendaftaran ditutup
+                            @else
+                                {{ abs($daysLeft) }} hari tersisa
+                            @endif
+                        </span>
+                        <div class="w-1 h-1 bg-neutral-400 rounded-full"></div>
+                    @endif
+                    <span class="justify-start text-neutral-400 text-sm font-normal leading-none">
+                        {{ $applicantCount }} Pelamar
                     </span>
-                    <p class="text-sm font-normal text-neutral-400">30 Pelamar</p>
                 </div>
             </div>
-            <div class="flex flex-col bg-white rounded-md px-4 py-6">
-                <div class="flex flex-row gap-6 items-center">
-                    <img src="{{asset('Images/LOGOPT.png') }}" class="w-20 h-20">
-                    <div class="flex flex-col gap-2">
-                        <div class="flex gap-4 items-center">
-                            <h4 class="font-medium text-lg">UI UX DESIGNER</h4>
-                        </div>
-                        <div class="flex flex-row items-center gap-2">
-                            <p class="text-sm font-normal text-neutral-400">PT. Quantum</p>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                                    <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                                </svg>
-                            </span>
-                            <p class="text-sm font-normal text-neutral-400">Jakarta Pusat</p>
-                        </div>
-                        <div class="flex flex-row gap-2">
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">WFO</span>
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">Software
-                                House</span>
-                        </div>
-                    </div>
-                    <div class="justify-end ml-auto">
-                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
-                            Ajukan Magang
-                        </a>
-                    </div>
-                </div>
-                <hr class="w-full my-4 mx-auto border-t-2 border-neutral-200">
-                <div class="flex flex-row items-center gap-2">
-                    <p class="text-sm font-normal text-neutral-400">23 hari tersisa</p>
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                            <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                        </svg>
-                    </span>
-                    <p class="text-sm font-normal text-neutral-400">30 Pelamar</p>
-                </div>
-            </div>
-            <div class="flex flex-col bg-white rounded-md px-4 py-6">
-                <div class="flex flex-row gap-6 items-center">
-                    <img src="{{asset('Images/LOGOPT.png') }}" class="w-20 h-20">
-                    <div class="flex flex-col gap-2">
-                        <div class="flex gap-4 items-center">
-                            <h4 class="font-medium text-lg">UI UX DESIGNER</h4>
-                        </div>
-                        <div class="flex flex-row items-center gap-2">
-                            <p class="text-sm font-normal text-neutral-400">PT. Quantum</p>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                                    <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                                </svg>
-                            </span>
-                            <p class="text-sm font-normal text-neutral-400">Jakarta Pusat</p>
-                        </div>
-                        <div class="flex flex-row gap-2">
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">WFO</span>
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">Software
-                                House</span>
-                        </div>
-                    </div>
-                    <div class="justify-end ml-auto">
-                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
-                            Ajukan Magang
-                        </a>
-                    </div>
-                </div>
-                <hr class="w-full my-4 mx-auto border-t-2 border-neutral-200">
-                <div class="flex flex-row items-center gap-2">
-                    <p class="text-sm font-normal text-neutral-400">23 hari tersisa</p>
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                            <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                        </svg>
-                    </span>
-                    <p class="text-sm font-normal text-neutral-400">30 Pelamar</p>
-                </div>
-            </div>
-            <div class="flex flex-col bg-white rounded-md px-4 py-6">
-                <div class="flex flex-row gap-6 items-center">
-                    <img src="{{asset('Images/LOGOPT.png') }}" class="w-20 h-20">
-                    <div class="flex flex-col gap-2">
-                        <div class="flex gap-4 items-center">
-                            <h4 class="font-medium text-lg">UI UX DESIGNER</h4>
-                        </div>
-                        <div class="flex flex-row items-center gap-2">
-                            <p class="text-sm font-normal text-neutral-400">PT. Quantum</p>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                                    <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                                </svg>
-                            </span>
-                            <p class="text-sm font-normal text-neutral-400">Jakarta Pusat</p>
-                        </div>
-                        <div class="flex flex-row gap-2">
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">WFO</span>
-                            <span
-                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-500">Software
-                                House</span>
-                        </div>
-                    </div>
-                    <div class="justify-end ml-auto">
-                        <a href="#" class="btn-outline bg-gray-100 text-gray-300 hover:bg-primary-700 hover:text-white">
-                            Ajukan Magang
-                        </a>
-                    </div>
-                </div>
-                <hr class="w-full my-4 mx-auto border-t-2 border-neutral-200">
-                <div class="flex flex-row items-center gap-2">
-                    <p class="text-sm font-normal text-neutral-400">23 hari tersisa</p>
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
-                            <circle cx="2" cy="2" r="2" fill="#A3A3A3" />
-                        </svg>
-                    </span>
-                    <p class="text-sm font-normal text-neutral-400">30 Pelamar</p>
-                </div>
-            </div>
-        </div>
+        @empty
+        @endforelse
     </div>
 @endsection
+    
+    @push('scripts')
+            <script>
+            document.getElementById('lihat-semua-lowongan').addEventListener('click', function(e) {
+                e.preventDefault();
+                let btn = this;
+                btn.innerText = 'Memuat...';
+                fetch('{{ route('mahasiswa.semua-lowongan') }}')
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('content-lowongan-terbaru').style.display = 'none';
+                    document.getElementById('content-semua-lowongan').innerHTML = html;
+                    document.getElementById('content-semua-lowongan').style.display = 'block';
+                });
+        });
+        </script>
+    @endpush
