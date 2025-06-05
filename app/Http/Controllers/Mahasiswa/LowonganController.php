@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\JenisPerusahaanModel;
 use App\Models\PerusahaanMitraModel;
 use App\Models\LowonganModel;
+use App\Models\MagangModel;
+use App\Models\DokumenModel;
+use App\Models\JenisDokumenModel;
 use App\Services\MabacService;
 use App\Services\TopsisService;
 use Illuminate\Http\Request;
@@ -187,11 +190,70 @@ class LowonganController extends Controller
         ->limit(4) // Limit to 4 items
         ->get();
 
+        // Check if student has already applied for this internship
+        $hasApplied = false;
+        if (Auth::user()->mahasiswa) {
+            $hasApplied = MagangModel::where('id_mahasiswa', Auth::user()->mahasiswa->id_mahasiswa)
+                ->where('id_lowongan', $id)
+                ->exists();
+        }
+
         return view('mahasiswa.detail_lowongan', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'lowongan' => $lowongan,
             'lowonganList' => $lowonganList,
+            'hasApplied' => $hasApplied,
         ]);
+    }
+
+    public function checkDocuments(Request $request, $id)
+    {
+        try {
+            $lowongan = LowonganModel::findOrFail($id);
+            $mahasiswa = Auth::user()->mahasiswa;
+
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data mahasiswa tidak ditemukan.'
+                ]);
+            }
+
+            // Get all required document types
+            $requiredDocuments = JenisDokumenModel::all();
+            
+            // Get student's uploaded documents
+            $studentDocuments = DokumenModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->get();
+            
+            // Check for missing documents
+            $missingDocuments = [];
+            foreach ($requiredDocuments as $requiredDoc) {
+                $hasDocument = $studentDocuments->where('id_jenis_dokumen', $requiredDoc->id_jenis_dokumen)->isNotEmpty();
+                if (!$hasDocument) {
+                    $missingDocuments[] = $requiredDoc->nama;
+                }
+            }
+
+            // Return document status
+            if (!empty($missingDocuments)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dokumen belum lengkap',
+                    'missing_documents' => $missingDocuments
+                ]);
+            } else {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Dokumen lengkap'
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
     }
 }

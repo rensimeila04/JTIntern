@@ -159,6 +159,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.lowongan');
         Route::get('/lowongan/{id}', [MahasiswaLowonganController::class, 'detail'])
             ->name('mahasiswa.lowongan.detail');
+        Route::post('/lowongan/{id}/check-documents', [MahasiswaLowonganController::class, 'checkDocuments'])
+            ->name('mahasiswa.lowongan.check-documents');
         
         // Profile Management
         Route::prefix('profile')->group(function () {

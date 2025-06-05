@@ -20,9 +20,23 @@
                                 class="text-base font-normal text-primary-500">{{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}</a>
                         </div>
                         <div class="self-start">
-                            <a href="" class="btn-primary-lg">
-                                <x-lucide-briefcase class="w-5 h-5 mr-2" /> Ajukan Magang
-                            </a>
+                            @if($hasApplied)
+                                <button disabled class="btn-secondary-lg cursor-not-allowed">
+                                    <x-lucide-check class="w-5 h-5 mr-2" /> Sudah Diajukan
+                                </button>
+                            @elseif(!$lowongan->status_pendaftaran)
+                                <button disabled class="btn-secondary-lg cursor-not-allowed">
+                                    <x-lucide-x class="w-5 h-5 mr-2" /> Tidak Aktif
+                                </button>
+                            @elseif($lowongan->deadline_pendaftaran && now() > $lowongan->deadline_pendaftaran)
+                                <button disabled class="btn-secondary-lg cursor-not-allowed">
+                                    <x-lucide-clock class="w-5 h-5 mr-2" /> Deadline Lewat
+                                </button>
+                            @else
+                                <button id="check-documents-btn" class="btn-primary-lg">
+                                    <x-lucide-briefcase class="w-5 h-5 mr-2" /> Ajukan Magang
+                                </button>
+                            @endif
                         </div>
                     </div>
                     <div class="flex flex-row gap-10">
@@ -209,4 +223,90 @@
         </div>
 
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkDocumentsBtn = document.getElementById('check-documents-btn');
+
+            if (checkDocumentsBtn) {
+                checkDocumentsBtn.addEventListener('click', function() {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memeriksa...';
+                    this.disabled = true;
+
+                    fetch(`{{ route('mahasiswa.lowongan.check-documents', $lowongan->id_lowongan) }}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Success Alert - Documents Complete
+                            showAlert('success', data.message);
+                        } else {
+                            // Error Alert - Documents Incomplete
+                            let errorMessage = data.message;
+                            
+                            if (data.missing_documents && data.missing_documents.length > 0) {
+                                errorMessage += '\n\nDokumen yang masih diperlukan:';
+                                errorMessage += '\n• ' + data.missing_documents.join('\n• ');
+                                errorMessage += '\n\nSilakan lengkapi dokumen di halaman profil.';
+                            }
+                            
+                            showAlert('error', errorMessage);
+                        }
+                    })
+                    .catch(error => {
+                        showAlert('error', 'Terjadi kesalahan saat memeriksa dokumen. Silakan coba lagi.');
+                    })
+                    .finally(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    });
+                });
+            }
+
+            function showAlert(type, message) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `fixed top-4 right-4 max-w-sm p-4 rounded-lg shadow-lg z-50 ${
+                    type === 'success' 
+                        ? 'bg-green-100 border border-green-400 text-green-700' 
+                        : 'bg-red-100 border border-red-400 text-red-700'
+                }`;
+                
+                alertDiv.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            ${type === 'success' 
+                                ? '<svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>'
+                                : '<svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>'
+                            }
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium whitespace-pre-line">${message}</p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                            <button class="inline-flex text-gray-400 hover:text-gray-600" onclick="this.parentElement.parentElement.parentElement.remove()">
+                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(alertDiv);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            }
+        });
+    </script>
 @endsection
