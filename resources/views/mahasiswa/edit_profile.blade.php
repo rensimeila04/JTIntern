@@ -689,13 +689,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // Fungsi untuk hapus dokumen
 function hapusDokumen(jenisDokumen) {
     if (confirm('Apakah Anda yakin ingin menghapus dokumen ini?')) {
-        const formData = new FormData();
-        formData.append('jenis_dokumen', jenisDokumen);
-        formData.append('_token', '{{ csrf_token() }}');
-
         fetch('{{ route("mahasiswa.profile.hapus-dokumen") }}', {
-            method: 'DELETE',
-            body: formData
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                jenis_dokumen: jenisDokumen,
+                _method: 'DELETE'
+            })
         })
         .then(response => response.json())
         .then(data => {

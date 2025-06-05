@@ -230,8 +230,8 @@ class ProfileController extends Controller
             }
 
             // Hapus file dari storage
-            if ($dokumen->path_dokumen) {
-                Storage::delete($dokumen->path_dokumen);
+            if ($dokumen->path_dokumen && Storage::disk('public')->exists($dokumen->path_dokumen)) {
+                Storage::disk('public')->delete($dokumen->path_dokumen);
             }
 
             // Hapus dari database
