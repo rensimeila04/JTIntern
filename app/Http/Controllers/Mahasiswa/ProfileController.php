@@ -18,6 +18,17 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+    /**
+     * Get the authenticated user
+     * 
+     * @return \App\Models\UserModel
+     */
+    protected function getAuthenticatedUser()
+    {
+        /** @var \App\Models\UserModel */
+        return Auth::user();
+    }
+
     public function edit()
     {
         $breadcrumb = [
@@ -68,7 +79,7 @@ class ProfileController extends Controller
         }
 
         try {
-            $user = Auth::user();
+            $user = $this->getAuthenticatedUser();
 
             // Hapus foto lama jika ada
             if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
@@ -114,7 +125,7 @@ class ProfileController extends Controller
         }
 
         try {
-            $user = Auth::user();
+            $user = $this->getAuthenticatedUser();
 
             // Update user name
             $user->update([
@@ -167,7 +178,7 @@ class ProfileController extends Controller
         }
 
         try {
-            $user = Auth::user();
+            $user = $this->getAuthenticatedUser();
             $updateData = ['email' => $request->email];
 
             if ($request->password) {
@@ -209,7 +220,7 @@ class ProfileController extends Controller
         }
 
         try {
-            $user = Auth::user();
+            $user = $this->getAuthenticatedUser();
             $mahasiswa = $user->mahasiswa;
 
             if (!$mahasiswa) {
@@ -266,7 +277,7 @@ class ProfileController extends Controller
         }
 
         try {
-            $user = Auth::user();
+            $user = $this->getAuthenticatedUser();
             $mahasiswa = $user->mahasiswa;
 
             if (!$mahasiswa) {
@@ -336,7 +347,7 @@ class ProfileController extends Controller
         }
 
         try {
-            $user = Auth::user();
+            $user = $this->getAuthenticatedUser();
             $mahasiswa = $user->mahasiswa;
 
             if (!$mahasiswa) {
