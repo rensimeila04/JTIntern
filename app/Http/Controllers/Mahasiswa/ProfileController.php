@@ -7,6 +7,7 @@ use App\Models\ProgramStudiModel;
 use App\Models\KompetensiModel;
 use App\Models\JenisPerusahaanModel;
 use App\Models\DokumenModel;
+use App\Models\JenisDokumenModel;
 use App\Models\MahasiswaModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,6 +108,144 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memperbarui preferensi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function uploadDokumen(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'dokumen' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120', // Max 5MB
+            'jenis_dokumen' => 'required|string|in:curriculum vitae,portofolio,sertifikat,surat pengantar,transkip nilai'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $user = Auth::user();
+            $mahasiswa = $user->mahasiswa;
+
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data mahasiswa tidak ditemukan'
+                ], 404);
+            }
+
+            // Cari jenis dokumen
+            $jenisDokumen = JenisDokumenModel::where('nama', $request->jenis_dokumen)->first();
+            if (!$jenisDokumen) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jenis dokumen tidak valid'
+                ], 400);
+            }
+
+            // Hapus dokumen lama jika ada
+            $existingDokumen = DokumenModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->where('id_jenis_dokumen', $jenisDokumen->id_jenis_dokumen)
+                ->first();
+
+            if ($existingDokumen && $existingDokumen->path_dokumen) {
+                Storage::delete($existingDokumen->path_dokumen);
+                $existingDokumen->delete();
+            }
+
+            // Upload file baru
+            $file = $request->file('dokumen');
+            $fileName = time() . '_' . $request->jenis_dokumen . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('dokumen', $fileName, 'public');
+
+            // Simpan ke database
+            DokumenModel::create([
+                'nama_dokumen' => $fileName,
+                'id_jenis_dokumen' => $jenisDokumen->id_jenis_dokumen,
+                'id_mahasiswa' => $mahasiswa->id_mahasiswa,
+                'path_dokumen' => $filePath,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Dokumen berhasil diunggah!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengunggah dokumen: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function hapusDokumen(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'jenis_dokumen' => 'required|string|in:curriculum vitae,portofolio,sertifikat,surat pengantar,transkip nilai'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Jenis dokumen tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $user = Auth::user();
+            $mahasiswa = $user->mahasiswa;
+
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data mahasiswa tidak ditemukan'
+                ], 404);
+            }
+
+            // Cari jenis dokumen
+            $jenisDokumen = JenisDokumenModel::where('nama', $request->jenis_dokumen)->first();
+            if (!$jenisDokumen) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jenis dokumen tidak valid'
+                ], 400);
+            }
+
+            // Cari dokumen yang akan dihapus
+            $dokumen = DokumenModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->where('id_jenis_dokumen', $jenisDokumen->id_jenis_dokumen)
+                ->first();
+
+            if (!$dokumen) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dokumen tidak ditemukan'
+                ], 404);
+            }
+
+            // Hapus file dari storage
+            if ($dokumen->path_dokumen) {
+                Storage::delete($dokumen->path_dokumen);
+            }
+
+            // Hapus dari database
+            $dokumen->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Dokumen berhasil dihapus!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus dokumen: ' . $e->getMessage()
             ], 500);
         }
     }

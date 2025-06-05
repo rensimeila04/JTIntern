@@ -167,7 +167,19 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                {{ $cv && $cv->path_dokumen ? number_format(Storage::size($cv->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                                @if($cv && $cv->path_dokumen)
+                                    @php
+                                        try {
+                                            $fileSize = Storage::disk('public')->size($cv->path_dokumen);
+                                            $fileSizeKB = number_format($fileSize / 1024, 0) . ' KB';
+                                        } catch (\Exception $e) {
+                                            $fileSizeKB = 'File tidak ditemukan';
+                                        }
+                                    @endphp
+                                    {{ $fileSizeKB }}
+                                @else
+                                    -
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -179,15 +191,21 @@
                                 Lihat Dokumen
                             </a>
                         </div>
-                        <div class="flex justify-start">
-                            <button type="button"
-                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                                Perbarui Dokumen
+                        <div class="flex gap-2">
+                            <input type="file" id="cv-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('cv-upload').click()"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
+                                Perbarui
+                            </button>
+                            <button type="button" onclick="hapusDokumen('curriculum vitae')"
+                                class="inline-flex justify-center px-4 py-2 border border-red-600 rounded-lg text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm font-medium transition">
+                                <x-lucide-trash-2 class="w-4 h-4" />
                             </button>
                         </div>
                     @else
                         <div class="flex items-center">
-                            <button type="button"
+                            <input type="file" id="cv-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('cv-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
                                 Unggah
@@ -215,7 +233,19 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                {{ $portofolio && $portofolio->path_dokumen ? number_format(Storage::size($portofolio->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                                @if($portofolio && $portofolio->path_dokumen)
+                                    @php
+                                        try {
+                                            $fileSize = Storage::disk('public')->size($portofolio->path_dokumen);
+                                            $fileSizeKB = number_format($fileSize / 1024, 0) . ' KB';
+                                        } catch (\Exception $e) {
+                                            $fileSizeKB = 'File tidak ditemukan';
+                                        }
+                                    @endphp
+                                    {{ $fileSizeKB }}
+                                @else
+                                    -
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -227,15 +257,21 @@
                                 Lihat Dokumen
                             </a>
                         </div>
-                        <div class="flex justify-start">
-                            <button type="button"
-                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                                Perbarui Dokumen
+                        <div class="flex gap-2">
+                            <input type="file" id="portofolio-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('portofolio-upload').click()"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
+                                Perbarui
+                            </button>
+                            <button type="button" onclick="hapusDokumen('portofolio')"
+                                class="inline-flex justify-center px-4 py-2 border border-red-600 rounded-lg text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm font-medium transition">
+                                <x-lucide-trash-2 class="w-4 h-4" />
                             </button>
                         </div>
                     @else
                         <div class="flex items-center">
-                            <button type="button"
+                            <input type="file" id="portofolio-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('portofolio-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
                                 Unggah
@@ -263,7 +299,19 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                {{ $sertifikat && $sertifikat->path_dokumen ? number_format(Storage::size($sertifikat->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                                @if($sertifikat && $sertifikat->path_dokumen)
+                                    @php
+                                        try {
+                                            $fileSize = Storage::disk('public')->size($sertifikat->path_dokumen);
+                                            $fileSizeKB = number_format($fileSize / 1024, 0) . ' KB';
+                                        } catch (\Exception $e) {
+                                            $fileSizeKB = 'File tidak ditemukan';
+                                        }
+                                    @endphp
+                                    {{ $fileSizeKB }}
+                                @else
+                                    -
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -275,15 +323,21 @@
                                 Lihat Dokumen
                             </a>
                         </div>
-                        <div class="flex justify-start">
-                            <button type="button"
-                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                                Perbarui Dokumen
+                        <div class="flex gap-2">
+                            <input type="file" id="sertifikat-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('sertifikat-upload').click()"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
+                                Perbarui
+                            </button>
+                            <button type="button" onclick="hapusDokumen('sertifikat')"
+                                class="inline-flex justify-center px-4 py-2 border border-red-600 rounded-lg text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm font-medium transition">
+                                <x-lucide-trash-2 class="w-4 h-4" />
                             </button>
                         </div>
                     @else
                         <div class="flex items-center">
-                            <button type="button"
+                            <input type="file" id="sertifikat-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('sertifikat-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
                                 Unggah
@@ -311,7 +365,19 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                {{ $suratPengantar && $suratPengantar->path_dokumen ? number_format(Storage::size($suratPengantar->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                                @if($suratPengantar && $suratPengantar->path_dokumen)
+                                    @php
+                                        try {
+                                            $fileSize = Storage::disk('public')->size($suratPengantar->path_dokumen);
+                                            $fileSizeKB = number_format($fileSize / 1024, 0) . ' KB';
+                                        } catch (\Exception $e) {
+                                            $fileSizeKB = 'File tidak ditemukan';
+                                        }
+                                    @endphp
+                                    {{ $fileSizeKB }}
+                                @else
+                                    -
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -323,15 +389,21 @@
                                 Lihat Dokumen
                             </a>
                         </div>
-                        <div class="flex justify-start">
-                            <button type="button"
-                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                                Perbarui Dokumen
+                        <div class="flex gap-2">
+                            <input type="file" id="surat-pengantar-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('surat-pengantar-upload').click()"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
+                                Perbarui
+                            </button>
+                            <button type="button" onclick="hapusDokumen('surat pengantar')"
+                                class="inline-flex justify-center px-4 py-2 border border-red-600 rounded-lg text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm font-medium transition">
+                                <x-lucide-trash-2 class="w-4 h-4" />
                             </button>
                         </div>
                     @else
                         <div class="flex items-center">
-                            <button type="button"
+                            <input type="file" id="surat-pengantar-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('surat-pengantar-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
                                 Unggah
@@ -359,7 +431,19 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                {{ $transkip && $transkip->path_dokumen ? number_format(Storage::size($transkip->path_dokumen) / 1024, 0) . ' KB' : '-' }}
+                                @if($transkip && $transkip->path_dokumen)
+                                    @php
+                                        try {
+                                            $fileSize = Storage::disk('public')->size($transkip->path_dokumen);
+                                            $fileSizeKB = number_format($fileSize / 1024, 0) . ' KB';
+                                        } catch (\Exception $e) {
+                                            $fileSizeKB = 'File tidak ditemukan';
+                                        }
+                                    @endphp
+                                    {{ $fileSizeKB }}
+                                @else
+                                    -
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -371,15 +455,21 @@
                                 Lihat Dokumen
                             </a>
                         </div>
-                        <div class="flex justify-start">
-                            <button type="button"
-                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition w-full">
-                                Perbarui Dokumen
+                        <div class="flex gap-2">
+                            <input type="file" id="transkip-nilai-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('transkip-nilai-upload').click()"
+                                class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
+                                Perbarui
+                            </button>
+                            <button type="button" onclick="hapusDokumen('transkip nilai')"
+                                class="inline-flex justify-center px-4 py-2 border border-red-600 rounded-lg text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm font-medium transition">
+                                <x-lucide-trash-2 class="w-4 h-4" />
                             </button>
                         </div>
                     @else
                         <div class="flex items-center">
-                            <button type="button"
+                            <input type="file" id="transkip-nilai-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button type="button" onclick="document.getElementById('transkip-nilai-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
                                 Unggah
@@ -536,5 +626,91 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Terjadi kesalahan saat memperbarui preferensi');
         });
     });
+
+    // Fungsi untuk upload dokumen
+    function uploadDokumen(jenisDokumen, file) {
+        const formData = new FormData();
+        formData.append('dokumen', file);
+        formData.append('jenis_dokumen', jenisDokumen);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route("mahasiswa.profile.upload-dokumen") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan saat mengunggah dokumen');
+                console.error('Errors:', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengunggah dokumen');
+        });
+    }
+
+    // Event listeners untuk upload file
+    document.getElementById('cv-upload').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            uploadDokumen('curriculum vitae', e.target.files[0]);
+        }
+    });
+
+    document.getElementById('portofolio-upload').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            uploadDokumen('portofolio', e.target.files[0]);
+        }
+    });
+
+    document.getElementById('sertifikat-upload').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            uploadDokumen('sertifikat', e.target.files[0]);
+        }
+    });
+
+    document.getElementById('surat-pengantar-upload').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            uploadDokumen('surat pengantar', e.target.files[0]);
+        }
+    });
+
+    document.getElementById('transkip-nilai-upload').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            uploadDokumen('transkip nilai', e.target.files[0]);
+        }
+    });
 });
+
+// Fungsi untuk hapus dokumen
+function hapusDokumen(jenisDokumen) {
+    if (confirm('Apakah Anda yakin ingin menghapus dokumen ini?')) {
+        const formData = new FormData();
+        formData.append('jenis_dokumen', jenisDokumen);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route("mahasiswa.profile.hapus-dokumen") }}', {
+            method: 'DELETE',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan saat menghapus dokumen');
+                console.error('Errors:', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menghapus dokumen');
+        });
+    }
+}
 </script>

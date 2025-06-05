@@ -166,6 +166,10 @@ Route::middleware(['auth'])->group(function () {
                 ->name('mahasiswa.edit_profile');
             Route::post('/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])
                 ->name('mahasiswa.profile.update-preferensi');
+            Route::post('/upload-dokumen', [MahasiswaProfileController::class, 'uploadDokumen'])
+                ->name('mahasiswa.profile.upload-dokumen');
+            Route::delete('/hapus-dokumen', [MahasiswaProfileController::class, 'hapusDokumen'])
+                ->name('mahasiswa.profile.hapus-dokumen');
         });
         
         // Decision Support System
