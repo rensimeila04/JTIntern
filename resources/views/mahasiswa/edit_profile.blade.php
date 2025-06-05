@@ -1,5 +1,126 @@
 @extends('layout.template')
 @section('content')
+    <!-- Success Modal -->
+    <div id="success-modal" 
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="success-modal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="success-modal-label" class="font-bold text-gray-800 dark:text-white">
+                        Berhasil!
+                    </h3>
+                    <button type="button" data-hs-overlay="#success-modal"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-check text-green-600 text-2xl"></i>
+                        </div>
+                        <p id="success-message" class="mt-2 text-sm text-gray-600 dark:text-neutral-400"></p>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" data-hs-overlay="#success-modal" onclick="location.reload()"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="error-modal" 
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="error-modal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="error-modal-label" class="font-bold text-gray-800 dark:text-white">
+                        Terjadi Kesalahan
+                    </h3>
+                    <button type="button" data-hs-overlay="#error-modal"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-x text-red-600 text-2xl"></i>
+                        </div>
+                        <p id="error-message" class="mt-2 text-sm text-gray-600 dark:text-neutral-400"></p>
+                        <div id="error-details" class="mt-3 text-sm text-gray-500 dark:text-neutral-500 hidden"></div>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" data-hs-overlay="#error-modal"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-delete-modal" 
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="confirm-delete-modal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="confirm-delete-modal-label" class="font-bold text-gray-800 dark:text-white">
+                        Konfirmasi Hapus
+                    </h3>
+                    <button type="button" data-hs-overlay="#confirm-delete-modal"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-warning text-yellow-600 text-2xl"></i>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                            Apakah Anda yakin ingin menghapus dokumen ini?
+                        </p>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" data-hs-overlay="#confirm-delete-modal"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                        Batal
+                    </button>
+                    <button type="button" id="confirm-delete-btn"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="bg-white w-full flex flex-col p-4 space-y-6 rounded-2xl">
         <h2 class="font-medium text-xl">Edit Profil Pengguna</h2>
         <div class="border border-neutral-200 rounded-lg px-4 py-6 w-full space-y-6">
@@ -23,7 +144,8 @@
                     </div>
                     <div>
                         <label for="nim" class="text-sm font-semibold">NIM</label>
-                        <input type="text" id="nim" name="nim" value="{{ Auth::user()->mahasiswa->nim ?? '' }}"
+                        <input type="text" id="nim" name="nim"
+                            value="{{ Auth::user()->mahasiswa->nim ?? '' }}"
                             class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
                     <div>
@@ -102,11 +224,14 @@
                                 placeholder="Ketik kota atau wilayah yang diinginkan..."
                                 class="py-2.5 sm:py-3 px-4 mt-2.5 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-primary-500 focus:ring-primary-500"
                                 autocomplete="off">
-                            <div id="location-suggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50 hidden">
+                            <div id="location-suggestions"
+                                class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50 hidden">
                             </div>
                         </div>
-                        <input type="hidden" id="latitude-preferensi" name="latitude_preferensi" value="{{ Auth::user()->mahasiswa->latitude_preferensi ?? '' }}">
-                        <input type="hidden" id="longitude-preferensi" name="longitude_preferensi" value="{{ Auth::user()->mahasiswa->longitude_preferensi ?? '' }}">
+                        <input type="hidden" id="latitude-preferensi" name="latitude_preferensi"
+                            value="{{ Auth::user()->mahasiswa->latitude_preferensi ?? '' }}">
+                        <input type="hidden" id="longitude-preferensi" name="longitude_preferensi"
+                            value="{{ Auth::user()->mahasiswa->longitude_preferensi ?? '' }}">
                     </div>
                 </div>
                 <span class="flex justify-end mt-6">
@@ -167,7 +292,7 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                @if($cv && $cv->path_dokumen)
+                                @if ($cv && $cv->path_dokumen)
                                     @php
                                         try {
                                             $fileSize = Storage::disk('public')->size($cv->path_dokumen);
@@ -192,7 +317,8 @@
                             </a>
                         </div>
                         <div class="flex gap-2">
-                            <input type="file" id="cv-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="cv-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('cv-upload').click()"
                                 class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
                                 Perbarui
@@ -204,7 +330,8 @@
                         </div>
                     @else
                         <div class="flex items-center">
-                            <input type="file" id="cv-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="cv-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('cv-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
@@ -233,7 +360,7 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                @if($portofolio && $portofolio->path_dokumen)
+                                @if ($portofolio && $portofolio->path_dokumen)
                                     @php
                                         try {
                                             $fileSize = Storage::disk('public')->size($portofolio->path_dokumen);
@@ -258,7 +385,8 @@
                             </a>
                         </div>
                         <div class="flex gap-2">
-                            <input type="file" id="portofolio-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="portofolio-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('portofolio-upload').click()"
                                 class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
                                 Perbarui
@@ -270,7 +398,8 @@
                         </div>
                     @else
                         <div class="flex items-center">
-                            <input type="file" id="portofolio-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="portofolio-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('portofolio-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
@@ -299,7 +428,7 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                @if($sertifikat && $sertifikat->path_dokumen)
+                                @if ($sertifikat && $sertifikat->path_dokumen)
                                     @php
                                         try {
                                             $fileSize = Storage::disk('public')->size($sertifikat->path_dokumen);
@@ -324,7 +453,8 @@
                             </a>
                         </div>
                         <div class="flex gap-2">
-                            <input type="file" id="sertifikat-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="sertifikat-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('sertifikat-upload').click()"
                                 class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
                                 Perbarui
@@ -336,7 +466,8 @@
                         </div>
                     @else
                         <div class="flex items-center">
-                            <input type="file" id="sertifikat-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="sertifikat-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('sertifikat-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
@@ -365,7 +496,7 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                @if($suratPengantar && $suratPengantar->path_dokumen)
+                                @if ($suratPengantar && $suratPengantar->path_dokumen)
                                     @php
                                         try {
                                             $fileSize = Storage::disk('public')->size($suratPengantar->path_dokumen);
@@ -390,7 +521,8 @@
                             </a>
                         </div>
                         <div class="flex gap-2">
-                            <input type="file" id="surat-pengantar-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="surat-pengantar-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('surat-pengantar-upload').click()"
                                 class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
                                 Perbarui
@@ -402,7 +534,8 @@
                         </div>
                     @else
                         <div class="flex items-center">
-                            <input type="file" id="surat-pengantar-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="surat-pengantar-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('surat-pengantar-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
@@ -431,7 +564,7 @@
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                @if($transkip && $transkip->path_dokumen)
+                                @if ($transkip && $transkip->path_dokumen)
                                     @php
                                         try {
                                             $fileSize = Storage::disk('public')->size($transkip->path_dokumen);
@@ -456,7 +589,8 @@
                             </a>
                         </div>
                         <div class="flex gap-2">
-                            <input type="file" id="transkip-nilai-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="transkip-nilai-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('transkip-nilai-upload').click()"
                                 class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
                                 Perbarui
@@ -468,7 +602,8 @@
                         </div>
                     @else
                         <div class="flex items-center">
-                            <input type="file" id="transkip-nilai-upload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" id="transkip-nilai-upload" class="hidden"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <button type="button" onclick="document.getElementById('transkip-nilai-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
@@ -485,16 +620,56 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let debounceTimer;
+    let currentDeleteAction = null;
 
-    // Fungsi untuk mencari lokasi menggunakan Nominatim API
+    // Modal functions
+    function showSuccessModal(message) {
+        document.getElementById('success-message').textContent = message;
+        HSOverlay.open(document.getElementById('success-modal'));
+    }
+
+    function showErrorModal(message, errors = null) {
+        document.getElementById('error-message').textContent = message;
+        const errorDetails = document.getElementById('error-details');
+
+        if (errors) {
+            let errorText = '';
+            for (const [field, messages] of Object.entries(errors)) {
+                errorText += `${field}: ${messages.join(', ')}\n`;
+            }
+            errorDetails.textContent = errorText;
+            errorDetails.classList.remove('hidden');
+        } else {
+            errorDetails.classList.add('hidden');
+        }
+
+        HSOverlay.open(document.getElementById('error-modal'));
+    }
+
+    function showConfirmDeleteModal(callback) {
+        currentDeleteAction = callback;
+        HSOverlay.open(document.getElementById('confirm-delete-modal'));
+    }
+
+    // Confirm delete button handler
+    document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+        if (currentDeleteAction) {
+            currentDeleteAction();
+            HSOverlay.close(document.getElementById('confirm-delete-modal'));
+            currentDeleteAction = null;
+        }
+    });
+
+    // ...existing location search code...
     async function searchLocation(query) {
         if (query.length < 3) {
             hideSuggestions();
             return;
         }
-        
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5&addressdetails=1&accept-language=id`;
-        
+
+        const url =
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5&addressdetails=1&accept-language=id`;
+
         try {
             const response = await fetch(url, {
                 headers: {
@@ -502,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             const data = await response.json();
-            
+
             showSuggestions(data);
         } catch (error) {
             console.error("Error fetching location data:", error);
@@ -510,20 +685,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Menampilkan suggestions
     function showSuggestions(suggestions) {
         const suggestionsDiv = document.getElementById('location-suggestions');
         suggestionsDiv.innerHTML = '';
-        
+
         if (suggestions.length > 0) {
             suggestions.forEach(place => {
                 const item = document.createElement('div');
-                item.className = 'px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0';
-                
-                // Format display name yang lebih bersih dan dalam bahasa Indonesia
+                item.className =
+                    'px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0';
+
                 const displayName = place.display_name;
-                
-                // Mapping tipe dalam bahasa Indonesia
+
                 const typeMapping = {
                     'administrative': 'Wilayah Administratif',
                     'city': 'Kota',
@@ -539,27 +712,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     'industrial': 'Industri',
                     'residential': 'Perumahan'
                 };
-                
+
                 const typeInIndonesian = typeMapping[place.type] || place.class || 'Lokasi';
-                
+
                 item.innerHTML = `
-                    <div class="text-sm font-medium text-gray-900">${displayName}</div>
-                    <div class="text-xs text-gray-500">${typeInIndonesian}</div>
-                `;
-                
+                <div class="text-sm font-medium text-gray-900">${displayName}</div>
+                <div class="text-xs text-gray-500">${typeInIndonesian}</div>
+            `;
+
                 item.onclick = function() {
                     document.getElementById('preferensi_lokasi').value = displayName;
                     document.getElementById('latitude-preferensi').value = place.lat;
                     document.getElementById('longitude-preferensi').value = place.lon;
                     hideSuggestions();
                 };
-                
+
                 suggestionsDiv.appendChild(item);
             });
-            
+
             suggestionsDiv.classList.remove('hidden');
         } else {
-            // Tampilkan pesan tidak ada hasil
             const noResult = document.createElement('div');
             noResult.className = 'px-4 py-3 text-sm text-gray-500';
             noResult.textContent = 'Tidak ada lokasi yang ditemukan';
@@ -568,12 +740,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Menyembunyikan suggestions
     function hideSuggestions() {
         document.getElementById('location-suggestions').classList.add('hidden');
     }
 
-    // Event listener untuk input lokasi
+    // Event listeners
     document.getElementById('preferensi_lokasi').addEventListener('input', function(e) {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
@@ -581,14 +752,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     });
 
-    // Menyembunyikan suggestions ketika klik di luar
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.location-input-container')) {
             hideSuggestions();
         }
     });
 
-    // Mencegah submit form saat menekan Enter di input lokasi
     document.getElementById('preferensi_lokasi').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -602,29 +771,28 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('kompetensi', document.getElementById('kompetensi').value);
         formData.append('jenis_perusahaan', document.getElementById('jenis_perusahaan').value);
         formData.append('preferensi_lokasi', document.getElementById('preferensi_lokasi').value);
-        formData.append('latitude_preferensi', document.getElementById('latitude-preferensi').value);
-        formData.append('longitude_preferensi', document.getElementById('longitude-preferensi').value);
+        formData.append('latitude_preferensi', document.getElementById('latitude-preferensi')
+        .value);
+        formData.append('longitude_preferensi', document.getElementById('longitude-preferensi')
+            .value);
         formData.append('_token', '{{ csrf_token() }}');
 
-        fetch('{{ route("mahasiswa.profile.update-preferensi") }}', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message);
-                // Optional: reload page or update UI
-                location.reload();
-            } else {
-                alert(data.message || 'Terjadi kesalahan');
-                console.error('Errors:', data.errors);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat memperbarui preferensi');
-        });
+        fetch('{{ route('mahasiswa.profile.update-preferensi') }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessModal(data.message);
+                } else {
+                    showErrorModal(data.message || 'Terjadi kesalahan', data.errors);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorModal('Terjadi kesalahan saat memperbarui preferensi');
+            });
     });
 
     // Fungsi untuk upload dokumen
@@ -634,24 +802,23 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('jenis_dokumen', jenisDokumen);
         formData.append('_token', '{{ csrf_token() }}');
 
-        fetch('{{ route("mahasiswa.profile.upload-dokumen") }}', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message);
-                location.reload();
-            } else {
-                alert(data.message || 'Terjadi kesalahan saat mengunggah dokumen');
-                console.error('Errors:', data.errors);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat mengunggah dokumen');
-        });
+        fetch('{{ route('mahasiswa.profile.upload-dokumen') }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessModal(data.message);
+                } else {
+                    showErrorModal(data.message || 'Terjadi kesalahan saat mengunggah dokumen', data
+                        .errors);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorModal('Terjadi kesalahan saat mengunggah dokumen');
+            });
     }
 
     // Event listeners untuk upload file
@@ -684,37 +851,36 @@ document.addEventListener('DOMContentLoaded', function() {
             uploadDokumen('transkip nilai', e.target.files[0]);
         }
     });
-});
 
-// Fungsi untuk hapus dokumen
-function hapusDokumen(jenisDokumen) {
-    if (confirm('Apakah Anda yakin ingin menghapus dokumen ini?')) {
-        fetch('{{ route("mahasiswa.profile.hapus-dokumen") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                jenis_dokumen: jenisDokumen,
-                _method: 'DELETE'
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message);
-                location.reload();
-            } else {
-                alert(data.message || 'Terjadi kesalahan saat menghapus dokumen');
-                console.error('Errors:', data.errors);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat menghapus dokumen');
+    // Global function for delete confirmation
+    window.hapusDokumen = function(jenisDokumen) {
+        showConfirmDeleteModal(function() {
+            fetch('{{ route('mahasiswa.profile.hapus-dokumen') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        jenis_dokumen: jenisDokumen,
+                        _method: 'DELETE'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showSuccessModal(data.message);
+                    } else {
+                        showErrorModal(data.message ||
+                            'Terjadi kesalahan saat menghapus dokumen', data.errors);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showErrorModal('Terjadi kesalahan saat menghapus dokumen');
+                });
         });
-    }
-}
+    };
+});
 </script>
