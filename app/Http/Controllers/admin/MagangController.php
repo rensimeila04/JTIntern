@@ -7,6 +7,8 @@ use App\Models\MagangModel;
 use App\Models\LowonganModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class MagangController extends Controller
 {
@@ -105,9 +107,13 @@ class MagangController extends Controller
         // Get all document types for reference
         $jenisDokumen = \App\Models\JenisDokumenModel::all();
 
+        // Get all dosen pembimbing for dropdown
+        $dosenPembimbing = \App\Models\DosenPembimbingModel::with('user')->get();
+
         return view('admin.detail_magang', [
             'magang' => $magang,
             'jenisDokumen' => $jenisDokumen,
+            'dosenPembimbing' => $dosenPembimbing,
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu
         ]);
@@ -321,5 +327,140 @@ class MagangController extends Controller
             'activeMenu' => $activeMenu,
             'aktiveMagang' => $aktiveMagang
         ]);
+    }
+
+    public function terimaMagang(Request $request, $id)
+    {
+        try {
+            // Validate request
+            $validator = Validator::make($request->all(), [
+                'id_dosen_pembimbing' => 'nullable|exists:dosen_pembimbing,id_dosen_pembimbing'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data tidak valid',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Find magang record
+            $magang = MagangModel::findOrFail($id);
+
+            // Check if status is still pending
+            if ($magang->status_magang !== 'menunggu') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengajuan magang sudah diproses sebelumnya'
+                ], 400);
+            }
+
+            // Update magang status and dosen pembimbing
+            $updateData = [
+                'status_magang' => 'diterima',
+                'tanggal_diterima' => now()
+            ];
+
+            // Add dosen pembimbing if selected
+            if ($request->filled('id_dosen_pembimbing')) {
+                $updateData['id_dosen_pembimbing'] = $request->id_dosen_pembimbing;
+            }
+
+            $magang->update($updateData);
+
+            // Log the action
+            Log::info('Magang application accepted', [
+                'magang_id' => $id,
+                'mahasiswa' => $magang->mahasiswa->user->name,
+                'dosen_pembimbing_id' => $request->id_dosen_pembimbing,
+                'admin' => auth()->user()->name
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengajuan magang berhasil diterima',
+                'data' => [
+                    'status' => 'diterima',
+                    'dosen_pembimbing' => $magang->dosenPembimbing ? $magang->dosenPembimbing->user->name : null
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error accepting magang application', [
+                'magang_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memproses pengajuan'
+            ], 500);
+        }
+    }
+
+    public function tolakMagang(Request $request, $id)
+    {
+        try {
+            // Validate request
+            $validator = Validator::make($request->all(), [
+                'alasan_penolakan' => 'nullable|string|max:500'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data tidak valid',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Find magang record
+            $magang = MagangModel::findOrFail($id);
+
+            // Check if status is still pending
+            if ($magang->status_magang !== 'menunggu') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengajuan magang sudah diproses sebelumnya'
+                ], 400);
+            }
+
+            // Update magang status
+            $magang->update([
+                'status_magang' => 'ditolak',
+                'tanggal_ditolak' => now(),
+                'alasan_penolakan' => $request->alasan_penolakan
+            ]);
+
+            // Log the action
+            Log::info('Magang application rejected', [
+                'magang_id' => $id,
+                'mahasiswa' => $magang->mahasiswa->user->name,
+                'alasan' => $request->alasan_penolakan,
+                'admin' => auth()->user()->name
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengajuan magang berhasil ditolak',
+                'data' => [
+                    'status' => 'ditolak'
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error rejecting magang application', [
+                'magang_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memproses pengajuan'
+            ], 500);
+        }
     }
 }

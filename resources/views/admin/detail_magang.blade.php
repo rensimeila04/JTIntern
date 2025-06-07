@@ -395,7 +395,8 @@
                             @if ($magang->status_magang == 'menunggu')
                                 <div class="flex gap-2">
                                     <button type="button" id="btn-terima"
-                                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none"
+                                        aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-terima-modal" data-hs-overlay="#hs-terima-modal">
                                         Terima
                                     </button>
                                     <button type="button" id="btn-tolak"
@@ -436,4 +437,261 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Terima -->
+    <div id="hs-terima-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-terima-modal-label">
+        <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
+            <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xl rounded-xl pointer-events-auto">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
+                    <h3 id="hs-terima-modal-label" class="font-bold text-gray-800">
+                        Konfirmasi Penerimaan Magang
+                    </h3>
+                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" aria-label="Close" data-hs-overlay="#hs-terima-modal">
+                        <span class="sr-only">Close</span>
+                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"></path>
+                            <path d="m6 6 12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="p-2 bg-green-100 rounded-full flex items-center justify-center">
+                                <x-lucide-check-circle class="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Terima Pengajuan Magang</p>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    Apakah Anda yakin ingin menerima pengajuan magang dari <strong>{{ $magang->mahasiswa->user->name }}</strong> 
+                                    untuk posisi <strong>{{ $magang->lowongan->judul_lowongan }}</strong> di 
+                                    <strong>{{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</strong>?
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Dosen Pembimbing Selection -->
+                        <div class="space-y-2">
+                            <label for="dosen-pembimbing" class="block text-sm font-medium text-gray-900">
+                                Pilih Dosen Pembimbing
+                            </label>
+                            <select id="dosen-pembimbing" name="id_dosen_pembimbing" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                <option value="">-- Pilih Dosen Pembimbing --</option>
+                                @foreach($dosenPembimbing as $dosen)
+                                    <option value="{{ $dosen->id_dosen_pembimbing }}"
+                                        {{ ($magang->id_dosen_pembimbing == $dosen->id_dosen_pembimbing) ? 'selected' : '' }}>
+                                        {{ $dosen->user->name }} - {{ $dosen->nip }}
+                                        @if($dosen->bidang_minat)
+                                            ({{ $dosen->bidang_minat }})
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="text-xs text-gray-500">
+                                <x-lucide-info class="inline w-3 h-3 mr-1" />
+                                Pilih dosen pembimbing untuk mahasiswa ini (opsional)
+                            </p>
+                        </div>
+                        
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <div class="flex items-start gap-2">
+                                <x-lucide-info class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                <div class="text-sm text-blue-800">
+                                    <p class="font-medium">Setelah menerima pengajuan:</p>
+                                    <ul class="mt-1 list-disc list-inside space-y-0.5 text-xs">
+                                        <li>Status magang akan berubah menjadi "Diterima"</li>
+                                        <li>Mahasiswa akan mendapat notifikasi penerimaan</li>
+                                        <li>Dosen pembimbing akan ditugaskan (jika dipilih)</li>
+                                        <li>Proses magang dapat dimulai sesuai jadwal</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
+                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#hs-terima-modal">
+                        Batal
+                    </button>
+                    <button type="button" id="confirm-terima" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <x-lucide-check class="w-4 h-4" />
+                        Ya, Terima
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusText = document.getElementById('status-text');
+            const btnTolak = document.getElementById('btn-tolak');
+            const btnDetail = document.getElementById('btn-detail-lowongan');
+            const confirmTerima = document.getElementById('confirm-terima');
+            const dosenSelect = document.getElementById('dosen-pembimbing');
+
+            // Add CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            // Handle modal confirm button
+            confirmTerima?.addEventListener('click', function() {
+                const selectedDosenId = dosenSelect.value;
+                
+                // Disable button to prevent double submission
+                confirmTerima.disabled = true;
+                confirmTerima.innerHTML = `
+                    <svg class="animate-spin w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Memproses...
+                `;
+
+                // Make AJAX call - Fixed URL
+                fetch(`/admin/kelola-magang/{{ $magang->id_magang }}/terima`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id_dosen_pembimbing: selectedDosenId || null
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update status display
+                        statusText.textContent = 'Diterima';
+                        statusText.className = 'inline-flex items-center h-[28px] gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-green-500 text-green-500';
+                        
+                        // Close modal
+                        const modal = document.getElementById('hs-terima-modal');
+                        if (modal) {
+                            modal.classList.add('hidden');
+                            modal.classList.remove('pointer-events-auto');
+                            document.body.classList.remove('overflow-hidden');
+                        }
+                        
+                        // Hide action buttons
+                        const actionButtons = document.querySelector('.flex.gap-2');
+                        if (actionButtons) {
+                            actionButtons.style.display = 'none';
+                        }
+                        
+                        // Show success message
+                        showNotification('success', data.message);
+                        
+                        // Reload page after delay to show updated data
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                        
+                    } else {
+                        showNotification('error', data.message || 'Terjadi kesalahan saat memproses pengajuan');
+                        
+                        // Re-enable button
+                        confirmTerima.disabled = false;
+                        confirmTerima.innerHTML = `
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Ya, Terima
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('error', 'Terjadi kesalahan saat memproses pengajuan');
+                    
+                    // Re-enable button
+                    confirmTerima.disabled = false;
+                    confirmTerima.innerHTML = `
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Ya, Terima
+                    `;
+                });
+            });
+
+            btnTolak?.addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin menolak pengajuan magang ini?')) {
+                    // Make AJAX call for rejection - Fixed URL
+                    fetch(`/admin/kelola-magang/{{ $magang->id_magang }}/tolak`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            alasan_penolakan: prompt('Alasan penolakan (opsional):') || ''
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            statusText.textContent = 'Ditolak';
+                            statusText.className = 'inline-flex items-center h-[28px] gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-red-500 text-red-500';
+                            
+                            // Hide action buttons
+                            const actionButtons = document.querySelector('.flex.gap-2');
+                            if (actionButtons) {
+                                actionButtons.style.display = 'none';
+                            }
+                            
+                            showNotification('success', data.message);
+                            
+                            // Reload page after delay
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            showNotification('error', data.message || 'Terjadi kesalahan saat menolak pengajuan');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('error', 'Terjadi kesalahan saat menolak pengajuan');
+                    });
+                }
+            });
+
+            btnDetail?.addEventListener('click', function() {
+                window.location.href = '/detail-lowongan/{{ $magang->lowongan->id_lowongan }}';
+            });
+
+            // Notification function
+            function showNotification(type, message) {
+                const bgColor = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
+                const iconPath = type === 'success' 
+                    ? 'M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+                    : 'M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z';
+
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 ${bgColor} px-4 py-3 rounded-lg shadow-lg z-50 max-w-sm`;
+                notification.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="${iconPath}" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-sm">${message}</span>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-lg leading-none">&times;</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
+        });
+    </script>
 @endsection
