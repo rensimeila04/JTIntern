@@ -391,6 +391,11 @@
                                     <p class="align-top text-base font-normal text-neutral-700">
                                         {{ $magang->lowongan->periodeMagang->nama_periode ?? 'Tidak tersedia' }}</p>
                                 </div>
+                                <div class="flex items-center gap-2">
+                                    <x-lucide-square-user-round class="w-6 h-6 text-neutral-500" stroke-width="1.5" />
+                                    <p class="align-top text-base font-normal text-neutral-700">
+                                        {{ $magang->dosenPembimbing->user->name }}</p>
+                                </div>
                             </div>
                             @if ($magang->status_magang == 'menunggu')
                                 <div class="flex gap-2">
@@ -473,10 +478,11 @@
                         <!-- Dosen Pembimbing Selection -->
                         <div class="space-y-2">
                             <label for="dosen-pembimbing" class="block text-sm font-medium text-gray-900">
-                                Pilih Dosen Pembimbing
+                                Pilih Dosen Pembimbing <span class="text-red-500">*</span>
                             </label>
                             <select id="dosen-pembimbing" name="id_dosen_pembimbing" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                required>
                                 <option value="">-- Pilih Dosen Pembimbing --</option>
                                 @foreach($dosenPembimbing as $dosen)
                                     <option value="{{ $dosen->id_dosen_pembimbing }}"
@@ -488,9 +494,13 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <div id="dosen-error" class="text-red-500 text-xs hidden">
+                                <x-lucide-alert-circle class="inline w-3 h-3 mr-1" />
+                                Dosen pembimbing wajib dipilih
+                            </div>
                             <p class="text-xs text-gray-500">
                                 <x-lucide-info class="inline w-3 h-3 mr-1" />
-                                Pilih dosen pembimbing untuk mahasiswa ini (opsional)
+                                Pilih dosen pembimbing untuk mahasiswa ini <span class="text-red-500 font-medium">(wajib)</span>
                             </p>
                         </div>
                         
@@ -530,13 +540,54 @@
             const btnDetail = document.getElementById('btn-detail-lowongan');
             const confirmTerima = document.getElementById('confirm-terima');
             const dosenSelect = document.getElementById('dosen-pembimbing');
+            const dosenError = document.getElementById('dosen-error');
 
             // Add CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
+            // Real-time validation for dosen pembimbing selection
+            dosenSelect?.addEventListener('change', function() {
+                if (this.value) {
+                    this.classList.remove('border-red-300');
+                    this.classList.add('border-gray-300');
+                    dosenError.classList.add('hidden');
+                    confirmTerima.disabled = false;
+                    confirmTerima.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    this.classList.remove('border-gray-300');
+                    this.classList.add('border-red-300');
+                    dosenError.classList.remove('hidden');
+                    confirmTerima.disabled = true;
+                    confirmTerima.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            });
+
+            // Initially disable confirm button if no dosen selected
+            if (!dosenSelect?.value) {
+                confirmTerima.disabled = true;
+                confirmTerima.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
             // Handle modal confirm button
             confirmTerima?.addEventListener('click', function() {
                 const selectedDosenId = dosenSelect.value;
+                
+                // Frontend validation
+                if (!selectedDosenId) {
+                    dosenSelect.classList.remove('border-gray-300');
+                    dosenSelect.classList.add('border-red-300');
+                    dosenError.classList.remove('hidden');
+                    dosenSelect.focus();
+                    
+                    // Shake animation for attention
+                    dosenSelect.classList.add('animate-pulse');
+                    setTimeout(() => {
+                        dosenSelect.classList.remove('animate-pulse');
+                    }, 1000);
+                    
+                    showNotification('error', 'Silakan pilih dosen pembimbing terlebih dahulu');
+                    return;
+                }
                 
                 // Disable button to prevent double submission
                 confirmTerima.disabled = true;
@@ -548,7 +599,7 @@
                     Memproses...
                 `;
 
-                // Make AJAX call - Fixed URL
+                // Make AJAX call
                 fetch(`/admin/kelola-magang/{{ $magang->id_magang }}/terima`, {
                     method: 'POST',
                     headers: {
@@ -557,7 +608,7 @@
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        id_dosen_pembimbing: selectedDosenId || null
+                        id_dosen_pembimbing: selectedDosenId
                     })
                 })
                 .then(response => response.json())
@@ -590,6 +641,17 @@
                         }, 2000);
                         
                     } else {
+                        // Handle validation errors
+                        if (data.errors && data.errors.id_dosen_pembimbing) {
+                            dosenSelect.classList.remove('border-gray-300');
+                            dosenSelect.classList.add('border-red-300');
+                            dosenError.innerHTML = `
+                                <x-lucide-alert-circle class="inline w-3 h-3 mr-1" />
+                                ${data.errors.id_dosen_pembimbing[0]}
+                            `;
+                            dosenError.classList.remove('hidden');
+                        }
+                        
                         showNotification('error', data.message || 'Terjadi kesalahan saat memproses pengajuan');
                         
                         // Re-enable button
@@ -619,7 +681,7 @@
 
             btnTolak?.addEventListener('click', function() {
                 if (confirm('Apakah Anda yakin ingin menolak pengajuan magang ini?')) {
-                    // Make AJAX call for rejection - Fixed URL
+                    // Make AJAX call for rejection
                     fetch(`/admin/kelola-magang/{{ $magang->id_magang }}/tolak`, {
                         method: 'POST',
                         headers: {
@@ -661,7 +723,7 @@
             });
 
             btnDetail?.addEventListener('click', function() {
-                window.location.href = '/detail-lowongan/{{ $magang->lowongan->id_lowongan }}';
+                window.location.href = '/admin/lowongan/{{ $magang->lowongan->id_lowongan }}';
             });
 
             // Notification function

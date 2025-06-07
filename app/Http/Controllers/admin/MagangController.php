@@ -332,9 +332,12 @@ class MagangController extends Controller
     public function terimaMagang(Request $request, $id)
     {
         try {
-            // Validate request
+            // Validate request - Make dosen_pembimbing required
             $validator = Validator::make($request->all(), [
-                'id_dosen_pembimbing' => 'nullable|exists:dosen_pembimbing,id_dosen_pembimbing'
+                'id_dosen_pembimbing' => 'required|exists:dosen_pembimbing,id_dosen_pembimbing'
+            ], [
+                'id_dosen_pembimbing.required' => 'Dosen pembimbing wajib dipilih',
+                'id_dosen_pembimbing.exists' => 'Dosen pembimbing yang dipilih tidak valid'
             ]);
 
             if ($validator->fails()) {
@@ -359,30 +362,30 @@ class MagangController extends Controller
             // Update magang status and dosen pembimbing
             $updateData = [
                 'status_magang' => 'diterima',
-                'tanggal_diterima' => now()
+                'tanggal_diterima' => now(),
+                'id_dosen_pembimbing' => $request->id_dosen_pembimbing // Always set since it's required
             ];
 
-            // Add dosen pembimbing if selected
-            if ($request->filled('id_dosen_pembimbing')) {
-                $updateData['id_dosen_pembimbing'] = $request->id_dosen_pembimbing;
-            }
-
             $magang->update($updateData);
+
+            // Reload relationship to get updated data
+            $magang->load('dosenPembimbing.user');
 
             // Log the action
             Log::info('Magang application accepted', [
                 'magang_id' => $id,
                 'mahasiswa' => $magang->mahasiswa->user->name,
                 'dosen_pembimbing_id' => $request->id_dosen_pembimbing,
+                'dosen_pembimbing_name' => $magang->dosenPembimbing->user->name,
                 'admin' => auth()->user()->name
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan magang berhasil diterima',
+                'message' => 'Pengajuan magang berhasil diterima dengan dosen pembimbing: ' . $magang->dosenPembimbing->user->name,
                 'data' => [
                     'status' => 'diterima',
-                    'dosen_pembimbing' => $magang->dosenPembimbing ? $magang->dosenPembimbing->user->name : null
+                    'dosen_pembimbing' => $magang->dosenPembimbing->user->name
                 ]
             ]);
 
