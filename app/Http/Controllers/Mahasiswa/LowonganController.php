@@ -270,9 +270,79 @@ class LowonganController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Dokumen Pendukung',
-                    'documents' => $documentsData
+                    'documents' => $documentsData,
+                    'has_test' => $lowongan->test == 0 // Balik logika: jika test = 0, maka has_test = true
                 ]);
             }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function applyInternship(Request $request, $id)
+    {
+        try {
+            $lowongan = LowonganModel::findOrFail($id);
+            $mahasiswa = Auth::user()->mahasiswa;
+
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data mahasiswa tidak ditemukan.'
+                ]);
+            }
+
+            // Check if already applied
+            $hasApplied = MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->where('id_lowongan', $id)
+                ->exists();
+
+            if ($hasApplied) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda sudah mendaftar untuk lowongan ini.'
+                ]);
+            }
+
+            $testFilePath = null;
+
+            // Handle test file upload HANYA jika TIDAK ada test (test = 0) DAN file dikirim
+            if ($lowongan->test == 0) {
+                if ($request->hasFile('test_file')) {
+                    $request->validate([
+                        'test_file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120' // 5MB max
+                    ]);
+
+                    $testFile = $request->file('test_file');
+                    $fileName = 'test_' . $mahasiswa->id_mahasiswa . '_' . $id . '_' . time() . '.' . $testFile->getClientOriginalExtension();
+                    $testFilePath = $testFile->storeAs('test_files', $fileName, 'public');
+                } else {
+                    // Jika TIDAK ADA test (test = 0) tapi tidak ada file yang diupload
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'File test diperlukan untuk lowongan ini.'
+                    ]);
+                }
+            }
+
+            // Create application
+            MagangModel::create([
+                'id_mahasiswa' => $mahasiswa->id_mahasiswa,
+                'id_lowongan' => $id,
+                'status_magang' => 'menunggu',
+                'path_file_test' => $testFilePath
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => $lowongan->test == 0 ? 
+                    'Pendaftaran berhasil! File test telah diunggah. Silakan tunggu informasi lebih lanjut.' : 
+                    'Pendaftaran magang berhasil diajukan!'
+            ]);
 
         } catch (\Exception $e) {
             return response()->json([

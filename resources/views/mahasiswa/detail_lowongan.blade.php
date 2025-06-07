@@ -312,7 +312,93 @@
         </div>
     </div>
 
+    <!-- Test Upload Modal -->
+    <div id="test-upload-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="test-upload-modal-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="test-upload-modal-label" class="font-bold text-neutral-900 dark:text-white">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            Upload File Test
+                        </div>
+                    </h3>
+                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#test-upload-modal">
+                        <span class="sr-only">Close</span>
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 6-12 12" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <form id="test-upload-form" enctype="multipart/form-data">
+                    <div class="p-4 overflow-y-auto">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-neutral-400 mb-4">
+                                Silakan upload file test yang diperlukan untuk posisi ini.
+                            </p>
+                        </div>
+                        
+                        <!-- File Upload Area -->
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-center w-full">
+                                <label for="test-file-input" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                        </svg>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Klik untuk upload</span> atau drag and drop</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOC, DOCX, JPG, PNG (MAX. 5MB)</p>
+                                    </div>
+                                    <input id="test-file-input" name="test_file" type="file" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
+                                </label>
+                            </div>
+                            
+                            <!-- Selected file display -->
+                            <div id="selected-file-info" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <p id="file-name" class="text-sm font-medium text-blue-900"></p>
+                                        <p id="file-size" class="text-xs text-blue-600"></p>
+                                    </div>
+                                    <button type="button" id="remove-file" class="text-red-500 hover:text-red-700">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                        <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#test-upload-modal">
+                            Batal
+                        </button>
+                        <button id="submit-application-btn" type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Ajukan Magang
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let hasTest = false;
+
         document.addEventListener('DOMContentLoaded', function() {
             const checkDocumentsBtn = document.getElementById('check-documents-btn');
 
@@ -332,6 +418,30 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
+                            hasTest = data.has_test;
+                            
+                            // Update button text based on test requirement
+                            const continueBtn = document.getElementById('continue-application-btn');
+                            if (hasTest) {
+                                console.log('Setting button to: Lanjutkan Pendaftaran (TIDAK ADA TEST - PERLU UPLOAD)');
+                                // TIDAK ADA test (test = 0) - perlu upload file
+                                continueBtn.innerHTML = `
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Lanjutkan Pendaftaran
+                                `;
+                            } else {
+                                console.log('Setting button to: Ajukan Magang (ADA TEST - LANGSUNG APPLY)');
+                                // ADA test (test = 1) - langsung apply
+                                continueBtn.innerHTML = `
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h8z"></path>
+                                    </svg>
+                                    Ajukan Magang
+                                `;
+                            }
+                            
                             // Success Modal - Documents Complete
                             document.getElementById('success-message').textContent = data.message;
                             
@@ -400,20 +510,55 @@
 
             // Handle continue application button
             document.getElementById('continue-application-btn').addEventListener('click', function() {
-                // Close modal first
-                const successModal = document.getElementById('success-modal');
-                if (successModal.classList.contains('hs-overlay-open')) {
-                    // You can add logic here to proceed with the application
-                    // For now, just close the modal
-                    HSOverlay.close(successModal);
+                // Close success modal
+                HSOverlay.close(document.getElementById('success-modal'));
+                
+                if (hasTest) {
+                    // TIDAK ADA test (test = 0) - tampilkan modal upload
+                    showModal('test-upload-modal');
+                } else {
+                    // ADA test (test = 1) - langsung apply
+                    applyInternship();
                 }
-                // Add your application logic here
-                console.log('Proceeding with application...');
+            });
+
+            // Handle test file upload form
+            document.getElementById('test-upload-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fileInput = document.getElementById('test-file-input');
+                if (!fileInput.files[0]) {
+                    alert('Silakan pilih file test terlebih dahulu.');
+                    return;
+                }
+                
+                applyInternship(new FormData(this));
+            });
+
+            // Handle file input change
+            document.getElementById('test-file-input').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const fileInfo = document.getElementById('selected-file-info');
+                const fileName = document.getElementById('file-name');
+                const fileSize = document.getElementById('file-size');
+                
+                if (file) {
+                    fileName.textContent = file.name;
+                    fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                    fileInfo.classList.remove('hidden');
+                } else {
+                    fileInfo.classList.add('hidden');
+                }
+            });
+
+            // Handle remove file
+            document.getElementById('remove-file').addEventListener('click', function() {
+                document.getElementById('test-file-input').value = '';
+                document.getElementById('selected-file-info').classList.add('hidden');
             });
 
             // Handle go to profile button
             document.getElementById('go-to-profile-btn').addEventListener('click', function() {
-                // Redirect to profile page
                 window.location.href = '{{ route("mahasiswa.edit_profile") }}';
             });
 
@@ -422,16 +567,62 @@
                 if (modal && window.HSOverlay) {
                     HSOverlay.open(modal);
                 } else {
-                    // Fallback if HSOverlay is not available
                     modal.classList.remove('hidden');
                     modal.classList.add('hs-overlay-open');
                 }
+            }
+
+            function applyInternship(formData = null) {
+                const submitBtn = document.getElementById('submit-application-btn');
+                const originalText = submitBtn ? submitBtn.innerHTML : '';
+                
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memproses...';
+                    submitBtn.disabled = true;
+                }
+
+                const fetchOptions = {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                };
+
+                if (formData) {
+                    fetchOptions.body = formData;
+                } else {
+                    fetchOptions.headers['Content-Type'] = 'application/json';
+                }
+
+                fetch(`{{ route('mahasiswa.lowongan.apply', $lowongan->id_lowongan) }}`, fetchOptions)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Close any open modals
+                        if (hasTest) {
+                            HSOverlay.close(document.getElementById('test-upload-modal'));
+                        }
+                        
+                        alert(data.message);
+                        window.location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Terjadi kesalahan saat mengajukan magang. Silakan coba lagi.');
+                })
+                .finally(() => {
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
             }
         });
 
         // Helper function to create document card
         function createDocumentCard(doc) {
-            // Capitalize first letter of document type
             const capitalizedDocType = doc.jenis_dokumen.charAt(0).toUpperCase() + doc.jenis_dokumen.slice(1);
             
             return `
