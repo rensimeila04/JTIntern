@@ -83,4 +83,8 @@ class MahasiswaModel extends Model
     public function feedback() {
         return $this->hasMany(FeedbackModel::class, 'id_mahasiswa', 'id_mahasiswa');
     }
+
+    public function dokumen() {
+        return $this->hasMany(DokumenModel::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
 }

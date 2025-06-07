@@ -33,136 +33,73 @@
                 <div class="text-neutral-900 text-xl font-medium">Dokumen Pendukung</div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {{-- CV --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
-                            <x-lucide-file class="w-4 h-4 text-primary-600" />
+                @php
+                    $documentTypes = [
+                        'curriculum vitae' => ['icon' => 'ph ph-file', 'label' => 'Curriculum Vitae'],
+                        'portofolio' => ['icon' => 'ph ph-image', 'label' => 'Portofolio'],
+                        'sertifikat' => ['icon' => 'ph ph-medal', 'label' => 'Sertifikat'],
+                        'surat pengantar' => ['icon' => 'ph ph-envelope-simple', 'label' => 'Surat Pengantar'],
+                        'transkrip nilai' => ['icon' => 'ph ph-chart-line', 'label' => 'Transkrip Nilai']
+                    ];
+                @endphp
+
+                @foreach($documentTypes as $docType => $config)
+                    @php
+                        $document = $magang->mahasiswa->dokumen->where('jenisDokumen.nama', $docType)->first();
+                    @endphp
+                    
+                    <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
+                                @if(str_contains($config['icon'], 'x-lucide'))
+                                    <{{ $config['icon'] }} class="w-4 h-4 text-primary-600" />
+                                @else
+                                    <i class="{{ $config['icon'] }} w-4 h-4 text-primary-600"></i>
+                                @endif
+                            </div>
+                            <div class="text-neutral-900 text-base font-medium">{{ $config['label'] }}</div>
                         </div>
-                        <div class="text-neutral-900 text-base font-medium">Curriculum Vitae</div>
+                        
+                        @if($document)
+                            <div class="flex flex-col gap-1 text-xs mt-auto">
+                                <div class="flex flex-row items-center gap-1">
+                                    <span class="text-neutral-900 font-medium">Diunggah:</span>
+                                    <span class="text-neutral-500">{{ $document->created_at->format('d M Y') }}</span>
+                                </div>
+                                <div class="flex flex-row items-center gap-1">
+                                    <span class="text-neutral-900 font-medium">Ukuran:</span>
+                                    <span class="text-neutral-500">
+                                        @if($document->path_dokumen && file_exists(storage_path('app/public/' . $document->path_dokumen)))
+                                            {{ round(filesize(storage_path('app/public/' . $document->path_dokumen)) / 1024, 1) }} KB
+                                    @else
+                                        -
+                                    @endif
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex justify-start mt-auto">
+                                <a href="{{ asset('storage/' . $document->path_dokumen) }}" target="_blank"
+                                    class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                                    <x-lucide-eye class="w-4 h-4 mr-2" />
+                                    Lihat Dokumen
+                                </a>
+                            </div>
+                        @else
+                            <div class="flex flex-col gap-1 text-xs mt-auto">
+                                <div class="flex flex-row items-center gap-1">
+                                    <span class="text-neutral-500 font-medium">Belum diunggah</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-start mt-auto">
+                                <button disabled
+                                    class="w-full inline-flex items-center justify-center px-4 py-2 border border-neutral-300 rounded-lg text-neutral-400 bg-neutral-100 text-sm font-medium cursor-not-allowed">
+                                    <x-lucide-eye class="w-4 h-4 mr-2" />
+                                    Tidak Tersedia
+                                </button>
+                            </div>
+                        @endif
                     </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-start mt-auto">
-                        <a href="#" target="_blank"
-                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </a>
-                    </div>
-                </div>
-                {{-- Portofolio --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 ">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
-                            <x-lucide-image class="w-4 h-4 text-primary-600" />
-                        </div>
-                        <div class="text-neutral-900 text-base font-medium">Portofolio</div>
-                    </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-start mt-auto">
-                        <a href="#" target="_blank"
-                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </a>
-                    </div>
-                </div>
-                {{-- Sertifikat --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
-                            <i class="ph ph-medal w-4 h-4 text-primary-600"></i>
-                        </div>
-                        <div class="text-neutral-900 text-base font-medium">Sertifikat</div>
-                    </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-start mt-auto">
-                        <a href="#" target="_blank"
-                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </a>
-                    </div>
-                </div>
-                {{-- Surat Pengantar --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 ">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
-                            <i class="ph ph-envelope-simple w-4 h-4 text-primary-600"></i>
-                        </div>
-                        <div class="text-neutral-900 text-base font-medium">Surat Pengantar</div>
-                    </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-start mt-auto">
-                        <a href="#" target="_blank"
-                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </a>
-                    </div>
-                </div>
-                {{-- Transkrip Nilai --}}
-                <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 ">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
-                            <i class="ph ph-chart-line w-4 h-4 text-primary-600"></i>
-                        </div>
-                        <div class="text-neutral-900 text-base font-medium">Transkrip Nilai</div>
-                    </div>
-                    <div class="flex flex-col gap-1 text-xs mt-auto">
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Diunggah:</span>
-                            <span class="text-neutral-500">5 Mei 2025</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1">
-                            <span class="text-neutral-900 font-medium">Ukuran:</span>
-                            <span class="text-neutral-500">234 KB</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-start mt-auto">
-                        <a href="#" target="_blank"
-                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
-                            <x-lucide-eye class="w-4 h-4 mr-2" />
-                            Lihat Dokumen
-                        </a>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
         {{-- Pengajuan Magang --}}
