@@ -44,7 +44,7 @@ class JenisDokumenSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'transkip nilai',
+                'nama' => 'transkrip nilai', // Fixed typo from 'transkip nilai'
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

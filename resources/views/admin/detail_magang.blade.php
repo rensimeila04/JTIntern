@@ -136,13 +136,13 @@
                         </button>
                     </div>
                 </div>
-                {{-- Transkip Nilai --}}
+                {{-- Transkrip Nilai --}}
                 <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 ">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-chart-line w-4 h-4 text-primary-600"></i>
                         </div>
-                        <div class="text-neutral-900 text-base font-medium">Transkip Nilai</div>
+                        <div class="text-neutral-900 text-base font-medium">Transkrip Nilai</div>
                     </div>
                     <div class="flex flex-col gap-1 text-xs mt-auto">
                         <div class="flex flex-row items-center gap-1">

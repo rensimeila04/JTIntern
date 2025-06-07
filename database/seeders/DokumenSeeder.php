@@ -13,25 +13,25 @@ class DokumenSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get document type IDs
+        // Get document type IDs - matching the names from JenisDokumenSeeder
         $cvId = DB::table('jenis_dokumen')
-            ->where('nama', 'Curriculum Vitae (CV)')
+            ->where('nama', 'curriculum vitae')  // Changed from 'Curriculum Vitae (CV)'
             ->value('id_jenis_dokumen');
 
         $portfolioId = DB::table('jenis_dokumen')
-            ->where('nama', 'Portofolio')
+            ->where('nama', 'portofolio')  // Changed from 'Portofolio'
             ->value('id_jenis_dokumen');
 
         $sertifikatId = DB::table('jenis_dokumen')
-            ->where('nama', 'Sertifikat')
+            ->where('nama', 'sertifikat')  // Changed from 'Sertifikat'
             ->value('id_jenis_dokumen');
 
         $suratPengantarId = DB::table('jenis_dokumen')
-            ->where('nama', 'Surat Pengantar Magang')
+            ->where('nama', 'surat pengantar')  // Changed from 'Surat Pengantar Magang'
             ->value('id_jenis_dokumen');
 
         $transkripId = DB::table('jenis_dokumen')
-            ->where('nama', 'Transkrip Nilai')
+            ->where('nama', 'transkrip nilai')  // Changed from 'Transkrip Nilai' (note: there's a typo in JenisDokumenSeeder - 'transkip' instead of 'transkrip')
             ->value('id_jenis_dokumen');
 
         // Get mahasiswa data

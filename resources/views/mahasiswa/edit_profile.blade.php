@@ -546,29 +546,29 @@
                     @endif
                 </div>
 
-                {{-- Transkip Nilai --}}
+                {{-- Transkrip Nilai --}}
                 <div class="flex flex-col gap-4 rounded-xl bg-neutral-50 p-4 w-full">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center">
                             <i class="ph ph-chart-line w-4 h-4 text-primary-600"></i>
                         </div>
-                        <div class="text-neutral-900 text-base font-medium">Transkip Nilai</div>
+                        <div class="text-neutral-900 text-base font-medium">Transkrip Nilai</div>
                     </div>
                     <div class="flex flex-col gap-1 text-xs ">
-                        @php $transkip = $dokumen['transkip nilai'] ?? null; @endphp
+                        @php $transkrip = $dokumen['transkrip nilai'] ?? null; @endphp
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Diunggah:</span>
                             <span class="text-neutral-500">
-                                {{ $transkip ? $transkip->created_at->format('d M Y') : '-' }}
+                                {{ $transkrip ? $transkrip->created_at->format('d M Y') : '-' }}
                             </span>
                         </div>
                         <div class="flex flex-row items-center gap-1">
                             <span class="text-neutral-900 font-medium">Ukuran:</span>
                             <span class="text-neutral-500">
-                                @if ($transkip && $transkip->path_dokumen)
+                                @if ($transkrip && $transkrip->path_dokumen)
                                     @php
                                         try {
-                                            $fileSize = Storage::disk('public')->size($transkip->path_dokumen);
+                                            $fileSize = Storage::disk('public')->size($transkrip->path_dokumen);
                                             $fileSizeKB = number_format($fileSize / 1024, 0) . ' KB';
                                         } catch (\Exception $e) {
                                             $fileSizeKB = 'File tidak ditemukan';
@@ -581,31 +581,31 @@
                             </span>
                         </div>
                     </div>
-                    @if ($transkip)
+                    @if ($transkrip)
                         <div class="flex justify-start ">
-                            <a href="{{ asset('storage/' . $transkip->path_dokumen) }}" target="_blank"
+                            <a href="{{ asset('storage/' . $transkrip->path_dokumen) }}" target="_blank"
                                 class="btn-primary inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-eye class="w-4 h-4 mr-2" />
                                 Lihat Dokumen
                             </a>
                         </div>
                         <div class="flex gap-2">
-                            <input type="file" id="transkip-nilai-upload" class="hidden"
+                            <input type="file" id="transkrip-nilai-upload" class="hidden"
                                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                            <button type="button" onclick="document.getElementById('transkip-nilai-upload').click()"
+                            <button type="button" onclick="document.getElementById('transkrip-nilai-upload').click()"
                                 class="inline-flex justify-center px-4 py-2 border border-primary-600 rounded-lg text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 text-sm font-medium transition flex-1">
                                 Perbarui
                             </button>
-                            <button type="button" onclick="hapusDokumen('transkip nilai')"
+                            <button type="button" onclick="hapusDokumen('transkrip nilai')"
                                 class="inline-flex justify-center px-4 py-2 border border-red-600 rounded-lg text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm font-medium transition">
                                 <x-lucide-trash-2 class="w-4 h-4" />
                             </button>
                         </div>
                     @else
                         <div class="flex items-center">
-                            <input type="file" id="transkip-nilai-upload" class="hidden"
+                            <input type="file" id="transkrip-nilai-upload" class="hidden"
                                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                            <button type="button" onclick="document.getElementById('transkip-nilai-upload').click()"
+                            <button type="button" onclick="document.getElementById('transkrip-nilai-upload').click()"
                                 class="btn-primary justify-center inline-flex items-center py-2 rounded-lg text-sm font-medium transition w-full">
                                 <x-lucide-upload class="w-4 h-4 mr-2" />
                                 Unggah
@@ -994,7 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'portofolio-upload', 
         'sertifikat-upload',
         'surat-pengantar-upload',
-        'transkip-nilai-upload'
+        'transkrip-nilai-upload'
     ];
 
     const documentTypes = {
@@ -1002,7 +1002,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'portofolio-upload': 'portofolio',
         'sertifikat-upload': 'sertifikat',
         'surat-pengantar-upload': 'surat pengantar',
-        'transkip-nilai-upload': 'transkip nilai'
+        'transkrip-nilai-upload': 'transkrip nilai'
     };
 
     fileUploads.forEach(uploadId => {

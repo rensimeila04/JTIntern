@@ -67,7 +67,7 @@
                                         <i class="ph ph-medal w-4 h-4 text-primary-600"></i>
                                     @elseif(Str::contains($jenisDokumen, 'surat'))
                                         <i class="ph ph-envelope-simple w-4 h-4 text-primary-600"></i>
-                                    @elseif(Str::contains($jenisDokumen, 'transkip') || Str::contains($jenisDokumen, 'nilai'))
+                                    @elseif(Str::contains($jenisDokumen, 'transkrip') || Str::contains($jenisDokumen, 'nilai'))
                                         <i class="ph ph-chart-line w-4 h-4 text-primary-600"></i>
                                     @else
                                         <x-lucide-file class="w-4 h-4 text-primary-600" />

@@ -265,7 +265,7 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'dokumen' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120', // Max 5MB
-            'jenis_dokumen' => 'required|string|in:curriculum vitae,portofolio,sertifikat,surat pengantar,transkip nilai'
+            'jenis_dokumen' => 'required|string|in:curriculum vitae,portofolio,sertifikat,surat pengantar,transkrip nilai'
         ]);
 
         if ($validator->fails()) {
@@ -335,7 +335,7 @@ class ProfileController extends Controller
     public function hapusDokumen(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'jenis_dokumen' => 'required|string|in:curriculum vitae,portofolio,sertifikat,surat pengantar,transkip nilai'
+            'jenis_dokumen' => 'required|string|in:curriculum vitae,portofolio,sertifikat,surat pengantar,transkrip nilai'
         ]);
 
         if ($validator->fails()) {
