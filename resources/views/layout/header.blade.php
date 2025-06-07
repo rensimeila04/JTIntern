@@ -90,9 +90,11 @@
                 <button id="user-dropdown" type="button"
                     class="hs-dropdown-toggle self-stretch py-4 flex justify-start items-center gap-2"
                     aria-haspopup="menu" aria-expanded="false" aria-label="User menu">
-                    <img class="size-9 rounded-full"
-                         src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/avatar.svg') }}"
-                         alt="User profile">
+                    <div class="size-9 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover"
+                             src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/avatar.svg') }}"
+                             alt="User profile">
+                    </div>
                     <div class="flex flex-col justify-start text-left">
                         <div class="text-black text-xs font-medium">{{ Auth::user()->name }}</div>
                         <div class="text-neutral-400 text-xs">{{ Auth::user()->level->nama_level }}</div>
