@@ -370,6 +370,23 @@
                                 {{ ucfirst($magang->status_magang) }}
                             </span>
                         </div>
+
+                        
+
+                        {{-- Show acceptance date if status is diterima --}}
+                        @if($magang->status_magang == 'diterima' && $magang->tanggal_diterima)
+                            <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-start gap-2">
+                                    <x-lucide-check class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                                    <div>
+                                        <p class="text-sm font-medium text-green-800">Status Diterima</p>
+                                        <p class="text-xs text-green-600 mt-1">
+                                            Diterima pada: {{ \Carbon\Carbon::parse($magang->tanggal_diterima)->format('d M Y H:i') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="flex gap-8">
                         <img src="{{ $magang->lowongan->perusahaanMitra->logo_perusahaan ? asset('storage/' . $magang->lowongan->perusahaanMitra->logo_perusahaan) : asset('Images/placeholder_perusahaan.png') }}"
@@ -444,7 +461,100 @@
         </div>
     </div>
 
-    <!-- Modal Tolak -->
+    {{-- Alasan Penolakan Section - Tampil di bagian paling bawah --}}
+    @if($magang->status_magang == 'ditolak')
+        <div class="bg-white h-fit p-6 rounded-lg space-y-6">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-red-100 rounded-full flex items-center justify-center">
+                    <x-lucide-x-circle class="w-6 h-6 text-red-600" />
+                </div>
+                <div>
+                    <p class="text-xl font-medium text-neutral-900">Informasi Penolakan</p>
+                    <p class="text-sm text-neutral-500">Detail alasan penolakan pengajuan magang</p>
+                </div>
+            </div>
+
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 space-y-4">
+                {{-- Status dan Tanggal --}}
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <span class="text-sm font-medium text-red-800">Status: Ditolak</span>
+                    </div>
+                    @if($magang->tanggal_ditolak)
+                        <div class="text-right">
+                            <p class="text-xs text-red-600">Ditolak pada</p>
+                            <p class="text-sm font-medium text-red-700">
+                                {{ \Carbon\Carbon::parse($magang->tanggal_ditolak)->format('d M Y H:i') }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Alasan Penolakan --}}
+                <div class="bg-white rounded-lg p-4">
+                    <h5 class="text-sm font-medium text-red-900 mb-3 flex items-center gap-2">
+                        <x-lucide-message-square-text class="w-4 h-4" />
+                        Alasan Penolakan
+                    </h5>
+                    
+                    @if($magang->alasan_penolakan)
+                        <div class="relative">
+                            <x-lucide-quote class="absolute top-0 left-0 w-4 h-4 text-red-400" />
+                            <p class="text-sm text-red-700 leading-relaxed pl-6 italic bg-red-25 p-3 rounded border-l-4 border-red-300">
+                                {{ $magang->alasan_penolakan }}
+                            </p>
+                        </div>
+                    @else
+                        <div class="flex items-center justify-center py-6">
+                            <div class="text-center">
+                                <x-lucide-message-square-x class="w-8 h-8 text-red-400 mx-auto mb-2" />
+                                <p class="text-sm text-red-600">Tidak ada alasan penolakan yang diberikan</p>
+                                <p class="text-xs text-red-500 mt-1">Admin tidak memberikan alasan spesifik untuk penolakan ini</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Informasi Tambahan --}}
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div class="flex items-start gap-2">
+                        <x-lucide-info class="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                        <div class="text-sm text-yellow-800">
+                            <p class="font-medium mb-1">Langkah Selanjutnya:</p>
+                            <ul class="list-disc list-inside space-y-1 text-xs">
+                                <li>Mahasiswa dapat mengajukan ke lowongan magang lain yang tersedia</li>
+                                <li>Pastikan dokumen pendukung sudah lengkap sebelum mengajukan kembali</li>
+                                <li>Hubungi admin jika memerlukan klarifikasi lebih lanjut</li>
+                                <li>Perbaiki aspek yang menjadi alasan penolakan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Detail Pengajuan yang Ditolak --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-lg p-4">
+                        <h6 class="text-xs font-medium text-red-900 mb-2">Pengajuan yang Ditolak</h6>
+                        <div class="space-y-1">
+                            <p class="text-sm text-red-700">{{ $magang->lowongan->judul_lowongan }}</p>
+                            <p class="text-xs text-red-600">{{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg p-4">
+                        <h6 class="text-xs font-medium text-red-900 mb-2">Mahasiswa</h6>
+                        <div class="space-y-1">
+                            <p class="text-sm text-red-700">{{ $magang->mahasiswa->user->name }}</p>
+                            <p class="text-xs text-red-600">{{ $magang->mahasiswa->nim }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Modal Tolak --}}
     <div id="hs-tolak-modal" class="hs-overlay hs-overlay-open:opacity-100 hs-overlay-open:duration-500 hidden size-full fixed top-0 start-0 z-80 opacity-0 overflow-x-hidden transition-all overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-tolak-modal-label">
         <div class="sm:max-w-lg sm:w-full m-3 sm:mx-auto">
             <div class="flex flex-col bg-white border border-gray-200 shadow-2xl rounded-xl pointer-events-auto">
@@ -519,7 +629,7 @@
         </div>
     </div>
 
-    <!-- Modal Terima -->
+    {{-- Modal Terima --}}
     <div id="hs-terima-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-terima-modal-label">
         <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
             <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xl rounded-xl pointer-events-auto">
@@ -584,7 +694,7 @@
                             <div class="flex items-start gap-2">
                                 <x-lucide-info class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                                 <div class="text-sm text-blue-800">
-                                    <p class="font-medium">Setelah menerima pengajuan:</p>
+                                    <p class="font-medium mb-1">Setelah menerima pengajuan:</p>
                                     <ul class="mt-1 list-disc list-inside space-y-0.5 text-xs">
                                         <li>Status magang akan berubah menjadi "Diterima"</li>
                                         <li>Mahasiswa akan mendapat notifikasi penerimaan</li>

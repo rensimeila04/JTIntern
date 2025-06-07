@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class MagangModel extends Model
 {
@@ -18,19 +19,19 @@ class MagangModel extends Model
         'id_lowongan',
         'id_dosen_pembimbing',
         'status_magang',
-        'alasan_penolakan',      // Add this
-        'tanggal_diterima',      // Add this
-        'tanggal_ditolak',       // Add this
+        'alasan_penolakan',
+        'tanggal_diterima',
+        'tanggal_ditolak',
         'path_sertifikat',
         'path_file_test'
     ];
 
-    // Add date casting for the new timestamp columns
-    protected $dates = [
-        'tanggal_diterima',
-        'tanggal_ditolak',
-        'created_at',
-        'updated_at'
+    // Use casts instead of dates (Laravel 8+)
+    protected $casts = [
+        'tanggal_diterima' => 'datetime',
+        'tanggal_ditolak' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function mahasiswa()
