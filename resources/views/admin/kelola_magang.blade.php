@@ -248,8 +248,6 @@
                                             <td class="px-6 py-4 text-sm font-medium text-gray-800 dark:text-neutral-200">
                                                 @if($item->status_magang == 'ditolak' || $item->status_magang == 'menunggu')
                                                     -
-                                                @elseif($item->status_magang == 'diterima')
-                                                    <span class="text-neutral-400">Belum ditambahkan</span>
                                                 @else
                                                     {{ $item->dosenPembimbing ? $item->dosenPembimbing->user->name : 'Belum ditambahkan' }}
                                                 @endif
