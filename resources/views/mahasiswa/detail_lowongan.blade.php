@@ -20,17 +20,21 @@
                                 class="text-base font-normal text-primary-500">{{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}</a>
                         </div>
                         <div class="self-start">
-                            @if($hasApplied)
-                                <button disabled class="btn-secondary-lg cursor-not-allowed">
-                                    <x-lucide-check class="w-5 h-5 mr-2" /> Sudah Diajukan
+                            @if ($hasApplied && $canApply == false)
+                                <button disabled id="check-documents-btn" class="btn-primary-lg">
+                                    <x-lucide-briefcase class="w-5 h-5 mr-2" /> Ajukan Magang
                                 </button>
                             @elseif(!$lowongan->status_pendaftaran)
-                                <button disabled class="btn-secondary-lg cursor-not-allowed">
-                                    <x-lucide-x class="w-5 h-5 mr-2" /> Tidak Aktif
+                                <button disabled id="check-documents-btn" class="btn-primary-lg">
+                                    <x-lucide-briefcase class="w-5 h-5 mr-2" /> Ajukan Magang
                                 </button>
                             @elseif($lowongan->deadline_pendaftaran && now() > $lowongan->deadline_pendaftaran)
-                                <button disabled class="btn-secondary-lg cursor-not-allowed">
-                                    <x-lucide-clock class="w-5 h-5 mr-2" /> Deadline Lewat
+                                <button disabled id="check-documents-btn" class="btn-primary-lg">
+                                    <x-lucide-briefcase class="w-5 h-5 mr-2" /> Ajukan Magang
+                                </button>
+                            @elseif(!$canApply)
+                                <button disabled id="check-documents-btn" class="btn-primary-lg">
+                                    <x-lucide-briefcase class="w-5 h-5 mr-2" /> Ajukan Magang
                                 </button>
                             @else
                                 <button id="check-documents-btn" class="btn-primary-lg">
@@ -121,15 +125,18 @@
                     alt="{{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
                     class="w-30 h-30 object-cover rounded-2xl">
                 <div class="space-y-4 w-full">
-                    <h1 class="text-lg font-medium text-neutral-900">{{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}</h1>
+                    <h1 class="text-lg font-medium text-neutral-900">
+                        {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}</h1>
                     <div class="flex flex-row gap-9">
                         <div class="flex flex-col gap-2">
                             <p class="text-base font-normal text-neutral-400">Jenis Perusahaan</p>
-                            <p class="text-base font-normal text-neutral-700">{{ $lowongan->perusahaanMitra->jenisPerusahaan->nama_jenis_perusahaan}}</p>
+                            <p class="text-base font-normal text-neutral-700">
+                                {{ $lowongan->perusahaanMitra->jenisPerusahaan->nama_jenis_perusahaan }}</p>
                         </div>
                         <div class="flex flex-col gap-2">
                             <p class="text-base font-normal text-neutral-400">Bidang Industri</p>
-                            <p class="text-base font-normal text-neutral-700">{{ $lowongan->perusahaanMitra->bidang_industri }}</p>
+                            <p class="text-base font-normal text-neutral-700">
+                                {{ $lowongan->perusahaanMitra->bidang_industri }}</p>
                         </div>
                     </div>
                 </div>
@@ -137,7 +144,7 @@
             <div class="fles flex-col gap-2">
                 <p class="text-xl font-medium text-neutral-900">Deskripsi</p>
                 <p class="text-base font-normal text-neutral-400 whitespace-pre-line">
-                    {{ $lowongan->perusahaanMitra->tentang ? $lowongan->perusahaanMitra-> tentang : 'Tidak ada deskripsi' }}
+                    {{ $lowongan->perusahaanMitra->tentang ? $lowongan->perusahaanMitra->tentang : 'Tidak ada deskripsi' }}
                 </p>
             </div>
         </div>
@@ -150,38 +157,45 @@
                 @forelse ($lowonganList as $lowongan)
                     @php
                         $wibNow = now('Asia/Jakarta');
-                        $deadline = $lowongan->deadline_pendaftaran ? 
-                            \Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->setTimezone('Asia/Jakarta') : null;
+                        $deadline = $lowongan->deadline_pendaftaran
+                            ? \Carbon\Carbon::parse($lowongan->deadline_pendaftaran)->setTimezone('Asia/Jakarta')
+                            : null;
                         $daysLeft = $deadline ? $deadline->diffInDays($wibNow, false) : null;
                         $applicantCount = $lowongan->magang()->count();
                         $isExpired = $deadline && $deadline->isPast();
                     @endphp
-                    <div class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 relative z-0 {{ $isExpired ? 'opacity-75' : '' }}">
+                    <div
+                        class="bg-white flex-col rounded-xl flex py-6 px-4 gap-4 relative z-0 {{ $isExpired ? 'opacity-75' : '' }}">
                         <div class="inline-flex items-center gap-6">
-                            <img src="{{ $lowongan->perusahaanMitra->logo ? $lowongan->perusahaanMitra->logo_url : asset('images/placeholder_perusahaan.png') }}" 
-                                 alt="Logo {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
-                                 class="w-20 h-20 rounded-lg object-contain bg-gray-50">
-                            <div class="flex flex-col flex-1 justify-start items-start gap-2 h-fill cursor-pointer" 
-                                 onclick="window.location.href='{{ route('mahasiswa.lowongan.detail', $lowongan->id_lowongan) }}'">
+                            <img src="{{ $lowongan->perusahaanMitra->logo ? $lowongan->perusahaanMitra->logo_url : asset('images/placeholder_perusahaan.png') }}"
+                                alt="Logo {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}"
+                                class="w-20 h-20 rounded-lg object-contain bg-gray-50">
+                            <div class="flex flex-col flex-1 justify-start items-start gap-2 h-fill cursor-pointer"
+                                onclick="window.location.href='{{ route('mahasiswa.lowongan.detail', $lowongan->id_lowongan) }}'">
                                 <div class="self-stretch inline-flex justify-start items-center gap-4">
-                                    <div class="justify-start text-black text-lg font-medium leading-none hover:text-primary-600 transition-colors">
+                                    <div
+                                        class="justify-start text-black text-lg font-medium leading-none hover:text-primary-600 transition-colors">
                                         {{ $lowongan->judul_lowongan }}
                                     </div>
                                 </div>
                                 <div class="inline-flex justify-start items-center gap-2">
-                                    <span class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[120px]">
+                                    <span
+                                        class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[120px]">
                                         {{ $lowongan->perusahaanMitra->nama_perusahaan_mitra }}
                                     </span>
                                     <div class="w-1 h-1 bg-neutral-400 rounded-full flex-shrink-0"></div>
-                                    <span class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[150px]">
+                                    <span
+                                        class="justify-start text-neutral-400 text-sm font-normal leading-none truncate max-w-[150px]">
                                         {{ $lowongan->perusahaanMitra->alamat }}
                                     </span>
                                 </div>
                                 <div class="inline-flex justify-start items-start gap-2">
-                                    <span class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                    <span
+                                        class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
                                         {{ strtoupper($lowongan->jenis_magang) }}
                                     </span>
-                                    <span class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+                                    <span
+                                        class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
                                         {{ $lowongan->perusahaanMitra->jenisPerusahaan->nama_jenis_perusahaan }}
                                     </span>
                                 </div>
@@ -193,9 +207,9 @@
                         </div>
                         <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="self-stretch inline-flex justify-start items-center gap-2">
-                            @if($lowongan->deadline_pendaftaran)
+                            @if ($lowongan->deadline_pendaftaran)
                                 <span class="justify-start text-neutral-400 text-sm font-normal leading-none">
-                                    @if($isExpired)
+                                    @if ($isExpired)
                                         Pendaftaran ditutup
                                     @else
                                         {{ abs($daysLeft) }} hari tersisa
@@ -210,12 +224,17 @@
                     </div>
                 @empty
                     <div class="col-span-full text-center py-12">
-                        @if(isset($filters['search']) && $filters['search'])
-                            <div class="text-gray-500 text-lg">Tidak ada lowongan yang sesuai dengan pencarian "{{ $filters['search'] }}"</div>
-                            <div class="text-gray-400 text-sm mt-2">Coba kata kunci lain atau <a href="{{ route('mahasiswa.lowongan') }}" class="text-primary-500 hover:underline">lihat semua lowongan</a></div>
+                        @if (isset($filters['search']) && $filters['search'])
+                            <div class="text-gray-500 text-lg">Tidak ada lowongan yang sesuai dengan pencarian
+                                "{{ $filters['search'] }}"</div>
+                            <div class="text-gray-400 text-sm mt-2">Coba kata kunci lain atau <a
+                                    href="{{ route('mahasiswa.lowongan') }}"
+                                    class="text-primary-500 hover:underline">lihat semua lowongan</a></div>
                         @else
                             <div class="text-gray-500 text-lg">Tidak ada lowongan yang sesuai dengan filter</div>
-                            <div class="text-gray-400 text-sm mt-2">Coba ubah filter atau <a href="{{ route('mahasiswa.lowongan') }}" class="text-primary-500 hover:underline">reset semua filter</a></div>
+                            <div class="text-gray-400 text-sm mt-2">Coba ubah filter atau <a
+                                    href="{{ route('mahasiswa.lowongan') }}"
+                                    class="text-primary-500 hover:underline">reset semua filter</a></div>
                         @endif
                     </div>
                 @endforelse
@@ -225,18 +244,26 @@
     </div>
 
     <!-- Success Modal -->
-    <div id="success-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="success-modal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all max-w-fit w-auto m-3 mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+    <div id="success-modal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="success-modal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all max-w-fit w-auto m-3 mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="success-modal-label" class="font-bold text-neutral-900 dark:text-white">
                         <div class="flex items-center gap-2">
                             Lamar posisi {{ $lowongan->judul_lowongan }}
                         </div>
                     </h3>
-                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#success-modal">
+                    <button type="button"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close" data-hs-overlay="#success-modal">
                         <span class="sr-only">Close</span>
-                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path d="m18 6-12 12" />
                             <path d="m6 6 12 12" />
                         </svg>
@@ -245,20 +272,24 @@
                 <div class="p-4 overflow-y-auto">
                     <div class="text-start mb-6">
                         <p id="success-message" class="mt-2 text-lg text-neutral-900 font-medium dark:text-neutral-900">
-                             
+
                         </p>
                     </div>
-                    
+
                     <!-- Documents List Container -->
                     <div id="documents-container" class="space-y-4">
                         <!-- Documents will be populated here via JavaScript -->
                     </div>
                 </div>
-                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#success-modal">
+                <div
+                    class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800"
+                        data-hs-overlay="#success-modal">
                         Tutup
                     </button>
-                    <button id="continue-application-btn" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                    <button id="continue-application-btn" type="button"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                         Lanjutkan Pendaftaran
                     </button>
                 </div>
@@ -267,18 +298,26 @@
     </div>
 
     <!-- Error Modal -->
-    <div id="error-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="error-modal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+    <div id="error-modal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="error-modal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="error-modal-label" class="font-bold text-red-800 dark:text-white">
                         <div class="flex items-center gap-2">
                             Dokumen Belum Lengkap
                         </div>
                     </h3>
-                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#error-modal">
+                    <button type="button"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close" data-hs-overlay="#error-modal">
                         <span class="sr-only">Close</span>
-                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path d="m18 6-12 12" />
                             <path d="m6 6 12 12" />
                         </svg>
@@ -288,23 +327,31 @@
                     <div class="text-center">
                         <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="h-8 w-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd"></path>
                             </svg>
                         </div>
                         <div id="error-message" class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
                             <p class="mb-3">Dokumen Anda belum lengkap untuk mendaftar magang ini.</p>
-                            <div id="missing-documents-list" class="bg-red-50 border border-red-200 rounded-lg p-3 text-left">
+                            <div id="missing-documents-list"
+                                class="bg-red-50 border border-red-200 rounded-lg p-3 text-left">
                                 <!-- Missing documents will be populated here -->
                             </div>
-                            <p class="mt-3 text-sm text-gray-600">Silakan lengkapi dokumen di halaman profil terlebih dahulu.</p>
+                            <p class="mt-3 text-sm text-gray-600">Silakan lengkapi dokumen di halaman profil terlebih
+                                dahulu.</p>
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#error-modal">
+                <div
+                    class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800"
+                        data-hs-overlay="#error-modal">
                         Tutup
                     </button>
-                    <button id="go-to-profile-btn" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <button id="go-to-profile-btn" type="button"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
                         Ke Halaman Profil
                     </button>
                 </div>
@@ -313,21 +360,32 @@
     </div>
 
     <!-- Test Upload Modal -->
-    <div id="test-upload-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="test-upload-modal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+    <div id="test-upload-modal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="test-upload-modal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="test-upload-modal-label" class="font-bold text-neutral-900 dark:text-white">
                         <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                </path>
                             </svg>
                             Upload File Test
                         </div>
                     </h3>
-                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#test-upload-modal">
+                    <button type="button"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close" data-hs-overlay="#test-upload-modal">
                         <span class="sr-only">Close</span>
-                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path d="m18 6-12 12" />
                             <path d="m6 6 12 12" />
                         </svg>
@@ -337,35 +395,46 @@
                     <div class="p-4 overflow-y-auto">
                         <div class="text-center mb-6">
                             <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 21h10a2 2 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                 </svg>
                             </div>
                             <p class="text-sm text-gray-600 dark:text-neutral-400 mb-4">
                                 Silakan upload file test yang diperlukan untuk posisi ini.
                             </p>
                         </div>
-                        
+
                         <!-- File Upload Area -->
                         <div class="space-y-4">
                             <div class="flex items-center justify-center w-full">
-                                <label for="test-file-input" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                <label for="test-file-input"
+                                    class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                         </svg>
-                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Klik untuk upload</span> atau drag and drop</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOC, DOCX, JPG, PNG (MAX. 5MB)</p>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
+                                                class="font-semibold">Klik untuk upload</span> atau drag and drop</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOC, DOCX, JPG, PNG (MAX.
+                                            5MB)</p>
                                     </div>
-                                    <input id="test-file-input" name="test_file" type="file" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
+                                    <input id="test-file-input" name="test_file" type="file" class="hidden"
+                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
                                 </label>
                             </div>
-                            
+
                             <!-- Selected file display -->
                             <div id="selected-file-info" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-3">
                                 <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 21h10a2 2 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                     </svg>
                                     <div class="flex-1">
                                         <p id="file-name" class="text-sm font-medium text-blue-900"></p>
@@ -373,20 +442,26 @@
                                     </div>
                                     <button type="button" id="remove-file" class="text-red-500 hover:text-red-700">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                        <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#test-upload-modal">
+                    <div
+                        class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                        <button type="button"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800"
+                            data-hs-overlay="#test-upload-modal">
                             Batal
                         </button>
-                        <button id="submit-application-btn" type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none">
+                        <button id="submit-application-btn" type="submit"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                             </svg>
                             Ajukan Magang
                         </button>
@@ -405,106 +480,116 @@
             if (checkDocumentsBtn) {
                 checkDocumentsBtn.addEventListener('click', function() {
                     const originalText = this.innerHTML;
-                    this.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memeriksa...';
+                    this.innerHTML =
+                        '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memeriksa...';
                     this.disabled = true;
 
                     fetch(`{{ route('mahasiswa.lowongan.check-documents', $lowongan->id_lowongan) }}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            hasTest = data.has_test;
-                            
-                            // Update button text based on test requirement
-                            const continueBtn = document.getElementById('continue-application-btn');
-                            if (hasTest) {
-                                console.log('Setting button to: Lanjutkan Pendaftaran (TIDAK ADA TEST - PERLU UPLOAD)');
-                                // TIDAK ADA test (test = 0) - perlu upload file
-                                continueBtn.innerHTML = `
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                hasTest = data.has_test;
+
+                                // Update button text based on test requirement
+                                const continueBtn = document.getElementById('continue-application-btn');
+                                if (hasTest) {
+                                    console.log(
+                                        'Setting button to: Lanjutkan Pendaftaran (TIDAK ADA TEST - PERLU UPLOAD)'
+                                    );
+                                    // TIDAK ADA test (test = 0) - perlu upload file
+                                    continueBtn.innerHTML = `
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                     Lanjutkan Pendaftaran
                                 `;
-                            } else {
-                                console.log('Setting button to: Ajukan Magang (ADA TEST - LANGSUNG APPLY)');
-                                // ADA test (test = 1) - langsung apply
-                                continueBtn.innerHTML = `
+                                } else {
+                                    console.log(
+                                        'Setting button to: Ajukan Magang (ADA TEST - LANGSUNG APPLY)'
+                                    );
+                                    // ADA test (test = 1) - langsung apply
+                                    continueBtn.innerHTML = `
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h8z"></path>
                                     </svg>
                                     Ajukan Magang
                                 `;
-                            }
-                            
-                            // Success Modal - Documents Complete
-                            document.getElementById('success-message').textContent = data.message;
-                            
-                            // Populate documents list
-                            const documentsContainer = document.getElementById('documents-container');
-                            if (data.documents && data.documents.length > 0) {
-                                let html = '';
-                                
-                                // Group documents in rows of 2
-                                for (let i = 0; i < data.documents.length; i += 2) {
-                                    const doc1 = data.documents[i];
-                                    const doc2 = data.documents[i + 1];
-                                    
-                                    // If we have 2 documents for this row
-                                    if (doc2) {
-                                        html += `
+                                }
+
+                                // Success Modal - Documents Complete
+                                document.getElementById('success-message').textContent = data.message;
+
+                                // Populate documents list
+                                const documentsContainer = document.getElementById(
+                                    'documents-container');
+                                if (data.documents && data.documents.length > 0) {
+                                    let html = '';
+
+                                    // Group documents in rows of 2
+                                    for (let i = 0; i < data.documents.length; i += 2) {
+                                        const doc1 = data.documents[i];
+                                        const doc2 = data.documents[i + 1];
+
+                                        // If we have 2 documents for this row
+                                        if (doc2) {
+                                            html += `
                                             <div class="flex flex-row gap-4">
                                                 ${createDocumentCard(doc1)}
                                                 ${createDocumentCard(doc2)}
                                             </div>
                                         `;
-                                    } else {
-                                        // Last document (left-aligned)
-                                        html += `
+                                        } else {
+                                            // Last document (left-aligned)
+                                            html += `
                                             <div class="flex flex-row gap-4">
                                                 ${createDocumentCard(doc1)}
                                             </div>
                                         `;
+                                        }
                                     }
+
+                                    documentsContainer.innerHTML = html;
                                 }
-                                
-                                documentsContainer.innerHTML = html;
-                            }
-                            
-                            showModal('success-modal');
-                        } else {
-                            // Error Modal - Documents Incomplete
-                            document.getElementById('error-message').querySelector('p').textContent = data.message;
-                            
-                            const missingDocsList = document.getElementById('missing-documents-list');
-                            if (data.missing_documents && data.missing_documents.length > 0) {
-                                missingDocsList.innerHTML = `
+
+                                showModal('success-modal');
+                            } else {
+                                // Error Modal - Documents Incomplete
+                                document.getElementById('error-message').querySelector('p')
+                                    .textContent = data.message;
+
+                                const missingDocsList = document.getElementById(
+                                    'missing-documents-list');
+                                if (data.missing_documents && data.missing_documents.length > 0) {
+                                    missingDocsList.innerHTML = `
                                     <p class="font-medium text-red-800 mb-2">Dokumen yang masih diperlukan:</p>
                                     <ul class="list-disc list-inside text-red-700 space-y-1">
                                         ${data.missing_documents.map(doc => `<li>${doc}</li>`).join('')}
                                     </ul>
                                 `;
-                            } else {
-                                missingDocsList.innerHTML = '';
+                                } else {
+                                    missingDocsList.innerHTML = '';
+                                }
+
+                                showModal('error-modal');
                             }
-                            
+                        })
+                        .catch(error => {
+                            document.getElementById('error-message').querySelector('p').textContent =
+                                'Terjadi kesalahan saat memeriksa dokumen. Silakan coba lagi.';
+                            document.getElementById('missing-documents-list').innerHTML = '';
                             showModal('error-modal');
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById('error-message').querySelector('p').textContent = 'Terjadi kesalahan saat memeriksa dokumen. Silakan coba lagi.';
-                        document.getElementById('missing-documents-list').innerHTML = '';
-                        showModal('error-modal');
-                    })
-                    .finally(() => {
-                        this.innerHTML = originalText;
-                        this.disabled = false;
-                    });
+                        })
+                        .finally(() => {
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                        });
                 });
             }
 
@@ -512,7 +597,7 @@
             document.getElementById('continue-application-btn').addEventListener('click', function() {
                 // Close success modal
                 HSOverlay.close(document.getElementById('success-modal'));
-                
+
                 if (hasTest) {
                     // TIDAK ADA test (test = 0) - tampilkan modal upload
                     showModal('test-upload-modal');
@@ -525,13 +610,13 @@
             // Handle test file upload form
             document.getElementById('test-upload-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 const fileInput = document.getElementById('test-file-input');
                 if (!fileInput.files[0]) {
                     alert('Silakan pilih file test terlebih dahulu.');
                     return;
                 }
-                
+
                 applyInternship(new FormData(this));
             });
 
@@ -541,7 +626,7 @@
                 const fileInfo = document.getElementById('selected-file-info');
                 const fileName = document.getElementById('file-name');
                 const fileSize = document.getElementById('file-size');
-                
+
                 if (file) {
                     fileName.textContent = file.name;
                     fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
@@ -559,7 +644,7 @@
 
             // Handle go to profile button
             document.getElementById('go-to-profile-btn').addEventListener('click', function() {
-                window.location.href = '{{ route("mahasiswa.edit_profile") }}';
+                window.location.href = '{{ route('mahasiswa.edit_profile') }}';
             });
 
             function showModal(modalId) {
@@ -575,16 +660,18 @@
             function applyInternship(formData = null) {
                 const submitBtn = document.getElementById('submit-application-btn');
                 const originalText = submitBtn ? submitBtn.innerHTML : '';
-                
+
                 if (submitBtn) {
-                    submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memproses...';
+                    submitBtn.innerHTML =
+                        '<svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memproses...';
                     submitBtn.disabled = true;
                 }
 
                 const fetchOptions = {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
                     }
                 };
 
@@ -595,36 +682,36 @@
                 }
 
                 fetch(`{{ route('mahasiswa.lowongan.apply', $lowongan->id_lowongan) }}`, fetchOptions)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Close any open modals
-                        if (hasTest) {
-                            HSOverlay.close(document.getElementById('test-upload-modal'));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Close any open modals
+                            if (hasTest) {
+                                HSOverlay.close(document.getElementById('test-upload-modal'));
+                            }
+
+                            alert(data.message);
+                            window.location.reload();
+                        } else {
+                            alert(data.message);
                         }
-                        
-                        alert(data.message);
-                        window.location.reload();
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    alert('Terjadi kesalahan saat mengajukan magang. Silakan coba lagi.');
-                })
-                .finally(() => {
-                    if (submitBtn) {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }
-                });
+                    })
+                    .catch(error => {
+                        alert('Terjadi kesalahan saat mengajukan magang. Silakan coba lagi.');
+                    })
+                    .finally(() => {
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    });
             }
         });
 
         // Helper function to create document card
         function createDocumentCard(doc) {
             const capitalizedDocType = doc.jenis_dokumen.charAt(0).toUpperCase() + doc.jenis_dokumen.slice(1);
-            
+
             return `
                 <div class="flex flex-col gap-3 rounded-xl bg-neutral-50 p-4" style="width: 220px;">
                     <div class="flex items-center gap-3">

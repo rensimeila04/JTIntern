@@ -193,10 +193,35 @@ class LowonganController extends Controller
 
         // Check if student has already applied for this internship
         $hasApplied = false;
+        $canApply = true; // Default dapat mendaftar
+        $magangStatus = null;
+        
         if (Auth::user()->mahasiswa) {
-            $hasApplied = MagangModel::where('id_mahasiswa', Auth::user()->mahasiswa->id_mahasiswa)
+            // Cek apakah sudah pernah mendaftar lowongan ini
+            $existingMagang = MagangModel::where('id_mahasiswa', Auth::user()->mahasiswa->id_mahasiswa)
                 ->where('id_lowongan', $id)
+                ->first();
+                
+            if ($existingMagang) {
+                $hasApplied = true;
+                $magangStatus = $existingMagang->status_magang;
+                
+                // Jika status bukan ditolak, maka tidak bisa mendaftar lagi
+                if ($magangStatus !== 'ditolak') {
+                    $canApply = false;
+                }
+            }
+            
+            // Cek apakah ada magang aktif di lowongan lain (bukan ditolak dan bukan lowongan ini)
+            $activeMagangLain = MagangModel::where('id_mahasiswa', Auth::user()->mahasiswa->id_mahasiswa)
+                ->where('id_lowongan', '!=', $id) // Bukan lowongan ini
+                ->whereNotIn('status_magang', ['ditolak'])
                 ->exists();
+                
+            // Jika ada magang aktif di lowongan lain, maka tidak bisa mendaftar
+            if ($activeMagangLain) {
+                $canApply = false;
+            }
         }
 
         return view('mahasiswa.detail_lowongan', [
@@ -205,6 +230,8 @@ class LowonganController extends Controller
             'lowongan' => $lowongan,
             'lowonganList' => $lowonganList,
             'hasApplied' => $hasApplied,
+            'canApply' => $canApply,
+            'magangStatus' => $magangStatus,
         ]);
     }
 
@@ -296,16 +323,34 @@ class LowonganController extends Controller
                 ]);
             }
 
-            // Check if already applied
-            $hasApplied = MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
-                ->where('id_lowongan', $id)
+            // Cek apakah ada magang aktif (bukan ditolak)
+            $activeMagang = MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->whereNotIn('status_magang', ['ditolak'])
                 ->exists();
 
-            if ($hasApplied) {
+            if ($activeMagang) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Anda sudah mendaftar untuk lowongan ini.'
+                    'message' => 'Anda masih memiliki pengajuan magang yang sedang diproses atau diterima. Tidak dapat mengajukan magang baru.'
                 ]);
+            }
+
+            // Check if already applied for this specific lowongan
+            $existingApplication = MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->where('id_lowongan', $id)
+                ->first();
+
+            if ($existingApplication) {
+                // Jika status bukan ditolak, tidak bisa mendaftar lagi
+                if ($existingApplication->status_magang !== 'ditolak') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Anda sudah mendaftar untuk lowongan ini.'
+                    ]);
+                } else {
+                    // Jika status ditolak, hapus record lama dan buat baru
+                    $existingApplication->delete();
+                }
             }
 
             $testFilePath = null;
