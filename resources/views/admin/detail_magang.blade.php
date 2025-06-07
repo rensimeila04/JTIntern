@@ -394,7 +394,7 @@
                                 <div class="flex items-center gap-2">
                                     <x-lucide-square-user-round class="w-6 h-6 text-neutral-500" stroke-width="1.5" />
                                     <p class="align-top text-base font-normal text-neutral-700">
-                                        {{ $magang->dosenPembimbing->user->name }}</p>
+                                        {{ $magang->dosenPembimbing->user->name ?? '-' }}</p>
                                 </div>
                             </div>
                             @if ($magang->status_magang == 'menunggu')
@@ -405,7 +405,8 @@
                                         Terima
                                     </button>
                                     <button type="button" id="btn-tolak"
-                                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-500 text-red-500 hover:border-red-400 hover:bg-red-400 hover:text-white focus:outline-hidden focus:border-red-400 focus:text-red-400 disabled:opacity-50 disabled:pointer-events-none">
+                                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-500 text-red-500 hover:border-red-400 hover:bg-red-400 hover:text-white focus:outline-hidden focus:border-red-400 focus:text-red-400 disabled:opacity-50 disabled:pointer-events-none"
+                                        aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-tolak-modal" data-hs-overlay="#hs-tolak-modal">
                                         Tolak
                                     </button>
                                     <button type="button" id="btn-detail-lowongan"
@@ -438,6 +439,81 @@
                             </script>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tolak -->
+    <div id="hs-tolak-modal" class="hs-overlay hs-overlay-open:opacity-100 hs-overlay-open:duration-500 hidden size-full fixed top-0 start-0 z-80 opacity-0 overflow-x-hidden transition-all overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-tolak-modal-label">
+        <div class="sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 shadow-2xl rounded-xl pointer-events-auto">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
+                    <h3 id="hs-tolak-modal-label" class="font-bold text-gray-800">
+                        Konfirmasi Penolakan Magang
+                    </h3>
+                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" aria-label="Close" data-hs-overlay="#hs-tolak-modal">
+                        <span class="sr-only">Close</span>
+                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"></path>
+                            <path d="m6 6 12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="p-2 bg-red-100 rounded-full flex items-center justify-center">
+                                <x-lucide-x-circle class="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Tolak Pengajuan Magang</p>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    Apakah Anda yakin ingin menolak pengajuan magang dari <strong>{{ $magang->mahasiswa->user->name }}</strong> 
+                                    untuk posisi <strong>{{ $magang->lowongan->judul_lowongan }}</strong> di 
+                                    <strong>{{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</strong>?
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Alasan Penolakan -->
+                        <div class="space-y-2">
+                            <label for="alasan-penolakan" class="block text-sm font-medium text-gray-900">
+                                Alasan Penolakan <span class="text-gray-500 text-xs">(opsional)</span>
+                            </label>
+                            <textarea id="alasan-penolakan" name="alasan_penolakan" rows="4" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
+                                placeholder="Berikan alasan penolakan untuk membantu mahasiswa memahami keputusan..."></textarea>
+                            <p class="text-xs text-gray-500">
+                                <x-lucide-info class="inline w-3 h-3 mr-1" />
+                                Alasan penolakan akan dikirimkan kepada mahasiswa
+                            </p>
+                        </div>
+
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                            <div class="flex items-start gap-2">
+                                <x-lucide-alert-triangle class="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                                <div class="text-sm text-yellow-800">
+                                    <p class="font-medium">Perhatian!</p>
+                                    <ul class="mt-1 list-disc list-inside space-y-0.5 text-xs">
+                                        <li>Status magang akan berubah menjadi "Ditolak"</li>
+                                        <li>Mahasiswa akan mendapat notifikasi penolakan</li>
+                                        <li>Keputusan ini tidak dapat dibatalkan</li>
+                                        <li>Mahasiswa dapat mengajukan ke lowongan lain</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
+                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#hs-tolak-modal">
+                        Batal
+                    </button>
+                    <button type="button" id="confirm-tolak" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <x-lucide-x class="w-4 h-4" />
+                        Ya, Tolak
+                    </button>
                 </div>
             </div>
         </div>
@@ -539,8 +615,10 @@
             const btnTolak = document.getElementById('btn-tolak');
             const btnDetail = document.getElementById('btn-detail-lowongan');
             const confirmTerima = document.getElementById('confirm-terima');
+            const confirmTolak = document.getElementById('confirm-tolak');
             const dosenSelect = document.getElementById('dosen-pembimbing');
             const dosenError = document.getElementById('dosen-error');
+            const alasanTextarea = document.getElementById('alasan-penolakan');
 
             // Add CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -568,7 +646,7 @@
                 confirmTerima.classList.add('opacity-50', 'cursor-not-allowed');
             }
 
-            // Handle modal confirm button
+            // Handle modal confirm terima button
             confirmTerima?.addEventListener('click', function() {
                 const selectedDosenId = dosenSelect.value;
                 
@@ -679,47 +757,84 @@
                 });
             });
 
-            btnTolak?.addEventListener('click', function() {
-                if (confirm('Apakah Anda yakin ingin menolak pengajuan magang ini?')) {
-                    // Make AJAX call for rejection
-                    fetch(`/admin/kelola-magang/{{ $magang->id_magang }}/tolak`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            alasan_penolakan: prompt('Alasan penolakan (opsional):') || ''
-                        })
+            // Handle modal confirm tolak button
+            confirmTolak?.addEventListener('click', function() {
+                const alasanPenolakan = alasanTextarea.value.trim();
+                
+                // Disable button to prevent double submission
+                confirmTolak.disabled = true;
+                confirmTolak.innerHTML = `
+                    <svg class="animate-spin w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Memproses...
+                `;
+
+                // Make AJAX call for rejection
+                fetch(`/admin/kelola-magang/{{ $magang->id_magang }}/tolak`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        alasan_penolakan: alasanPenolakan
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            statusText.textContent = 'Ditolak';
-                            statusText.className = 'inline-flex items-center h-[28px] gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-red-500 text-red-500';
-                            
-                            // Hide action buttons
-                            const actionButtons = document.querySelector('.flex.gap-2');
-                            if (actionButtons) {
-                                actionButtons.style.display = 'none';
-                            }
-                            
-                            showNotification('success', data.message);
-                            
-                            // Reload page after delay
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 2000);
-                        } else {
-                            showNotification('error', data.message || 'Terjadi kesalahan saat menolak pengajuan');
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        statusText.textContent = 'Ditolak';
+                        statusText.className = 'inline-flex items-center h-[28px] gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-red-500 text-red-500';
+                        
+                        // Close modal
+                        const modal = document.getElementById('hs-tolak-modal');
+                        if (modal) {
+                            modal.classList.add('hidden');
+                            modal.classList.remove('pointer-events-auto');
+                            document.body.classList.remove('overflow-hidden');
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('error', 'Terjadi kesalahan saat menolak pengajuan');
-                    });
-                }
+                        
+                        // Hide action buttons
+                        const actionButtons = document.querySelector('.flex.gap-2');
+                        if (actionButtons) {
+                            actionButtons.style.display = 'none';
+                        }
+                        
+                        showNotification('success', data.message);
+                        
+                        // Reload page after delay
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        showNotification('error', data.message || 'Terjadi kesalahan saat menolak pengajuan');
+                        
+                        // Re-enable button
+                        confirmTolak.disabled = false;
+                        confirmTolak.innerHTML = `
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 6 6 18M6 6l12 12" clip-rule="evenodd"></path>
+                            </svg>
+                            Ya, Tolak
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('error', 'Terjadi kesalahan saat menolak pengajuan');
+                    
+                    // Re-enable button
+                    confirmTolak.disabled = false;
+                    confirmTolak.innerHTML = `
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 6 6 18M6 6l12 12" clip-rule="evenodd"></path>
+                        </svg>
+                        Ya, Tolak
+                    `;
+                });
             });
 
             btnDetail?.addEventListener('click', function() {
