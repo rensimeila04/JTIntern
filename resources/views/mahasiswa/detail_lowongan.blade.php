@@ -226,12 +226,12 @@
 
     <!-- Success Modal -->
     <div id="success-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="success-modal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all max-w-fit w-auto m-3 mx-auto">
             <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
-                    <h3 id="success-modal-label" class="font-bold text-green-800 dark:text-white">
+                    <h3 id="success-modal-label" class="font-bold text-neutral-900 dark:text-white">
                         <div class="flex items-center gap-2">
-                            Dokumen Lengkap
+                            Lamar posisi {{ $lowongan->judul_lowongan }}
                         </div>
                     </h3>
                     <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#success-modal">
@@ -243,22 +243,22 @@
                     </button>
                 </div>
                 <div class="p-4 overflow-y-auto">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="h-8 w-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <p id="success-message" class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
-                            Semua dokumen telah lengkap. Anda dapat melanjutkan proses pendaftaran magang.
+                    <div class="text-start mb-6">
+                        <p id="success-message" class="mt-2 text-lg text-neutral-900 font-medium dark:text-neutral-900">
+                             
                         </p>
+                    </div>
+                    
+                    <!-- Documents List Container -->
+                    <div id="documents-container" class="space-y-4">
+                        <!-- Documents will be populated here via JavaScript -->
                     </div>
                 </div>
                 <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
                     <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#success-modal">
                         Tutup
                     </button>
-                    <button id="continue-application-btn" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <button id="continue-application-btn" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                         Lanjutkan Pendaftaran
                     </button>
                 </div>
@@ -334,6 +334,38 @@
                         if (data.success) {
                             // Success Modal - Documents Complete
                             document.getElementById('success-message').textContent = data.message;
+                            
+                            // Populate documents list
+                            const documentsContainer = document.getElementById('documents-container');
+                            if (data.documents && data.documents.length > 0) {
+                                let html = '';
+                                
+                                // Group documents in rows of 2
+                                for (let i = 0; i < data.documents.length; i += 2) {
+                                    const doc1 = data.documents[i];
+                                    const doc2 = data.documents[i + 1];
+                                    
+                                    // If we have 2 documents for this row
+                                    if (doc2) {
+                                        html += `
+                                            <div class="flex flex-row gap-4">
+                                                ${createDocumentCard(doc1)}
+                                                ${createDocumentCard(doc2)}
+                                            </div>
+                                        `;
+                                    } else {
+                                        // Last document (left-aligned)
+                                        html += `
+                                            <div class="flex flex-row gap-4">
+                                                ${createDocumentCard(doc1)}
+                                            </div>
+                                        `;
+                                    }
+                                }
+                                
+                                documentsContainer.innerHTML = html;
+                            }
+                            
                             showModal('success-modal');
                         } else {
                             // Error Modal - Documents Incomplete
@@ -396,5 +428,44 @@
                 }
             }
         });
+
+        // Helper function to create document card
+        function createDocumentCard(doc) {
+            // Capitalize first letter of document type
+            const capitalizedDocType = doc.jenis_dokumen.charAt(0).toUpperCase() + doc.jenis_dokumen.slice(1);
+            
+            return `
+                <div class="flex flex-col gap-3 rounded-xl bg-neutral-50 p-4" style="width: 220px;">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="text-neutral-900 text-sm font-medium truncate flex-1">${capitalizedDocType}</div>
+                    </div>
+                    <div class="flex flex-col gap-1 text-xs">
+                        <div class="flex flex-row items-center gap-1">
+                            <span class="text-neutral-900 font-medium">Diunggah:</span>
+                            <span class="text-neutral-500 truncate">${doc.tanggal_upload}</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-1">
+                            <span class="text-neutral-900 font-medium">Ukuran:</span>
+                            <span class="text-neutral-500 truncate">${doc.ukuran_file}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-start">
+                        <a href="${doc.url_dokumen}" target="_blank"
+                            class="inline-flex items-center justify-center w-full px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                            <svg class="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            Lihat Dokumen
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
     </script>
 @endsection

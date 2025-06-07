@@ -13,6 +13,7 @@ use App\Services\MabacService;
 use App\Services\TopsisService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class LowonganController extends Controller
 {
@@ -224,7 +225,9 @@ class LowonganController extends Controller
             $requiredDocuments = JenisDokumenModel::all();
             
             // Get student's uploaded documents
-            $studentDocuments = DokumenModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->get();
+            $studentDocuments = DokumenModel::with('jenisDokumen')
+                ->where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->get();
             
             // Check for missing documents
             $missingDocuments = [];
@@ -243,9 +246,31 @@ class LowonganController extends Controller
                     'missing_documents' => $missingDocuments
                 ]);
             } else {
+                // Prepare documents data for display
+                $documentsData = [];
+                foreach ($studentDocuments as $document) {
+                    $fileSize = '-';
+                    if ($document->path_dokumen && Storage::disk('public')->exists($document->path_dokumen)) {
+                        try {
+                            $fileSizeBytes = Storage::disk('public')->size($document->path_dokumen);
+                            $fileSize = number_format($fileSizeBytes / 1024, 0) . ' KB';
+                        } catch (\Exception $e) {
+                            $fileSize = 'File tidak ditemukan';
+                        }
+                    }
+
+                    $documentsData[] = [
+                        'jenis_dokumen' => $document->jenisDokumen->nama,
+                        'tanggal_upload' => $document->created_at->format('d M Y'),
+                        'ukuran_file' => $fileSize,
+                        'url_dokumen' => $document->path_dokumen ? asset('storage/' . $document->path_dokumen) : '#'
+                    ];
+                }
+
                 return response()->json([
                     'success' => true,
-                    'message' => 'Dokumen lengkap'
+                    'message' => 'Dokumen Pendukung',
+                    'documents' => $documentsData
                 ]);
             }
 
