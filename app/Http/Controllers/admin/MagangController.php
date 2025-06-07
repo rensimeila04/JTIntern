@@ -92,13 +92,14 @@ class MagangController extends Controller
 
         $activeMenu = 'kelola-magang';
 
-        // Fetch magang data with relationships including documents
+        // Fetch magang data with relationships including documents and feedback
         $magang = MagangModel::with([
             'mahasiswa.user',
             'mahasiswa.programStudi',
-            'mahasiswa.dokumen.jenisDokumen', // Load documents with their types
+            'mahasiswa.dokumen.jenisDokumen',
             'lowongan.perusahaanMitra',
-            'dosenPembimbing.user'
+            'dosenPembimbing.user',
+            'feedback' // Add feedback relationship
         ])->findOrFail($id);
 
         // Get all document types for reference
