@@ -18,8 +18,19 @@ class MagangModel extends Model
         'id_lowongan',
         'id_dosen_pembimbing',
         'status_magang',
+        'alasan_penolakan',      // Add this
+        'tanggal_diterima',      // Add this
+        'tanggal_ditolak',       // Add this
         'path_sertifikat',
         'path_file_test'
+    ];
+
+    // Add date casting for the new timestamp columns
+    protected $dates = [
+        'tanggal_diterima',
+        'tanggal_ditolak',
+        'created_at',
+        'updated_at'
     ];
 
     public function mahasiswa()
