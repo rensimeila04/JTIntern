@@ -51,11 +51,11 @@
                         </div>
                     </div>
                     <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                        <a href="#" target="_blank"
+                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
-                        </button>
+                        </a>
                     </div>
                 </div>
                 {{-- Portofolio --}}
@@ -77,11 +77,11 @@
                         </div>
                     </div>
                     <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                        <a href="#" target="_blank"
+                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
-                        </button>
+                        </a>
                     </div>
                 </div>
                 {{-- Sertifikat --}}
@@ -103,11 +103,11 @@
                         </div>
                     </div>
                     <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                        <a href="#" target="_blank"
+                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
-                        </button>
+                        </a>
                     </div>
                 </div>
                 {{-- Surat Pengantar --}}
@@ -129,11 +129,11 @@
                         </div>
                     </div>
                     <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                        <a href="#" target="_blank"
+                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
-                        </button>
+                        </a>
                     </div>
                 </div>
                 {{-- Transkrip Nilai --}}
@@ -155,11 +155,11 @@
                         </div>
                     </div>
                     <div class="flex justify-start mt-auto">
-                        <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                        <a href="#" target="_blank"
+                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
                             <x-lucide-eye class="w-4 h-4 mr-2" />
                             Lihat Dokumen
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
