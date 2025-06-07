@@ -92,8 +92,16 @@ class MagangController extends Controller
 
         $activeMenu = 'kelola-magang';
 
+        // Fetch magang data with relationships
+        $magang = MagangModel::with([
+            'mahasiswa.user',
+            'mahasiswa.programStudi',
+            'lowongan.perusahaanMitra',
+            'dosenPembimbing.user'
+        ])->findOrFail($id);
+
         return view('admin.detail_magang', [
-            'id' => $id,
+            'magang' => $magang,
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu
         ]);

@@ -6,22 +6,23 @@
         </div>
         <div class="bg-white h-fit p-6 rounded-lg space-y-6">
             <div class="flex items-center gap-8">
-                <img src="{{ asset('Images/DindaSafira.png') }}" alt="Profile Picture"
-                    class="w-30 h-30 rounded-lg object-cover">
+                <img src="{{ $magang->mahasiswa->user->profile_photo ? asset('storage/' . $magang->mahasiswa->user->profile_photo) : asset('Images/avatar.svg') }}"
+                    alt="Profile Picture" class="w-30 h-30 rounded-lg object-cover">
                 <div class="flex flex-col gap-6">
-                    <p class="text-lg font-medium text-neutral-900">Dinda Safira</p>
+                    <p class="text-lg font-medium text-neutral-900">{{ $magang->mahasiswa->user->name }}</p>
                     <div class="flex gap-8">
                         <div class="flex flex-col gap-2">
                             <p class="text-sm font-normal text-neutral-400">NIM</p>
-                            <p class="text-sm font-semibold text-neutral-700">2341720001</p>
+                            <p class="text-sm font-semibold text-neutral-700">{{ $magang->mahasiswa->nim }}</p>
                         </div>
                         <div class="flex flex-col gap-2">
                             <p class="text-sm font-normal text-neutral-400">Email</p>
-                            <p class="text-sm font-semibold text-neutral-700">2341720001@student.polinema.ac.id</p>
+                            <p class="text-sm font-semibold text-neutral-700">{{ $magang->mahasiswa->user->email }}</p>
                         </div>
                         <div class="flex flex-col gap-2">
                             <p class="text-sm font-normal text-neutral-400">Program Studi</p>
-                            <p class="text-sm font-semibold text-neutral-700">D-IV Teknik Informatika</p>
+                            <p class="text-sm font-semibold text-neutral-700">
+                                {{ $magang->mahasiswa->programStudi->nama_prodi }}</p>
                         </div>
                     </div>
                 </div>
@@ -172,41 +173,52 @@
                         <p class="text-xl font-medium text-neutral-900">Pengajuan Magang</p>
                         <div id="status-badge">
                             <span id="status-text"
-                                class="inline-flex items-center h-[28px] gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-yellow-500 text-yellow-500">Menunggu</span>
+                                class="inline-flex items-center h-[28px] gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium 
+                                @if ($magang->status_magang == 'menunggu') border border-yellow-500 text-yellow-500
+                                @elseif($magang->status_magang == 'diterima') border border-green-500 text-green-500
+                                @elseif($magang->status_magang == 'ditolak') border border-red-500 text-red-500
+                                @elseif($magang->status_magang == 'magang') border border-blue-500 text-blue-500
+                                @elseif($magang->status_magang == 'selesai') border border-gray-500 text-gray-500 @endif">
+                                {{ ucfirst($magang->status_magang) }}
+                            </span>
                         </div>
                     </div>
                     <div class="flex gap-8">
-                        <img src="{{ asset('Images/Pt.png') }}" alt="Profile Picture"
-                            class="w-30 h-30 rounded-lg object-cover">
+                        <img src="{{ $magang->lowongan->perusahaanMitra->logo_perusahaan ? asset('storage/' . $magang->lowongan->perusahaanMitra->logo_perusahaan) : asset('Images/placeholder_perusahaan.png') }}"
+                            alt="Company Logo" class="w-30 h-30 rounded-lg object-cover">
                         <div class="flex flex-col gap-6">
                             <div class="flex flex-col gap-3">
-                                <p class="text-xl font-medium text-neutral-900">UI UX Designer</p>
-                                <p class="text-base font-normal text-primary-500">PT. Quantum Technology Nusantara</p>
+                                <p class="text-xl font-medium text-neutral-900">{{ $magang->lowongan->judul_lowongan }}</p>
+                                <p class="text-base font-normal text-primary-500">
+                                    {{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</p>
                                 <div class="flex items-center gap-2">
-                                    <i class="ph ph-map-pin text-neutral-500 text-2xl"></i>
-                                    <p class="align-top text-base font-normal text-neutral-700">Jakarta Pusat, DKI Jakarta,
-                                        Indonesia
+                                    <x-lucide-map-pin class="w-6 h-6 text-neutral-500" stroke-width="1.5" />
+                                    <p class="align-top text-base font-normal text-neutral-700">
+                                        {{ $magang->lowongan->perusahaanMitra->alamat ?? 'Tidak Tersedia' }}</p>
                                     </p>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <x-lucide-calendar-days class="w-6 h-6 text-neutral-500" />
-                                    <p class="align-top text-base font-normal text-neutral-700">Ganjil 2026</p>
+                                    <x-lucide-calendar-days class="w-6 h-6 text-neutral-500" stroke-width="1.5"/>
+                                    <p class="align-top text-base font-normal text-neutral-700">
+                                        {{ $magang->lowongan->periodeMagang->nama_periode ?? 'Tidak tersedia' }}</p>
                                 </div>
                             </div>
-                            <div class="flex gap-2">
-                                <button type="button" id="btn-terima"
-                                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none">
-                                    Terima
-                                </button>
-                                <button type="button" id="btn-tolak"
-                                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-500 text-red-500 hover:border-red-400 hover:bg-red-400 hover:text-white focus:outline-hidden focus:border-red-400 focus:text-red-400 disabled:opacity-50 disabled:pointer-events-none">
-                                    Tolak
-                                </button>
-                                <button type="button" id="btn-detail-lowongan"
-                                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-blue-600 text-blue-600 hover:border-blue-500 hover:bg-blue-400 hover:text-white focus:outline-hidden focus:border-blue-500 focus:text-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-                                    Detail Lowongan
-                                </button>
-                            </div>
+                            @if ($magang->status_magang == 'menunggu')
+                                <div class="flex gap-2">
+                                    <button type="button" id="btn-terima"
+                                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none">
+                                        Terima
+                                    </button>
+                                    <button type="button" id="btn-tolak"
+                                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-500 text-red-500 hover:border-red-400 hover:bg-red-400 hover:text-white focus:outline-hidden focus:border-red-400 focus:text-red-400 disabled:opacity-50 disabled:pointer-events-none">
+                                        Tolak
+                                    </button>
+                                    <button type="button" id="btn-detail-lowongan"
+                                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-blue-600 text-blue-600 hover:border-blue-500 hover:bg-blue-400 hover:text-white focus:outline-hidden focus:border-blue-500 focus:text-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                                        Detail Lowongan
+                                    </button>
+                                </div>
+                            @endif
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
                                     const statusText = document.getElementById('status-text');
@@ -225,7 +237,7 @@
                                             'inline-flex items-center h-[28px] gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-red-500 text-red-500';
                                     });
                                     btnDetail?.addEventListener('click', function() {
-                                        window.location.href = '/detail-lowongan';
+                                        window.location.href = '/detail-lowongan/{{ $magang->lowongan->id_lowongan }}';
                                     });
                                 });
                             </script>
