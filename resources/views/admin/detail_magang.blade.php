@@ -150,6 +150,75 @@
         </div>
         @endif
 
+        @if($magang->status_magang == 'selesai' && $magang->path_sertifikat)
+        <div class="bg-white h-fit p-6 rounded-lg space-y-6">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-green-100 rounded-full flex items-center justify-center">
+                    <x-lucide-award class="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                    <p class="text-xl font-medium text-neutral-900">Sertifikat Magang</p>
+                    <p class="text-sm text-neutral-500">Sertifikat penyelesaian magang mahasiswa</p>
+                </div>
+            </div>
+            
+            <div class="bg-neutral-50 rounded-lg p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-white rounded-lg">
+                            <x-lucide-file-check class="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-neutral-900">
+                                {{ basename($magang->path_sertifikat) }}
+                            </p>
+                            <div class="flex items-center gap-4 text-xs text-neutral-500 mt-1">
+                                <span>Diterbitkan: {{ $magang->updated_at->format('d M Y H:i') }}</span>
+                                @if(file_exists(storage_path('app/public/' . $magang->path_sertifikat)))
+                                    <span>Ukuran: {{ round(filesize(storage_path('app/public/' . $magang->path_sertifikat)) / 1024, 1) }} KB</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ asset('storage/' . $magang->path_sertifikat) }}" target="_blank"
+                            class="inline-flex items-center px-3 py-2 border border-blue-500 rounded-lg text-blue-500 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium transition">
+                            <x-lucide-eye class="w-4 h-4 mr-2" />
+                            Lihat Sertifikat
+                        </a>
+                        <a href="{{ asset('storage/' . $magang->path_sertifikat) }}" download
+                            class="inline-flex items-center px-3 py-2 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-medium transition">
+                            <x-lucide-download class="w-4 h-4 mr-2" />
+                            Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @elseif($magang->status_magang == 'selesai' && !$magang->path_sertifikat)
+        <div class="bg-white h-fit p-6 rounded-lg space-y-6">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-gray-100 rounded-full flex items-center justify-center">
+                    <x-lucide-award class="w-6 h-6 text-gray-600" />
+                </div>
+                <div>
+                    <p class="text-xl font-medium text-neutral-900">Sertifikat Magang</p>
+                    <p class="text-sm text-neutral-500">Sertifikat belum tersedia</p>
+                </div>
+            </div>
+            
+            <div class="bg-neutral-50 rounded-lg p-4">
+                <div class="flex items-center justify-center py-8">
+                    <div class="text-center">
+                        <x-lucide-file-x class="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                        <p class="text-sm font-medium text-gray-600">Sertifikat Belum Diterbitkan</p>
+                        <p class="text-xs text-gray-500 mt-1">Sertifikat akan tersedia setelah diterbitkan oleh admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         {{-- Pengajuan Magang --}}
         <div class="h-fit rounded-lg space-y-3">
             <div class="space-y-4">
