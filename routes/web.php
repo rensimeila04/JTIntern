@@ -119,6 +119,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
             Route::post('/{id}/terima', [MagangController::class, 'terimaMagang'])->name('.terima-magang');
             Route::post('/{id}/tolak', [MagangController::class, 'tolakMagang'])->name('.tolak-magang');
+            
+            // Add these new routes for edit functionality
+            Route::get('/{id}/edit', [MagangController::class, 'edit'])->name('.edit');
+            Route::put('/{id}', [MagangController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [MagangController::class, 'destroy'])->name('.destroy');
         });
 
 

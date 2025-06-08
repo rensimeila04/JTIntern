@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MagangModel;
 use App\Models\LowonganModel;
+use App\Models\DosenPembimbingModel; // Add this import
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -68,6 +69,9 @@ class MagangController extends Controller
 
         // Get all lowongan for filter dropdown - FIXED field name
         $lowonganList = LowonganModel::select('id_lowongan', 'judul_lowongan')->orderBy('judul_lowongan')->get();
+        
+        // Add dosen list for edit modal
+        $dosenList = DosenPembimbingModel::with('user')->get();
 
         return view('admin.kelola_magang', [
             'breadcrumb' => $breadcrumb,
@@ -77,6 +81,7 @@ class MagangController extends Controller
             'currentFilter' => $request->status ?? 'all',
             'currentLowongan' => $request->lowongan_id ?? 'all',
             'lowonganList' => $lowonganList,
+            'dosenList' => $dosenList, // Add this line
             'counts' => [
                 'menunggu' => $menungguCount,
                 'diterima' => $diterimaCount,
@@ -517,6 +522,251 @@ class MagangController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses pengajuan'
+            ], 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $magang = MagangModel::with([
+                'mahasiswa.user',
+                'lowongan.perusahaanMitra',
+                'dosenPembimbing.user'
+            ])->findOrFail($id);
+
+            // Get all dosen pembimbing for dropdown
+            $dosenList = DosenPembimbingModel::with('user')->get();
+
+            return response()->json([
+                'success' => true,
+                'magang' => $magang,
+                'dosenList' => $dosenList
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching magang data for edit', [
+                'magang_id' => $id,
+                'error' => $e->getMessage(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data magang'
+            ], 500);
+        }
+    }
+
+    /**
+     * Update magang data
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            // Debug log untuk melihat data yang diterima
+            Log::info('Update magang request received', [
+                'magang_id' => $id,
+                'request_data' => $request->all(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+            ]);
+
+            // Validate request
+            $validator = Validator::make($request->all(), [
+                'status_magang' => 'required|in:menunggu,diterima,magang,selesai,ditolak',
+                'id_dosen_pembimbing' => 'nullable|exists:dosen_pembimbing,id_dosen_pembimbing'
+            ], [
+                'status_magang.required' => 'Status magang wajib dipilih',
+                'status_magang.in' => 'Status magang tidak valid',
+                'id_dosen_pembimbing.exists' => 'Dosen pembimbing tidak valid'
+            ]);
+
+            if ($validator->fails()) {
+                Log::error('Validation failed for magang update', [
+                    'magang_id' => $id,
+                    'errors' => $validator->errors()->toArray(),
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data tidak valid: ' . $validator->errors()->first(),
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Find magang record
+            $magang = MagangModel::findOrFail($id);
+            
+            // Store old data for comparison
+            $oldStatus = $magang->status_magang;
+            $oldDosenId = $magang->id_dosen_pembimbing;
+
+            // Prepare update data
+            $updateData = [
+                'status_magang' => $request->status_magang,
+            ];
+
+            // Handle dosen pembimbing
+            if ($request->has('id_dosen_pembimbing')) {
+                if ($request->id_dosen_pembimbing === '' || $request->id_dosen_pembimbing === null) {
+                    $updateData['id_dosen_pembimbing'] = null;
+                } else {
+                    $updateData['id_dosen_pembimbing'] = $request->id_dosen_pembimbing;
+                }
+            }
+
+            // Set timestamps based on status changes
+            if ($oldStatus !== $request->status_magang) {
+                switch ($request->status_magang) {
+                    case 'diterima':
+                        if (!$magang->tanggal_diterima) {
+                            $updateData['tanggal_diterima'] = \Carbon\Carbon::now('Asia/Jakarta');
+                        }
+                        $updateData['tanggal_ditolak'] = null;
+                        $updateData['alasan_penolakan'] = null;
+                        break;
+                    case 'ditolak':
+                        if (!$magang->tanggal_ditolak) {
+                            $updateData['tanggal_ditolak'] = \Carbon\Carbon::now('Asia/Jakarta');
+                        }
+                        $updateData['tanggal_diterima'] = null;
+                        // Only clear dosen if status is changing to ditolak
+                        if ($oldStatus !== 'ditolak') {
+                            $updateData['id_dosen_pembimbing'] = null;
+                        }
+                        break;
+                    case 'menunggu':
+                        $updateData['tanggal_diterima'] = null;
+                        $updateData['tanggal_ditolak'] = null;
+                        $updateData['alasan_penolakan'] = null;
+                        break;
+                }
+            }
+
+            // Perform database transaction to ensure consistency
+            DB::beginTransaction();
+            
+            try {
+                // Update magang
+                $magang->update($updateData);
+                
+                // Reload relationships
+                $magang->load('mahasiswa.user', 'lowongan.perusahaanMitra', 'dosenPembimbing.user');
+                
+                DB::commit();
+                
+                // Log the successful action
+                Log::info('Magang data updated successfully', [
+                    'magang_id' => $id,
+                    'mahasiswa' => $magang->mahasiswa->user->name,
+                    'old_status' => $oldStatus,
+                    'new_status' => $request->status_magang,
+                    'old_dosen_id' => $oldDosenId,
+                    'new_dosen_id' => $magang->id_dosen_pembimbing,
+                    'admin' => auth()->user()->name,
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+
+                $message = 'Data magang berhasil diperbarui';
+                if ($oldStatus !== $request->status_magang) {
+                    $message .= '. Status berubah dari ' . ucfirst($oldStatus) . ' menjadi ' . ucfirst($request->status_magang);
+                }
+                if ($oldDosenId !== $magang->id_dosen_pembimbing) {
+                    if ($magang->dosenPembimbing) {
+                        $message .= '. Dosen pembimbing: ' . $magang->dosenPembimbing->user->name;
+                    } else {
+                        $message .= '. Dosen pembimbing dihapus';
+                    }
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'data' => [
+                        'status' => $request->status_magang,
+                        'dosen_pembimbing' => $magang->dosenPembimbing ? $magang->dosenPembimbing->user->name : null,
+                        'id_dosen_pembimbing' => $magang->id_dosen_pembimbing
+                    ]
+                ], 200); // Explicitly set status code
+                
+            } catch (\Exception $dbError) {
+                DB::rollback();
+                throw $dbError;
+            }
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('Magang not found', [
+                'magang_id' => $id,
+                'error' => $e->getMessage(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Data magang tidak ditemukan'
+            ], 404);
+
+        } catch (\Exception $e) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollback();
+            }
+            
+            Log::error('Error updating magang data', [
+                'magang_id' => $id,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete magang record
+     */
+    public function destroy($id)
+    {
+        try {
+            $magang = MagangModel::with('mahasiswa.user')->findOrFail($id);
+            
+            // Store mahasiswa name for logging
+            $mahasiswaName = $magang->mahasiswa->user->name;
+            
+            // Delete the record
+            $magang->delete();
+
+            // Log the deletion
+            Log::info('Magang data deleted', [
+                'magang_id' => $id,
+                'mahasiswa' => $mahasiswaName,
+                'admin' => auth()->user()->name,
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data magang berhasil dihapus'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error deleting magang data', [
+                'magang_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus data'
             ], 500);
         }
     }

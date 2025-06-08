@@ -246,11 +246,7 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                                @if($item->status_magang == 'ditolak' || $item->status_magang == 'menunggu')
-                                                    -
-                                                @else
-                                                    {{ $item->dosenPembimbing ? $item->dosenPembimbing->user->name : 'Belum ditambahkan' }}
-                                                @endif
+                                                {{ $item->dosenPembimbing ? $item->dosenPembimbing->user->name : 'Belum ditambahkan' }}
                                             </td>
                                             <td class="px-6 py-4 text-sm font-medium">
                                                 <div class="flex justify-start gap-2">
@@ -260,16 +256,17 @@
                                                     </a>
 
                                                     @if(in_array($item->status_magang, ['diterima', 'magang', 'selesai', 'ditolak']))
-                                                        <a href="#" onclick="openEditModal({{ $item->id_magang }})"
-                                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
-                                                            <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
-                                                        </a>
-                                                    @else
-                                                        <span
-                                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-gray-300 focus:outline-hidden border border-gray-300 disabled:opacity-50 disabled:pointer-events-none cursor-not-allowed">
-                                                            <x-lucide-file-edit class="w-4 h-4 text-gray-300" />
-                                                        </span>
-                                                    @endif
+                                        <button type="button" onclick="openEditModal({{ $item->id_magang }})"
+                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            data-hs-overlay="#edit-modal">
+                                            <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
+                                        </button>
+                                    @else
+                                        <span
+                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-gray-300 focus:outline-hidden border border-gray-300 disabled:opacity-50 disabled:pointer-events-none cursor-not-allowed">
+                                            <x-lucide-file-edit class="w-4 h-4 text-gray-300" />
+                                        </span>
+                                    @endif
 
                                                     <button type="button"
                                                         onclick="confirmDeleteMagang({{ $item->id_magang }}, '{{ $item->mahasiswa->user->name }}')"
@@ -393,6 +390,74 @@
                         Selesai
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="edit-modal-label">
+        <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
+            <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="edit-modal-label" class="font-bold text-gray-800 dark:text-white">
+                        Edit Data Magang
+                    </h3>
+                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#edit-modal">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="size-4" />
+                    </button>
+                </div>
+                <form id="editMagangForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="p-4 overflow-y-auto">
+                        <div class="space-y-4">
+                            <!-- Mahasiswa Info (Read Only) -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Mahasiswa</label>
+                                <input type="text" id="edit-mahasiswa-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600" readonly>
+                            </div>
+
+                            <!-- Lowongan Info (Read Only) -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Lowongan</label>
+                                <input type="text" id="edit-lowongan-title" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600" readonly>
+                            </div>
+
+                            <!-- Status Magang -->
+                            <div>
+                                <label for="edit-status-magang" class="block text-sm font-medium text-gray-700 mb-1">Status Magang</label>
+                                <select name="status_magang" id="edit-status-magang" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                    <option value="menunggu">Menunggu</option>
+                                    <option value="diterima">Diterima</option>
+                                    <option value="magang">Magang</option>
+                                    <option value="selesai">Selesai</option>
+                                    <option value="ditolak">Ditolak</option>
+                                </select>
+                            </div>
+
+                            <!-- Dosen Pembimbing -->
+                            <div>
+                                <label for="edit-dosen-pembimbing" class="block text-sm font-medium text-gray-700 mb-1">Dosen Pembimbing</label>
+                                <select name="id_dosen_pembimbing" id="edit-dosen-pembimbing" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                    <option value="">-- Pilih Dosen Pembimbing --</option>
+                                    @foreach($dosenList ?? [] as $dosen)
+                                        <option value="{{ $dosen->id_dosen_pembimbing }}">{{ $dosen->user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                        <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" data-hs-overlay="#edit-modal">
+                            Batal
+                        </button>
+                        <button type="submit" id="saveEditBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none">
+                            <span id="saveEditText">Simpan Perubahan</span>
+                            <div id="saveEditSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading"></div>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -548,7 +613,7 @@
                     document.getElementById('deleteSpinner').classList.remove('hidden');
 
                     // Send delete request
-                    fetch(`{{ url('/admin/magang') }}/${deleteMagangId}`, {
+                    fetch(`{{ route('admin.kelola-magang') }}/${deleteMagangId}`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -586,6 +651,100 @@
                             document.getElementById('deleteButtonText').textContent = 'Hapus';
                             document.getElementById('deleteSpinner').classList.add('hidden');
                         });
+                });
+            }
+
+            // Edit Modal functionality
+            let currentEditId = null;
+
+            window.openEditModal = function(magangId) {
+                currentEditId = magangId;
+                
+                // Fetch magang data
+                fetch(`{{ route('admin.kelola-magang') }}/${magangId}/edit`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const magang = data.magang;
+                        
+                        // Populate form fields
+                        document.getElementById('edit-mahasiswa-name').value = magang.mahasiswa.user.name;
+                        document.getElementById('edit-lowongan-title').value = magang.lowongan.judul_lowongan;
+                        document.getElementById('edit-status-magang').value = magang.status_magang;
+                        document.getElementById('edit-dosen-pembimbing').value = magang.id_dosen_pembimbing || '';
+                        
+                        // Set form action
+                        document.getElementById('editMagangForm').action = `{{ route('admin.kelola-magang') }}/${magangId}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching magang data:', error);
+                    alert('Gagal memuat data magang');
+                });
+            };
+
+            // Handle edit form submission
+            const editForm = document.getElementById('editMagangForm');
+            if (editForm) {
+                editForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const saveBtn = document.getElementById('saveEditBtn');
+                    const saveText = document.getElementById('saveEditText');
+                    const saveSpinner = document.getElementById('saveEditSpinner');
+                    
+                    // Show loading state
+                    saveBtn.disabled = true;
+                    saveText.textContent = 'Menyimpan...';
+                    saveSpinner.classList.remove('hidden');
+                    
+                    const formData = new FormData(editForm);
+                    
+                    fetch(editForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Close modal
+                            const modalElement = document.getElementById('edit-modal');
+                            if (typeof HSOverlay !== 'undefined') {
+                                const modalInstance = HSOverlay.getInstance(modalElement);
+                                if (modalInstance) {
+                                    modalInstance.close();
+                                } else {
+                                    modalElement.classList.add('hidden');
+                                }
+                            } else {
+                                modalElement.classList.add('hidden');
+                            }
+                            
+                            // Show success modal
+                            showSuccessModal(data.message);
+                        } else {
+                            alert(data.message || 'Gagal menyimpan perubahan');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat menyimpan');
+                    })
+                    .finally(() => {
+                        // Reset button state
+                        saveBtn.disabled = false;
+                        saveText.textContent = 'Simpan Perubahan';
+                        saveSpinner.classList.add('hidden');
+                    });
                 });
             }
 
