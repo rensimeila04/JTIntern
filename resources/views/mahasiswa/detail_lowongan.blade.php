@@ -466,8 +466,8 @@
     </div>
 
     <script>
-        let hasTest = false;
-        const currentLowonganId = {{ $lowongan->id_lowongan }}; // Tambahkan variabel ini
+        let hasTest = false; // Kembali ke nama asli yang lebih mudah dipahami
+        const currentLowonganId = {{ $lowongan->id_lowongan }};
 
         document.addEventListener('DOMContentLoaded', function() {
             const checkDocumentsBtn = document.getElementById('check-documents-btn');
@@ -478,7 +478,6 @@
                     this.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memeriksa...';
                     this.disabled = true;
 
-                    // Gunakan currentLowonganId untuk memastikan ID yang benar
                     fetch(`/mahasiswa/lowongan/${currentLowonganId}/check-documents`, {
                             method: 'POST',
                             headers: {
@@ -489,29 +488,31 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
+                                // has_test dari controller: true jika test = 1 (ADA test)
                                 hasTest = data.has_test;
+
+                                console.log('Data dari server:', {
+                                    has_test: data.has_test,
+                                    hasTest: hasTest
+                                });
 
                                 // Update button text based on test requirement
                                 const continueBtn = document.getElementById('continue-application-btn');
                                 if (hasTest) {
-                                    console.log(
-                                        'Setting button to: Lanjutkan Pendaftaran (TIDAK ADA TEST - PERLU UPLOAD)'
-                                    );
-                                    // TIDAK ADA test (test = 0) - perlu upload file
+                                    console.log('ADA TEST - Perlu upload file test');
+                                    // ADA test (test = 1) - perlu upload file
+                                    continueBtn.innerHTML = `
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Lanjutkan dengan Upload Test
+                                `;
+                                } else {
+                                    console.log('TIDAK ADA TEST - Langsung apply');
+                                    // TIDAK ADA test (test = 0) - langsung apply
                                     continueBtn.innerHTML = `
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    Lanjutkan Pendaftaran
-                                `;
-                                } else {
-                                    console.log(
-                                        'Setting button to: Ajukan Magang (ADA TEST - LANGSUNG APPLY)'
-                                    );
-                                    // ADA test (test = 1) - langsung apply
-                                    continueBtn.innerHTML = `
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h8z"></path>
                                     </svg>
                                     Ajukan Magang
                                 `;
@@ -521,8 +522,7 @@
                                 document.getElementById('success-message').textContent = data.message;
 
                                 // Populate documents list
-                                const documentsContainer = document.getElementById(
-                                    'documents-container');
+                                const documentsContainer = document.getElementById('documents-container');
                                 if (data.documents && data.documents.length > 0) {
                                     let html = '';
 
@@ -531,7 +531,6 @@
                                         const doc1 = data.documents[i];
                                         const doc2 = data.documents[i + 1];
 
-                                        // If we have 2 documents for this row
                                         if (doc2) {
                                             html += `
                                             <div class="flex flex-row gap-4">
@@ -540,7 +539,6 @@
                                             </div>
                                         `;
                                         } else {
-                                            // Last document (left-aligned)
                                             html += `
                                             <div class="flex flex-row gap-4">
                                                 ${createDocumentCard(doc1)}
@@ -555,11 +553,9 @@
                                 showModal('success-modal');
                             } else {
                                 // Error Modal - Documents Incomplete
-                                document.getElementById('error-message').querySelector('p')
-                                    .textContent = data.message;
+                                document.getElementById('error-message').querySelector('p').textContent = data.message;
 
-                                const missingDocsList = document.getElementById(
-                                    'missing-documents-list');
+                                const missingDocsList = document.getElementById('missing-documents-list');
                                 if (data.missing_documents && data.missing_documents.length > 0) {
                                     missingDocsList.innerHTML = `
                                     <p class="font-medium text-red-800 mb-2">Dokumen yang masih diperlukan:</p>
@@ -575,6 +571,7 @@
                             }
                         })
                         .catch(error => {
+                            console.error('Error:', error);
                             document.getElementById('error-message').querySelector('p').textContent =
                                 'Terjadi kesalahan saat memeriksa dokumen. Silakan coba lagi.';
                             document.getElementById('missing-documents-list').innerHTML = '';
@@ -589,14 +586,18 @@
 
             // Handle continue application button
             document.getElementById('continue-application-btn').addEventListener('click', function() {
+                console.log('Continue button clicked, hasTest:', hasTest);
+                
                 // Close success modal
                 HSOverlay.close(document.getElementById('success-modal'));
 
                 if (hasTest) {
-                    // TIDAK ADA test (test = 0) - tampilkan modal upload
+                    console.log('Showing test upload modal');
+                    // ADA test (test = 1) - tampilkan modal upload
                     showModal('test-upload-modal');
                 } else {
-                    // ADA test (test = 1) - langsung apply
+                    console.log('Applying directly without test upload');
+                    // TIDAK ADA test (test = 0) - langsung apply
                     applyInternship();
                 }
             });
@@ -611,6 +612,7 @@
                     return;
                 }
 
+                console.log('Submitting with file:', fileInput.files[0].name);
                 applyInternship(new FormData(this));
             });
 
@@ -655,6 +657,8 @@
                 const submitBtn = document.getElementById('submit-application-btn');
                 const originalText = submitBtn ? submitBtn.innerHTML : '';
 
+                console.log('applyInternship called with formData:', formData ? 'Yes' : 'No');
+
                 if (submitBtn) {
                     submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memproses...';
                     submitBtn.disabled = true;
@@ -673,10 +677,10 @@
                     fetchOptions.headers['Content-Type'] = 'application/json';
                 }
 
-                // Gunakan currentLowonganId untuk memastikan ID yang benar
                 fetch(`/mahasiswa/lowongan/${currentLowonganId}/apply`, fetchOptions)
                     .then(response => response.json())
                     .then(data => {
+                        console.log('Apply response:', data);
                         if (data.success) {
                             if (hasTest) {
                                 HSOverlay.close(document.getElementById('test-upload-modal'));
@@ -688,6 +692,7 @@
                         }
                     })
                     .catch(error => {
+                        console.error('Apply error:', error);
                         alert('Terjadi kesalahan saat mengajukan magang. Silakan coba lagi.');
                     })
                     .finally(() => {
@@ -699,7 +704,7 @@
             }
         });
 
-        // Helper function to create document card
+        // Helper function to create document card (tetap sama)
         function createDocumentCard(doc) {
             const capitalizedDocType = doc.jenis_dokumen.charAt(0).toUpperCase() + doc.jenis_dokumen.slice(1);
 

@@ -298,7 +298,7 @@ class LowonganController extends Controller
                     'success' => true,
                     'message' => 'Dokumen Pendukung',
                     'documents' => $documentsData,
-                    'has_test' => $lowongan->test == 0 // Balik logika: jika test = 0, maka has_test = true
+                    'has_test' => $lowongan->test == 1 // PERBAIKAN: true jika test = 1 (ADA test)
                 ]);
             }
 
@@ -355,8 +355,8 @@ class LowonganController extends Controller
 
             $testFilePath = null;
 
-            // Handle test file upload HANYA jika TIDAK ada test (test = 0) DAN file dikirim
-            if ($lowongan->test == 0) {
+            // Handle test file upload HANYA jika ADA test (test = 1) DAN file dikirim
+            if ($lowongan->test == 1) {
                 if ($request->hasFile('test_file')) {
                     $request->validate([
                         'test_file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120' // 5MB max
@@ -366,7 +366,7 @@ class LowonganController extends Controller
                     $fileName = 'test_' . $mahasiswa->id_mahasiswa . '_' . $id . '_' . time() . '.' . $testFile->getClientOriginalExtension();
                     $testFilePath = $testFile->storeAs('test_files', $fileName, 'public');
                 } else {
-                    // Jika TIDAK ADA test (test = 0) tapi tidak ada file yang diupload
+                    // Jika ADA test (test = 1) tapi tidak ada file yang diupload
                     return response()->json([
                         'success' => false,
                         'message' => 'File test diperlukan untuk lowongan ini.'
@@ -384,7 +384,7 @@ class LowonganController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => $lowongan->test == 0 ? 
+                'message' => $lowongan->test == 1 ? 
                     'Pendaftaran berhasil! File test telah diunggah. Silakan tunggu informasi lebih lanjut.' : 
                     'Pendaftaran magang berhasil diajukan!'
             ]);
