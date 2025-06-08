@@ -4,129 +4,417 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengajuan Magang Diterima</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        }
-                    }
-                }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f9fafb;
+            color: #374151;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 640px;
+            margin: 2rem auto;
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            padding: 1.5rem 2rem;
+            color: white;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #e0f2fe;
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 1.5rem 2rem;
+        }
+        
+        .greeting {
+            margin-bottom: 1.5rem;
+        }
+        
+        .greeting p {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .greeting .name {
+            color: #0284c7;
+            font-weight: bold;
+        }
+        
+        .greeting .description {
+            color: #6b7280;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        .status-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-text {
+            color: #166534;
+            font-weight: 600;
+        }
+        
+        .status-date {
+            margin-left: auto;
+            color: #16a34a;
+            font-size: 0.875rem;
+        }
+        
+        .detail-section {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .title-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .detail-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
-    </script>
+        
+        .detail-item {
+            margin-bottom: 0.75rem;
+        }
+        
+        .detail-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .detail-value {
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .next-steps {
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .next-steps .section-title {
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+            color: #2563eb;
+        }
+        
+        .steps-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            color: #1d4ed8;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: #0284c7;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-button:hover {
+            background-color: #0369a1;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+        }
+        
+        .closing-message {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .closing-message p {
+            color: #374151;
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+        
+        .closing-message .highlight {
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .closing-message .brand {
+            color: #0284c7;
+            font-weight: bold;
+        }
+        
+        .footer {
+            background-color: #f3f4f6;
+            padding: 1rem 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer p {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                margin: 1rem;
+                border-radius: 8px;
+            }
+            
+            .header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .content {
+                padding: 1rem 1.5rem;
+            }
+            
+            .status-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+            
+            .status-date {
+                margin-left: 0;
+            }
+            
+            .footer {
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden my-8">
+<body>
+    <div class="container">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-8 py-6">
-            <div class="flex items-center justify-between">
+        <div class="header">
+            <div class="header-content">
                 <div>
-                    <h1 class="text-2xl font-bold text-white mb-2">🎉 Selamat!</h1>
-                    <p class="text-primary-100">Pengajuan magang Anda telah disetujui</p>
+                    <h1>🎉 Selamat!</h1>
+                    <p>Pengajuan magang Anda telah disetujui</p>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
-                    <span class="text-white font-semibold text-sm">DITERIMA</span>
+                <div class="status-badge">
+                    <span>DITERIMA</span>
                 </div>
             </div>
         </div>
 
         <!-- Content -->
-        <div class="px-8 py-6">
+        <div class="content">
             <!-- Greeting -->
-            <div class="mb-6">
-                <p class="text-gray-800 text-lg">Halo <strong class="text-primary-600">{{ $magang->mahasiswa->user->name }}</strong>,</p>
-                <p class="text-gray-600 mt-2 leading-relaxed">
-                    Kami dengan senang hati mengabarkan bahwa pengajuan magang Anda telah <strong class="text-green-600">disetujui</strong>! 
+            <div class="greeting">
+                <p>Halo <span class="name">{{ $magang->mahasiswa->user->name }}</span>,</p>
+                <p class="description">
+                    Kami dengan senang hati mengabarkan bahwa pengajuan magang Anda telah <strong style="color: #16a34a;">disetujui</strong>! 
                     Selamat atas pencapaian ini.
                 </p>
             </div>
 
             <!-- Status Badge -->
-            <div class="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg mb-6">
-                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <span class="text-green-800 font-semibold">Status: Diterima</span>
-                <span class="ml-auto text-green-600 text-sm">
+            <div class="status-section">
+                <div class="pulse-dot"></div>
+                <span class="status-text">Status: Diterima</span>
+                <span class="status-date">
                     {{ $magang->tanggal_diterima ? \Carbon\Carbon::parse($magang->tanggal_diterima)->setTimezone('Asia/Jakarta')->format('d F Y H:i') . ' WIB' : '' }}
                 </span>
             </div>
 
             <!-- Detail Magang -->
-            <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <div class="w-2 h-2 bg-primary-500 rounded-full"></div>
+            <div class="detail-section">
+                <h3 class="section-title">
+                    <div class="title-dot"></div>
                     Detail Magang
                 </h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-3">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Posisi</p>
-                            <p class="text-gray-800 font-semibold">{{ $magang->lowongan->judul_lowongan }}</p>
+                <div class="detail-grid">
+                    <div>
+                        <div class="detail-item">
+                            <p class="detail-label">Posisi</p>
+                            <p class="detail-value">{{ $magang->lowongan->judul_lowongan }}</p>
                         </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Perusahaan</p>
-                            <p class="text-gray-800 font-semibold">{{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</p>
+                        <div class="detail-item">
+                            <p class="detail-label">Perusahaan</p>
+                            <p class="detail-value">{{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</p>
                         </div>
                     </div>
-                    <div class="space-y-3">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Dosen Pembimbing</p>
-                            <p class="text-gray-800 font-semibold">{{ $magang->dosenPembimbing->user->name ?? 'Akan ditentukan' }}</p>
+                    <div>
+                        <div class="detail-item">
+                            <p class="detail-label">Dosen Pembimbing</p>
+                            <p class="detail-value">{{ $magang->dosenPembimbing->user->name ?? 'Akan ditentukan' }}</p>
                         </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Periode</p>
-                            <p class="text-gray-800 font-semibold">{{ $magang->lowongan->periodeMagang->nama_periode ?? 'Tidak tersedia' }}</p>
+                        <div class="detail-item">
+                            <p class="detail-label">Periode</p>
+                            <p class="detail-value">{{ $magang->lowongan->periodeMagang->nama_periode ?? 'Tidak tersedia' }}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Next Steps -->
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
-                <h3 class="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="next-steps">
+                <h3 class="section-title">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Langkah Selanjutnya
                 </h3>
-                <ul class="space-y-2">
-                    <li class="flex items-start gap-3">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span class="text-blue-700">Hubungi dosen pembimbing yang telah ditugaskan</span>
+                <ul class="steps-list">
+                    <li class="step-item">
+                        <div class="step-dot"></div>
+                        <span class="step-text">Hubungi dosen pembimbing yang telah ditugaskan</span>
                     </li>
-                    <li class="flex items-start gap-3">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span class="text-blue-700">Koordinasi dengan perusahaan untuk jadwal mulai magang</span>
+                    <li class="step-item">
+                        <div class="step-dot"></div>
+                        <span class="step-text">Koordinasi dengan perusahaan untuk jadwal mulai magang</span>
                     </li>
-                    <li class="flex items-start gap-3">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span class="text-blue-700">Siapkan dokumen yang diperlukan untuk memulai magang</span>
+                    <li class="step-item">
+                        <div class="step-dot"></div>
+                        <span class="step-text">Siapkan dokumen yang diperlukan untuk memulai magang</span>
                     </li>
-                    <li class="flex items-start gap-3">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span class="text-blue-700">Pastikan mengisi log aktivitas harian selama magang</span>
+                    <li class="step-item">
+                        <div class="step-dot"></div>
+                        <span class="step-text">Pastikan mengisi log aktivitas harian selama magang</span>
                     </li>
                 </ul>
             </div>
 
             <!-- CTA Button -->
-            <div class="text-center mb-6">
-                <a href="{{ route('mahasiswa.dashboard') }}" 
-                   class="inline-flex items-center px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition duration-200 shadow-lg hover:shadow-xl">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="cta-section">
+                <a href="{{ route('mahasiswa.dashboard') }}" class="cta-button">
+                    <svg class="cta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                     Lihat Dashboard
@@ -134,20 +422,20 @@
             </div>
 
             <!-- Closing Message -->
-            <div class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p class="text-gray-700 leading-relaxed">
+            <div class="closing-message">
+                <p>
                     Jika Anda memiliki pertanyaan, jangan ragu untuk menghubungi koordinator magang atau dosen pembimbing.
                 </p>
-                <p class="text-gray-800 font-semibold mt-2">
+                <p class="highlight">
                     Selamat dan sukses untuk perjalanan magang Anda!
                 </p>
-                <p class="text-primary-600 font-bold mt-1">Tim JTIntern</p>
+                <p class="brand">Tim JTIntern</p>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="bg-gray-100 px-8 py-4 border-t border-gray-200">
-            <p class="text-center text-sm text-gray-600">
+        <div class="footer">
+            <p>
                 Email ini dikirim secara otomatis dari sistem JTIntern.<br>
                 Jangan balas email ini. Untuk pertanyaan, hubungi admin sistem.
             </p>
