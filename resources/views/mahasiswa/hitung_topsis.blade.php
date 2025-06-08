@@ -9,7 +9,7 @@
         <div class="mb-6 bg-blue-50 p-4 rounded-lg">
             <h3 class="text-lg font-semibold mb-2">Profil Mahasiswa</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <p><strong>Nama:</strong> {{ $hasil['mahasiswa']->user->nama }}</p>
+                <p><strong>Nama:</strong> {{ $hasil['mahasiswa']->user->name }}</p>
                 <p><strong>NIM:</strong> {{ $hasil['mahasiswa']->nim }}</p>
                 <p><strong>Kompetensi:</strong> {{ $hasil['mahasiswa']->kompetensi->nama_kompetensi ?? 'Tidak ada' }}</p>
                 <p><strong>Jenis Perusahaan:</strong> {{ $hasil['mahasiswa']->jenisPerusahaan->nama_jenis_perusahaan ?? 'Tidak ada' }}</p>
