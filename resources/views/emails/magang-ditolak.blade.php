@@ -392,7 +392,7 @@
                 <div class="status-dot"></div>
                 <span class="status-text">Status: Tidak Diterima</span>
                 <span class="status-date">
-                    {{ $magang->tanggal_ditolak ? \Carbon\Carbon::parse($magang->tanggal_ditolak)->setTimezone('Asia/Jakarta')->format('d F Y H:i') . ' WIB' : '' }}
+                    {{ $magang->tanggal_ditolak ? \Carbon\Carbon::parse($magang->tanggal_ditolak)->format('d F Y H:i') . ' WIB' : '' }}
                 </span>
             </div>
 

@@ -348,7 +348,7 @@
                 <div class="pulse-dot"></div>
                 <span class="status-text">Status: Diterima</span>
                 <span class="status-date">
-                    {{ $magang->tanggal_diterima ? \Carbon\Carbon::parse($magang->tanggal_diterima)->setTimezone('Asia/Jakarta')->format('d F Y H:i') . ' WIB' : '' }}
+                    {{ $magang->tanggal_diterima ? \Carbon\Carbon::parse($magang->tanggal_diterima)->format('d F Y H:i') : '' }}
                 </span>
             </div>
 

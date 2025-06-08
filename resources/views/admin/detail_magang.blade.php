@@ -450,7 +450,7 @@
                                     <p class="text-sm font-medium text-green-800">Status Diterima</p>
                                     <p class="text-xs text-green-600 mt-1">
                                         Diterima pada:
-                                        {{ \Carbon\Carbon::parse($magang->tanggal_diterima)->format('d M Y') }}
+                                        {{ \Carbon\Carbon::parse($magang->tanggal_diterima)->format('d M Y H:i') }}
                                     </p>
                                 </div>
                             </div>
