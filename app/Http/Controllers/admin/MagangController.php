@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MagangDiterimaMail;
+use App\Mail\MagangDitolakMail;
 
 class MagangController extends Controller
 {
@@ -359,17 +362,38 @@ class MagangController extends Controller
                 ], 400);
             }
 
-            // Update magang status and dosen pembimbing
+            // Update magang status and dosen pembimbing with WIB timezone
             $updateData = [
                 'status_magang' => 'diterima',
-                'tanggal_diterima' => now(),
-                'id_dosen_pembimbing' => $request->id_dosen_pembimbing // Always set since it's required
+                'tanggal_diterima' => \Carbon\Carbon::now('Asia/Jakarta'),
+                'id_dosen_pembimbing' => $request->id_dosen_pembimbing,
+                'tanggal_ditolak' => null,
+                'alasan_penolakan' => null
             ];
 
             $magang->update($updateData);
 
             // Reload relationship to get updated data
-            $magang->load('dosenPembimbing.user');
+            $magang->load('dosenPembimbing.user', 'mahasiswa.user', 'lowongan.perusahaanMitra', 'lowongan.periodeMagang');
+
+            // Send email notification
+            try {
+                Mail::to($magang->mahasiswa->user->email)->send(new MagangDiterimaMail($magang));
+                Log::info('Email penerimaan magang berhasil dikirim', [
+                    'magang_id' => $id,
+                    'email' => $magang->mahasiswa->user->email,
+                    'mahasiswa' => $magang->mahasiswa->user->name,
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+            } catch (\Exception $emailError) {
+                Log::error('Gagal mengirim email penerimaan magang', [
+                    'magang_id' => $id,
+                    'email' => $magang->mahasiswa->user->email,
+                    'error' => $emailError->getMessage(),
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+                // Continue process even if email fails
+            }
 
             // Log the action
             Log::info('Magang application accepted', [
@@ -377,15 +401,17 @@ class MagangController extends Controller
                 'mahasiswa' => $magang->mahasiswa->user->name,
                 'dosen_pembimbing_id' => $request->id_dosen_pembimbing,
                 'dosen_pembimbing_name' => $magang->dosenPembimbing->user->name,
-                'admin' => auth()->user()->name
+                'admin' => auth()->user()->name,
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan magang berhasil diterima dengan dosen pembimbing: ' . $magang->dosenPembimbing->user->name,
+                'message' => 'Pengajuan magang berhasil diterima dan email notifikasi telah dikirim. Dosen pembimbing: ' . $magang->dosenPembimbing->user->name,
                 'data' => [
                     'status' => 'diterima',
-                    'dosen_pembimbing' => $magang->dosenPembimbing->user->name
+                    'dosen_pembimbing' => $magang->dosenPembimbing->user->name,
+                    'tanggal_diterima' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i') . ' WIB'
                 ]
             ]);
 
@@ -393,7 +419,8 @@ class MagangController extends Controller
             Log::error('Error accepting magang application', [
                 'magang_id' => $id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
             ]);
 
             return response()->json([
@@ -430,26 +457,52 @@ class MagangController extends Controller
                 ], 400);
             }
 
-            // Update magang status
+            // Update magang status with WIB timezone
             $magang->update([
                 'status_magang' => 'ditolak',
-                'tanggal_ditolak' => now(),
-                'alasan_penolakan' => $request->alasan_penolakan
+                'tanggal_ditolak' => \Carbon\Carbon::now('Asia/Jakarta'),
+                'alasan_penolakan' => $request->alasan_penolakan,
+                'tanggal_diterima' => null,
+                'id_dosen_pembimbing' => null
             ]);
+
+            // Reload relationships for email
+            $magang->load('mahasiswa.user', 'lowongan.perusahaanMitra');
+
+            // Send email notification
+            try {
+                Mail::to($magang->mahasiswa->user->email)->send(new MagangDitolakMail($magang));
+                Log::info('Email penolakan magang berhasil dikirim', [
+                    'magang_id' => $id,
+                    'email' => $magang->mahasiswa->user->email,
+                    'mahasiswa' => $magang->mahasiswa->user->name,
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+            } catch (\Exception $emailError) {
+                Log::error('Gagal mengirim email penolakan magang', [
+                    'magang_id' => $id,
+                    'email' => $magang->mahasiswa->user->email,
+                    'error' => $emailError->getMessage(),
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+                // Continue process even if email fails
+            }
 
             // Log the action
             Log::info('Magang application rejected', [
                 'magang_id' => $id,
                 'mahasiswa' => $magang->mahasiswa->user->name,
                 'alasan' => $request->alasan_penolakan,
-                'admin' => auth()->user()->name
+                'admin' => auth()->user()->name,
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan magang berhasil ditolak',
+                'message' => 'Pengajuan magang berhasil ditolak dan email notifikasi telah dikirim',
                 'data' => [
-                    'status' => 'ditolak'
+                    'status' => 'ditolak',
+                    'tanggal_ditolak' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i') . ' WIB'
                 ]
             ]);
 
@@ -457,7 +510,8 @@ class MagangController extends Controller
             Log::error('Error rejecting magang application', [
                 'magang_id' => $id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
             ]);
 
             return response()->json([

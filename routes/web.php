@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 // Auth Controllers
 use App\Http\Controllers\AuthController;
@@ -45,6 +46,18 @@ Route::post('register', [AuthController::class, 'postRegister'])->name('register
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/test-email', function() {
+    try {
+        Mail::raw('Test email dari JTIntern System', function($message) {
+            $message->to('mail@example.com')
+                   ->subject('Test Email Configuration');
+        });
+        return 'Email berhasil dikirim!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
