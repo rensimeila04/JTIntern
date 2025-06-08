@@ -365,12 +365,7 @@
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="test-upload-modal-label" class="font-bold text-neutral-900 dark:text-white">
                         <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                                </path>
-                            </svg>
+                            <x-lucide-file class="w-5 h-5 text-primary-600" />
                             Upload File Test
                         </div>
                     </h3>
@@ -390,11 +385,7 @@
                     <div class="p-4 overflow-y-auto">
                         <div class="text-center mb-6">
                             <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M7 21h10a2 2 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                </svg>
+                                <x-lucide-cloud-upload class="h-8 w-8 text-blue-600" />
                             </div>
                             <p class="text-sm text-gray-600 dark:text-neutral-400 mb-4">
                                 Silakan upload file test yang diperlukan untuk posisi ini.
@@ -407,12 +398,7 @@
                                 <label for="test-file-input"
                                     class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                        </svg>
+                                        <x-lucide-cloud-upload class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
                                         <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
                                                 class="font-semibold">Klik untuk upload</span> atau drag and drop</p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOC, DOCX, JPG, PNG (MAX.
@@ -426,20 +412,13 @@
                             <!-- Selected file display -->
                             <div id="selected-file-info" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-3">
                                 <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M7 21h10a2 2 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                    </svg>
+                                    <x-lucide-cloud-upload class="w-5 h-5 text-blue-600" />
                                     <div class="flex-1">
                                         <p id="file-name" class="text-sm font-medium text-blue-900"></p>
                                         <p id="file-size" class="text-xs text-blue-600"></p>
                                     </div>
-                                    <button type="button" id="remove-file" class="text-red-500 hover:text-red-700">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
+                                    <button type="button" id="remove-file" class="text-gray-500 hover:text-gray-700">
+                                        <x-lucide-x class="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
@@ -502,9 +481,7 @@
                                     console.log('ADA TEST - Perlu upload file test');
                                     // ADA test (test = 1) - perlu upload file
                                     continueBtn.innerHTML = `
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                    </svg>
+                                    <x-lucide-upload class="w-4 h-4 mr-2" />
                                     Lanjutkan dengan Upload Test
                                 `;
                                 } else {
