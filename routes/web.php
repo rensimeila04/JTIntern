@@ -84,6 +84,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/dospem/{id}', [UserController::class, 'detailDospem'])->name('.detail_dospem');
             Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])->name('.detail_mahasiswa');
             Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])->name('.detail_admin');
+            Route::get('/tambah', [UserController::class, 'create'])->name('.create');
+            Route::post('/tambah', [UserController::class, 'store'])->name('.store');
+            Route::put('/{id}', [UserController::class, 'update'])->name('.update');
+            Route::delete('/{id}', [UserController::class, 'destroy'])->name('.destroy');
         });
 
 

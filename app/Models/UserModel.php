@@ -72,4 +72,30 @@ class UserModel extends Authenticatable
     public function dosenPembimbing() {
         return $this->hasOne(DosenPembimbingModel::class, 'id_user', 'id_user');
     }
+
+    /**
+     * Boot method to set up model event hooks
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // When a user is deleted, also delete related records
+        static::deleting(function ($user) {
+            // Delete related models based on user level
+            if ($user->mahasiswa) {
+                // Delete related documents first to avoid foreign key constraint errors
+                \App\Models\DokumenModel::where('id_mahasiswa', $user->mahasiswa->id_mahasiswa)->delete();
+                $user->mahasiswa->delete();
+            }
+            
+            if ($user->dosenPembimbing) {
+                $user->dosenPembimbing->delete();
+            }
+            
+            if ($user->admin) {
+                $user->admin->delete();
+            }
+        });
+    }
 }

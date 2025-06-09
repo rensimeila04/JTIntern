@@ -15,11 +15,11 @@
                 <div class="w-28 h-28 rounded-2xl overflow-hidden flex-shrink-0 bg-neutral-100 flex items-center justify-center">
                     @if(isset($user->profile_photo) && $user->profile_photo)
                         <img class="w-28 h-28 object-cover"
-                            src="{{ asset('storage/' . $user->profile_photo) }}"
+                            src="{{ asset('Images/' . $user->profile_photo) }}"
                             alt="Foto Mahasiswa" />
                     @else
                         <img class="w-28 h-28 object-cover"
-                            src="{{ asset('images/avatar.svg') }}"
+                            src="{{ asset('Images/avatar.svg') }}"
                             alt="Default Avatar" />
                     @endif
                 </div>
@@ -80,7 +80,9 @@
                             <div class="flex flex-col gap-1 text-xs mt-auto">
                                 <div class="flex flex-row items-center gap-1">
                                     <span class="text-neutral-900 font-medium">Diunggah:</span>
-                                    <span class="text-neutral-500">{{ \Carbon\Carbon::parse($doc->created_at)->format('d M Y') }}</span>
+                                    <span class="text-neutral-500">
+                                        {{ \Carbon\Carbon::parse($doc->created_at)->format('d M Y') }}
+                                    </span>
                                 </div>
                                 <div class="flex flex-row items-center gap-1">
                                     <span class="text-neutral-900 font-medium">Ukuran:</span>
