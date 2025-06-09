@@ -138,7 +138,7 @@ class MagangController extends Controller
         // Query builder for magang - FIXED relationship name
         $query = MagangModel::with([
             'mahasiswa.user',
-            'lowongan.perusahaanMitra', // Correct relationship name
+            'lowongan.perusahaanMitra',
             'dosenPembimbing.user'
         ])->where('status_magang', 'ditolak');
 
@@ -149,9 +149,9 @@ class MagangController extends Controller
                 $q->where('name', 'like', "%$search%");
             })
                 ->orWhereHas('lowongan', function ($q) use ($search) {
-                    $q->where('judul_lowongan', 'like', "%$search%"); // Fixed field name
+                    $q->where('judul_lowongan', 'like', "%$search%");
                 })
-                ->orWhereHas('lowongan.perusahaanMitra', function ($q) use ($search) { // Fixed relationship name
+                ->orWhereHas('lowongan.perusahaanMitra', function ($q) use ($search) {
                     $q->where('nama_perusahaan_mitra', 'like', "%$search%");
                 });
         }
@@ -162,7 +162,8 @@ class MagangController extends Controller
         $currentSearch = request()->search ?? '';
         $currentLowongan = request()->lowongan_id ?? 'all';
 
-
+        // Tambahkan baris ini:
+        $dosenList = DosenPembimbingModel::with('user')->get();
 
         $activeMenu = 'kelola-magang';
 
@@ -173,6 +174,7 @@ class MagangController extends Controller
             'currentSearch' => $currentSearch,
             'currentLowongan' => $currentLowongan,
             'lowonganList' => $lowonganList,
+            'dosenList' => $dosenList, // <-- Tambahkan ini
         ]);
     }
 
