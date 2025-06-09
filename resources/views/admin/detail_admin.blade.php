@@ -8,7 +8,7 @@
             </div>
 
             @if (isset($user->profile_photo) && $user->profile_photo)
-                <img src="{{ asset('Images/' . $user->profile_photo) }}" alt="Profile Picture"
+                <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Profile Picture"
                     class="w-30 h-30 rounded-lg object-cover">
             @else
                 <img src="{{ asset('Images/avatar.svg') }}" alt="Profile Picture" 

@@ -346,15 +346,15 @@ class UserController extends Controller
             if ($request->hasFile('profile_photo') && $request->file('profile_photo')->isValid()) {
                 try {
                     // Delete old photo if exists
-                    if ($user->profile_photo && file_exists(public_path('images/' . $user->profile_photo))) {
-                        unlink(public_path('images/' . $user->profile_photo));
+                    if ($user->profile_photo && Storage::exists('public/' . $user->profile_photo)) {
+                        Storage::delete('public/' . $user->profile_photo);
                     }
 
                     $photo = $request->file('profile_photo');
                     $photoName = time() . '_' . str_replace(' ', '_', $photo->getClientOriginalName());
 
-                    // Simpan ke folder public/images
-                    $photo->move(public_path('images'), $photoName);
+                    // Simpan ke folder storage/app/public
+                    $photo->storeAs('public', $photoName);
 
                     // Update path pada database
                     $user->profile_photo = $photoName;

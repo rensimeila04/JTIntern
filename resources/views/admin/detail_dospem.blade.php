@@ -12,11 +12,12 @@
             </div>
             <div class="flex items-center gap-x-9">
                 <div class="w-30 h-30 rounded-2xl overflow-hidden">
-                    @if(isset($user->profile_photo) && $user->profile_photo)
-                        <img src="{{ asset('Images/' . $user->profile_photo) }}" alt="Profile Picture"
+                    @if (isset($user->profile_photo) && $user->profile_photo)
+                        <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Profile Picture"
                             class="w-full h-full object-cover">
                     @else
-                        <img src="{{ asset('images/avatar.svg') }}" alt="Default Profile" class="w-full h-full object-cover">
+                        <img src="{{ asset('images/avatar.svg') }}" alt="Default Profile"
+                            class="w-full h-full object-cover">
                     @endif
                 </div>
                 <div class="space-y-6">
@@ -38,7 +39,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Mahasiswa Bimbingan section with pagination, filtering and search -->
         <div class="bg-white h-fit p-4 rounded-lg space-y-6">
             <div class="flex justify-between items-center">
@@ -48,7 +49,7 @@
                     Export
                 </a>
             </div>
-            
+
             <!-- Filter and Search -->
             <div class="flex items-center justify-between">
                 <!-- Status filter dropdown -->
@@ -56,7 +57,7 @@
                     <button id="hs-dropdown-status" type="button"
                         class="hs-dropdown-toggle py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 h-[38px]"
                         aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                        @if($currentStatus == 'all')
+                        @if ($currentStatus == 'all')
                             Semua Status
                         @elseif($currentStatus == 'magang')
                             Magang
@@ -101,15 +102,16 @@
                 <form method="GET" action="{{ route('admin.pengguna.detail_dospem', $user->id_user) }}" class="relative">
                     <input type="hidden" name="status" value="{{ $currentStatus }}">
                     <div class="relative">
-                        <input type="text" name="search" value="{{ $currentSearch }}" 
+                        <input type="text" name="search" value="{{ $currentSearch }}"
                             class="py-2 px-4 ps-11 block w-full border-gray-200 rounded-lg text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                             placeholder="Cari mahasiswa...">
                         <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
                             <x-lucide-search class="h-4 w-4 text-gray-400" />
                         </div>
-                        @if($currentSearch)
+                        @if ($currentSearch)
                             <div class="absolute inset-y-0 end-0 flex items-center pe-4">
-                                <a href="{{ route('admin.pengguna.detail_dospem', ['id' => $user->id_user, 'status' => $currentStatus]) }}" class="text-gray-500 hover:text-gray-700">
+                                <a href="{{ route('admin.pengguna.detail_dospem', ['id' => $user->id_user, 'status' => $currentStatus]) }}"
+                                    class="text-gray-500 hover:text-gray-700">
                                     <x-lucide-x class="h-4 w-4" />
                                 </a>
                             </div>
@@ -117,7 +119,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <!-- Table -->
             <div>
                 <div class="flex flex-col">
@@ -128,29 +130,44 @@
                                     <!-- Table header remains the same -->
                                     <thead class="bg-gray-50 dark:bg-neutral-700">
                                         <tr>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400 w-auto">NIM</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">Nama Mahasiswa</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">Judul Lowongan</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">Nama Perusahaan</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400 w-auto">Status</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400 w-auto">
+                                                NIM</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">
+                                                Nama Mahasiswa</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">
+                                                Judul Lowongan</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">
+                                                Nama Perusahaan</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400 w-auto">
+                                                Status</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                         @forelse($mahasiswaBimbingan as $magang)
                                             <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 w-auto">
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 w-auto">
                                                     {{ $magang->mahasiswa->nim ?? 'N/A' }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                     {{ $magang->mahasiswa->user->name ?? 'N/A' }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                     {{ $magang->lowongan->judul_lowongan ?? 'N/A' }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                     {{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra ?? 'N/A' }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 w-auto">
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 w-auto">
                                                     @php
                                                         $statusClass = 'border-gray-500 text-gray-500';
                                                         $statusText = 'Selesai';
@@ -163,7 +180,8 @@
                                                             $statusText = 'Diterima';
                                                         }
                                                     @endphp
-                                                    <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border {{ $statusClass }}">
+                                                    <span
+                                                        class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border {{ $statusClass }}">
                                                         {{ $statusText }}
                                                     </span>
                                                 </td>
@@ -185,44 +203,44 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Pagination -->
             <div class="flex items-center justify-between">
                 <div class="text-sm text-gray-500">
-                    Menampilkan {{ $mahasiswaBimbingan->firstItem() ?? 0 }}-{{ $mahasiswaBimbingan->lastItem() ?? 0 }} dari {{ $mahasiswaBimbingan->total() }} mahasiswa
+                    Menampilkan {{ $mahasiswaBimbingan->firstItem() ?? 0 }}-{{ $mahasiswaBimbingan->lastItem() ?? 0 }}
+                    dari {{ $mahasiswaBimbingan->total() }} mahasiswa
                 </div>
-                
+
                 <!-- Pagination links -->
-                @if($mahasiswaBimbingan->hasPages())
-                <nav class="flex items-center gap-x-1" aria-label="Pagination">
-                    <!-- Previous page -->
-                    <a href="{{ $mahasiswaBimbingan->previousPageUrl() }}" 
-                       class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 {{ $mahasiswaBimbingan->onFirstPage() ? 'opacity-50 pointer-events-none' : '' }}"
-                       aria-label="Previous">
-                        <x-lucide-chevron-left class="shrink-0 size-3.5" stroke-width="2" />
-                        <span>Sebelumnya</span>
-                    </a>
-                    
-                    <!-- Page numbers -->
-                    <div class="flex items-center gap-x-1">
-                        @foreach ($mahasiswaBimbingan->getUrlRange(max($mahasiswaBimbingan->currentPage() - 2, 1), 
-                                                            min($mahasiswaBimbingan->currentPage() + 2, $mahasiswaBimbingan->lastPage())) as $page => $url)
-                            <a href="{{ $url }}" 
-                               class="min-h-9.5 min-w-9.5 flex justify-center items-center {{ $page == $mahasiswaBimbingan->currentPage() ? 'bg-gray-200 text-gray-800' : 'text-gray-800 hover:bg-gray-100' }} py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:{{ $page == $mahasiswaBimbingan->currentPage() ? 'bg-neutral-600 text-white' : 'text-white hover:bg-white/10' }} dark:focus:bg-{{ $page == $mahasiswaBimbingan->currentPage() ? 'neutral-500' : 'white/10' }}"
-                               {{ $page == $mahasiswaBimbingan->currentPage() ? 'aria-current="page"' : '' }}>
-                                {{ $page }}
-                            </a>
-                        @endforeach
-                    </div>
-                    
-                    <!-- Next page -->
-                    <a href="{{ $mahasiswaBimbingan->nextPageUrl() }}"
-                       class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 {{ $mahasiswaBimbingan->hasMorePages() ? '' : 'opacity-50 pointer-events-none' }}"
-                       aria-label="Next">
-                        <span>Selanjutnya</span>
-                        <x-lucide-chevron-right class="shrink-0 size-3.5" stroke-width="2" />
-                    </a>
-                </nav>
+                @if ($mahasiswaBimbingan->hasPages())
+                    <nav class="flex items-center gap-x-1" aria-label="Pagination">
+                        <!-- Previous page -->
+                        <a href="{{ $mahasiswaBimbingan->previousPageUrl() }}"
+                            class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 {{ $mahasiswaBimbingan->onFirstPage() ? 'opacity-50 pointer-events-none' : '' }}"
+                            aria-label="Previous">
+                            <x-lucide-chevron-left class="shrink-0 size-3.5" stroke-width="2" />
+                            <span>Sebelumnya</span>
+                        </a>
+
+                        <!-- Page numbers -->
+                        <div class="flex items-center gap-x-1">
+                            @foreach ($mahasiswaBimbingan->getUrlRange(max($mahasiswaBimbingan->currentPage() - 2, 1), min($mahasiswaBimbingan->currentPage() + 2, $mahasiswaBimbingan->lastPage())) as $page => $url)
+                                <a href="{{ $url }}"
+                                    class="min-h-9.5 min-w-9.5 flex justify-center items-center {{ $page == $mahasiswaBimbingan->currentPage() ? 'bg-gray-200 text-gray-800' : 'text-gray-800 hover:bg-gray-100' }} py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:{{ $page == $mahasiswaBimbingan->currentPage() ? 'bg-neutral-600 text-white' : 'text-white hover:bg-white/10' }} dark:focus:bg-{{ $page == $mahasiswaBimbingan->currentPage() ? 'neutral-500' : 'white/10' }}"
+                                    {{ $page == $mahasiswaBimbingan->currentPage() ? 'aria-current="page"' : '' }}>
+                                    {{ $page }}
+                                </a>
+                            @endforeach
+                        </div>
+
+                        <!-- Next page -->
+                        <a href="{{ $mahasiswaBimbingan->nextPageUrl() }}"
+                            class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 {{ $mahasiswaBimbingan->hasMorePages() ? '' : 'opacity-50 pointer-events-none' }}"
+                            aria-label="Next">
+                            <span>Selanjutnya</span>
+                            <x-lucide-chevron-right class="shrink-0 size-3.5" stroke-width="2" />
+                        </a>
+                    </nav>
                 @endif
             </div>
         </div>

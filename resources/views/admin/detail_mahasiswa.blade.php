@@ -15,7 +15,7 @@
                 <div class="w-28 h-28 rounded-2xl overflow-hidden flex-shrink-0 bg-neutral-100 flex items-center justify-center">
                     @if(isset($user->profile_photo) && $user->profile_photo)
                         <img class="w-28 h-28 object-cover"
-                            src="{{ asset('Images/' . $user->profile_photo) }}"
+                            src="{{ asset('storage/' . $user->profile_photo) }}"
                             alt="Foto Mahasiswa" />
                     @else
                         <img class="w-28 h-28 object-cover"

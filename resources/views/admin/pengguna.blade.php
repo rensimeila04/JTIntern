@@ -481,7 +481,7 @@
 
                 if (profilePhoto) {
                     const img = document.createElement('img');
-                    img.src = "{{ asset('Images') }}/" + profilePhoto; // Use asset helper like in detail_admin
+                    img.src = "{{ asset('storage') }}/" + profilePhoto; // Use asset helper like in detail_admin
                     img.alt = 'Profile Photo';
                     img.className = 'w-full h-full object-cover';
                     currentPhotoContainer.appendChild(img);
