@@ -69,7 +69,7 @@ class MagangController extends Controller
 
         // Get all lowongan for filter dropdown - FIXED field name
         $lowonganList = LowonganModel::select('id_lowongan', 'judul_lowongan')->orderBy('judul_lowongan')->get();
-        
+
         // Add dosen list for edit modal
         $dosenList = DosenPembimbingModel::with('user')->get();
 
@@ -145,15 +145,15 @@ class MagangController extends Controller
         // Search functionality - FIXED field names
         if (request()->filled('search')) {
             $search = request()->search;
-            $query->whereHas('mahasiswa.user', function($q) use ($search) {
+            $query->whereHas('mahasiswa.user', function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%");
             })
-            ->orWhereHas('lowongan', function($q) use ($search) {
-                $q->where('judul_lowongan', 'like', "%$search%"); // Fixed field name
-            })
-            ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($search) { // Fixed relationship name
-                $q->where('nama_perusahaan_mitra', 'like', "%$search%");
-            });
+                ->orWhereHas('lowongan', function ($q) use ($search) {
+                    $q->where('judul_lowongan', 'like', "%$search%"); // Fixed field name
+                })
+                ->orWhereHas('lowongan.perusahaanMitra', function ($q) use ($search) { // Fixed relationship name
+                    $q->where('nama_perusahaan_mitra', 'like', "%$search%");
+                });
         }
 
         // Get magang data with pagination
@@ -185,7 +185,7 @@ class MagangController extends Controller
         ];
 
         $activeMenu = 'kelola-magang';
-        
+
         // Query builder for magang - FIXED relationship name
         $query = MagangModel::with([
             'mahasiswa.user',
@@ -196,15 +196,15 @@ class MagangController extends Controller
         // Search functionality - FIXED field names
         if (request()->filled('search')) {
             $search = request()->search;
-            $query->whereHas('mahasiswa.user', function($q) use ($search) {
+            $query->whereHas('mahasiswa.user', function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%");
             })
-            ->orWhereHas('lowongan', function($q) use ($search) {
-                $q->where('judul_lowongan', 'like', "%$search%"); // Fixed field name
-            })
-            ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($search) { // Fixed relationship name
-                $q->where('nama_perusahaan_mitra', 'like', "%$search%");
-            });
+                ->orWhereHas('lowongan', function ($q) use ($search) {
+                    $q->where('judul_lowongan', 'like', "%$search%"); // Fixed field name
+                })
+                ->orWhereHas('lowongan.perusahaanMitra', function ($q) use ($search) { // Fixed relationship name
+                    $q->where('nama_perusahaan_mitra', 'like', "%$search%");
+                });
         }
 
         // Get magang data with pagination
@@ -212,7 +212,7 @@ class MagangController extends Controller
         $lowonganList = LowonganModel::select('id_lowongan', 'judul_lowongan')->orderBy('judul_lowongan')->get();
         $currentSearch = request()->search ?? '';
         $currentLowongan = request()->lowongan_id ?? 'all';
-        
+
 
         return view('admin.riwayat_magang', [
             'breadcrumb' => $breadcrumb,
@@ -330,10 +330,14 @@ class MagangController extends Controller
         // Get data with pagination
         $aktiveMagang = $query->latest()->paginate(10)->appends($request->query());
 
+        // Add dosen list for edit modal
+        $dosenList = DosenPembimbingModel::with('user')->get();
+
         return view('admin.magang_aktif', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
-            'aktiveMagang' => $aktiveMagang
+            'aktiveMagang' => $aktiveMagang,
+            'dosenList' => $dosenList // Add this line
         ]);
     }
 
@@ -419,7 +423,6 @@ class MagangController extends Controller
                     'tanggal_diterima' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i') . ' WIB'
                 ]
             ]);
-
         } catch (\Exception $e) {
             Log::error('Error accepting magang application', [
                 'magang_id' => $id,
@@ -510,7 +513,6 @@ class MagangController extends Controller
                     'tanggal_ditolak' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i') . ' WIB'
                 ]
             ]);
-
         } catch (\Exception $e) {
             Log::error('Error rejecting magang application', [
                 'magang_id' => $id,
@@ -543,7 +545,6 @@ class MagangController extends Controller
                 'magang' => $magang,
                 'dosenList' => $dosenList
             ]);
-
         } catch (\Exception $e) {
             Log::error('Error fetching magang data for edit', [
                 'magang_id' => $id,
@@ -597,7 +598,7 @@ class MagangController extends Controller
 
             // Find magang record
             $magang = MagangModel::findOrFail($id);
-            
+
             // Store old data for comparison
             $oldStatus = $magang->status_magang;
             $oldDosenId = $magang->id_dosen_pembimbing;
@@ -646,16 +647,16 @@ class MagangController extends Controller
 
             // Perform database transaction to ensure consistency
             DB::beginTransaction();
-            
+
             try {
                 // Update magang
                 $magang->update($updateData);
-                
+
                 // Reload relationships
                 $magang->load('mahasiswa.user', 'lowongan.perusahaanMitra', 'dosenPembimbing.user');
-                
+
                 DB::commit();
-                
+
                 // Log the successful action
                 Log::info('Magang data updated successfully', [
                     'magang_id' => $id,
@@ -692,12 +693,10 @@ class MagangController extends Controller
                 ], 200, [
                     'Content-Type' => 'application/json; charset=utf-8'
                 ]);
-                
             } catch (\Exception $dbError) {
                 DB::rollback();
                 throw $dbError;
             }
-
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error('Magang not found', [
                 'magang_id' => $id,
@@ -711,12 +710,11 @@ class MagangController extends Controller
             ], 404, [
                 'Content-Type' => 'application/json; charset=utf-8'
             ]);
-
         } catch (\Exception $e) {
             if (DB::transactionLevel() > 0) {
                 DB::rollback();
             }
-            
+
             Log::error('Error updating magang data', [
                 'magang_id' => $id,
                 'error' => $e->getMessage(),
@@ -743,10 +741,10 @@ class MagangController extends Controller
     {
         try {
             $magang = MagangModel::with('mahasiswa.user')->findOrFail($id);
-            
+
             // Store mahasiswa name for logging
             $mahasiswaName = $magang->mahasiswa->user->name;
-            
+
             // Delete the record
             $magang->delete();
 
@@ -762,7 +760,6 @@ class MagangController extends Controller
                 'success' => true,
                 'message' => 'Data magang berhasil dihapus'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Error deleting magang data', [
                 'magang_id' => $id,
