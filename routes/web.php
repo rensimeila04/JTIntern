@@ -47,11 +47,11 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/test-email', function() {
+Route::get('/test-email', function () {
     try {
-        Mail::raw('Test email dari JTIntern System', function($message) {
+        Mail::raw('Test email dari JTIntern System', function ($message) {
             $message->to('mail@example.com')
-                   ->subject('Test Email Configuration');
+                ->subject('Test Email Configuration');
         });
         return 'Email berhasil dikirim!';
     } catch (\Exception $e) {
@@ -119,11 +119,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
             Route::post('/{id}/terima', [MagangController::class, 'terimaMagang'])->name('.terima-magang');
             Route::post('/{id}/tolak', [MagangController::class, 'tolakMagang'])->name('.tolak-magang');
-            
+
             // Add these new routes for edit functionality
             Route::get('/{id}/edit', [MagangController::class, 'edit'])->name('.edit');
             Route::put('/{id}', [MagangController::class, 'update'])->name('.update');
             Route::delete('/{id}', [MagangController::class, 'destroy'])->name('.destroy');
+
+            Route::get('/{id}/sertifikat', [MagangController::class, 'lihatSertifikat'])->name('.lihat-sertifikat');
+            Route::get('/{id}/sertifikat/download', [MagangController::class, 'downloadSertifikat'])->name('.download-sertifikat');
         });
 
 
@@ -148,7 +151,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [LevelController::class, 'destroy'])->name('.destroy');
             Route::get('/{id}', [LevelController::class, 'detail'])->name('.detail');
         });
-        
+
         Route::prefix('program-studi')->name('admin.program_studi')->group(function () {
             Route::get('/', [ProgramStudiController::class, 'index'])->name('');
             Route::get('/tambah', [ProgramStudiController::class, 'create'])->name('.create');
@@ -173,7 +176,7 @@ Route::middleware(['auth'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
             ->name('mahasiswa.dashboard');
-        
+
         // Lowongan
         Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])
             ->name('mahasiswa.lowongan');
@@ -183,7 +186,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('mahasiswa.lowongan.check-documents');
         Route::post('/lowongan/{id}/apply', [MahasiswaLowonganController::class, 'applyInternship'])
             ->name('mahasiswa.lowongan.apply');
-        
+
         // Profile Management
         Route::prefix('profile')->group(function () {
             Route::get('/edit', [MahasiswaProfileController::class, 'edit'])
@@ -201,7 +204,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/update-akun', [MahasiswaProfileController::class, 'updateAkun'])
                 ->name('mahasiswa.profile.update-akun');
         });
-        
+
         // Decision Support System
         Route::prefix('decision')->group(function () {
             Route::get('/mabac/hitung', [MabacController::class, 'hitungMabac'])
@@ -209,7 +212,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])
                 ->name('mahasiswa.topsis.hitung');
         });
-        
+
         // Rincian Management
         Route::prefix('rincian')->group(function () {
             Route::get('/', [MahasiswaRincianController::class, 'index'])
@@ -223,11 +226,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/selesai', [MahasiswaRincianController::class, 'rincianSelesai'])
                 ->name('mahasiswa.rincian_selesai');
         });
-        
+
         // Feedback
         Route::get('/feedback', [FeedbackMagangController::class, 'index'])
             ->name('mahasiswa.feedback');
-        
+
         // Log Aktivitas
         Route::prefix('log-aktivitas')->group(function () {
             Route::get('/', [LogAktivitasController::class, 'index'])

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MagangDiterimaMail;
 use App\Mail\MagangDitolakMail;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class MagangController extends Controller
 {
@@ -215,6 +217,8 @@ class MagangController extends Controller
         $currentSearch = request()->search ?? '';
         $currentLowongan = request()->lowongan_id ?? 'all';
 
+        // Add dosen list for edit modal
+        $dosenList = DosenPembimbingModel::with('user')->get();
 
         return view('admin.riwayat_magang', [
             'breadcrumb' => $breadcrumb,
@@ -223,6 +227,7 @@ class MagangController extends Controller
             'currentSearch' => $currentSearch,
             'currentLowongan' => $currentLowongan,
             'lowonganList' => $lowonganList,
+            'dosenList' => $dosenList, // Tambahkan ini
         ]);
     }
 
@@ -775,5 +780,26 @@ class MagangController extends Controller
                 'message' => 'Terjadi kesalahan saat menghapus data'
             ], 500);
         }
+    }
+
+    public function lihatSertifikat($id)
+    {
+        $magang = MagangModel::findOrFail($id);
+        if (!$magang->path_sertifikat || !Storage::disk('public')->exists($magang->path_sertifikat)) {
+            abort(404, 'Sertifikat tidak ditemukan');
+        }
+        $file = storage_path('app/public/' . $magang->path_sertifikat);
+        return response()->file($file, [
+            'Content-Type' => 'application/pdf'
+        ]);
+    }
+
+    public function downloadSertifikat($id)
+    {
+        $magang = MagangModel::findOrFail($id);
+        if (!$magang->path_sertifikat || !Storage::disk('public')->exists($magang->path_sertifikat)) {
+            abort(404, 'Sertifikat tidak ditemukan');
+        }
+        return response()->download(storage_path('app/public/' . $magang->path_sertifikat), 'Sertifikat-Magang-'.$magang->mahasiswa->user->name.'.pdf');
     }
 }
