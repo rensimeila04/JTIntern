@@ -92,7 +92,7 @@
                         <button id="hs-dropdown-status" type="button"
                             class="hs-dropdown-toggle py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 h-[38px]"
                             aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                            @if($currentFilter == 'all')
+                            @if ($currentFilter == 'all')
                                 Semua Status
                             @elseif($currentFilter == 'menunggu')
                                 Menunggu
@@ -105,9 +105,9 @@
                             @elseif($currentFilter == 'ditolak')
                                 Ditolak
                             @endif
-                            <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
-                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg"
+                                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m6 9 6 6 6-6" />
                             </svg>
                         </button>
@@ -148,9 +148,9 @@
                             class="hs-dropdown-toggle py-1.5 sm:py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 h-[38px]"
                             aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
                             {{ $currentLowongan == 'all' ? 'Semua Magang' : $lowonganList->firstWhere('id_lowongan', $currentLowongan)?->judul_lowongan ?? 'Semua Magang' }}
-                            <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
-                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg"
+                                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m6 9 6 6 6-6" />
                             </svg>
                         </button>
@@ -161,7 +161,7 @@
                                     href="{{ route('admin.kelola-magang', ['lowongan_id' => 'all', 'status' => $currentFilter]) }}">
                                     Semua Magang
                                 </a>
-                                @foreach($lowonganList as $lowongan)
+                                @foreach ($lowonganList as $lowongan)
                                     <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm bg-white text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
                                         href="{{ route('admin.kelola-magang', ['lowongan_id' => $lowongan->id_lowongan, 'status' => $currentFilter]) }}">
                                         {{ $lowongan->judul_lowongan }}
@@ -228,7 +228,7 @@
                                                 {{ $item->lowongan->perusahaanMitra->nama_perusahaan_mitra }}
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-neutral-200">
-                                                @if($item->status_magang == 'menunggu')
+                                                @if ($item->status_magang == 'menunggu')
                                                     <span
                                                         class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-yellow-500 text-yellow-500">Menunggu</span>
                                                 @elseif($item->status_magang == 'diterima')
@@ -255,18 +255,19 @@
                                                         <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                     </a>
 
-                                                    @if(in_array($item->status_magang, ['diterima', 'magang', 'selesai', 'ditolak']))
-                                        <button type="button" onclick="openEditModal({{ $item->id_magang }})"
-                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none"
-                                            data-hs-overlay="#edit-modal">
-                                            <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
-                                        </button>
-                                    @else
-                                        <span
-                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-gray-300 focus:outline-hidden border border-gray-300 disabled:opacity-50 disabled:pointer-events-none cursor-not-allowed">
-                                            <x-lucide-file-edit class="w-4 h-4 text-gray-300" />
-                                        </span>
-                                    @endif
+                                                    @if (in_array($item->status_magang, ['diterima', 'magang', 'selesai', 'ditolak']))
+                                                        <button type="button"
+                                                            onclick="openEditModal({{ $item->id_magang }})"
+                                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none"
+                                                            data-hs-overlay="#edit-modal">
+                                                            <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
+                                                        </button>
+                                                    @else
+                                                        <span
+                                                            class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-gray-300 focus:outline-hidden border border-gray-300 disabled:opacity-50 disabled:pointer-events-none cursor-not-allowed">
+                                                            <x-lucide-file-edit class="w-4 h-4 text-gray-300" />
+                                                        </span>
+                                                    @endif
 
                                                     <button type="button"
                                                         onclick="confirmDeleteMagang({{ $item->id_magang }}, '{{ $item->mahasiswa->user->name }}')"
@@ -376,7 +377,7 @@
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <x-lucide-check class="w-8 h-8 text-green-600" />
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Data Berhasil Dihapus</h4>
+                        <h4 id="successModal-action-title" class="text-lg font-semibold text-gray-900 mb-2">Data Berhasil Dihapus</h4>
                         <p id="successMessage" class="text-sm text-gray-600 mb-4">
                             Data magang telah berhasil dihapus.
                         </p>
@@ -395,14 +396,20 @@
     </div>
 
     <!-- Edit Modal -->
-    <div id="edit-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="edit-modal-label">
-        <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
-            <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
+    <div id="edit-modal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="edit-modal-label">
+        <div
+            class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
+            <div
+                class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="edit-modal-label" class="font-bold text-gray-800 dark:text-white">
                         Edit Data Magang
                     </h3>
-                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#edit-modal">
+                    <button type="button"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close" data-hs-overlay="#edit-modal">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -415,19 +422,25 @@
                             <!-- Mahasiswa Info (Read Only) -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Mahasiswa</label>
-                                <input type="text" id="edit-mahasiswa-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600" readonly>
+                                <input type="text" id="edit-mahasiswa-name"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                                    readonly>
                             </div>
 
                             <!-- Lowongan Info (Read Only) -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Lowongan</label>
-                                <input type="text" id="edit-lowongan-title" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600" readonly>
+                                <input type="text" id="edit-lowongan-title"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                                    readonly>
                             </div>
 
                             <!-- Status Magang -->
                             <div>
-                                <label for="edit-status-magang" class="block text-sm font-medium text-gray-700 mb-1">Status Magang</label>
-                                <select name="status_magang" id="edit-status-magang" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                <label for="edit-status-magang"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Status Magang</label>
+                                <select name="status_magang" id="edit-status-magang"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                                     <option value="menunggu">Menunggu</option>
                                     <option value="diterima">Diterima</option>
                                     <option value="magang">Magang</option>
@@ -438,23 +451,32 @@
 
                             <!-- Dosen Pembimbing -->
                             <div>
-                                <label for="edit-dosen-pembimbing" class="block text-sm font-medium text-gray-700 mb-1">Dosen Pembimbing</label>
-                                <select name="id_dosen_pembimbing" id="edit-dosen-pembimbing" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                <label for="edit-dosen-pembimbing"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Dosen Pembimbing</label>
+                                <select name="id_dosen_pembimbing" id="edit-dosen-pembimbing"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                                     <option value="">-- Pilih Dosen Pembimbing --</option>
-                                    @foreach($dosenList ?? [] as $dosen)
-                                        <option value="{{ $dosen->id_dosen_pembimbing }}">{{ $dosen->user->name }}</option>
+                                    @foreach ($dosenList ?? [] as $dosen)
+                                        <option value="{{ $dosen->id_dosen_pembimbing }}">{{ $dosen->user->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                        <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" data-hs-overlay="#edit-modal">
+                    <div
+                        class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                        <button type="button"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                            data-hs-overlay="#edit-modal">
                             Batal
                         </button>
-                        <button type="submit" id="saveEditBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <button type="submit" id="saveEditBtn"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:outline-hidden focus:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none">
                             <span id="saveEditText">Simpan Perubahan</span>
-                            <div id="saveEditSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading"></div>
+                            <div id="saveEditSpinner"
+                                class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full"
+                                role="status" aria-label="loading"></div>
                         </button>
                     </div>
                 </form>
@@ -463,21 +485,21 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Search functionality with debounce
             const searchInput = document.getElementById('searchInput');
             const searchForm = document.getElementById('searchForm');
             let searchTimeout;
 
             if (searchInput && searchForm) {
-                searchInput.addEventListener('input', function () {
+                searchInput.addEventListener('input', function() {
                     clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(function () {
+                    searchTimeout = setTimeout(function() {
                         searchForm.submit();
                     }, 500);
                 });
 
-                searchInput.addEventListener('keypress', function (e) {
+                searchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         clearTimeout(searchTimeout);
@@ -488,89 +510,105 @@
 
             // Delete functionality
             let deleteMagangId = null;
-            let deleteModal = null;
-            let successModal = null;
+            // let deleteModal = null; // Consider refactoring to use HSOverlay.getInstance if issues arise
+            // let successModal = null; // Consider refactoring to use HSOverlay.getInstance
 
-            window.confirmDeleteMagang = function (id, name) {
+            // It's generally better to get HSOverlay instances when needed rather than storing them globally
+            // if they are re-initialized or if HSOverlay manages them internally.
+
+            window.confirmDeleteMagang = function(id, name) {
                 deleteMagangId = id;
                 document.getElementById('deleteMagangName').textContent = name;
-
+                console.log('confirmDeleteMagang called for id:', id);
                 try {
-                    const modalElement = document.getElementById('deleteModal');
-
-                    if (typeof HSOverlay === 'function') {
-                        deleteModal = new HSOverlay(modalElement);
-                        deleteModal.open();
-                    } else if (typeof HSOverlay === 'object' && typeof HSOverlay.open === 'function') {
-                        HSOverlay.open(modalElement);
-                    } else {
-                        modalElement.classList.remove('hidden');
-                        document.body.classList.add('overflow-hidden');
-                    }
+                    // const modalElement = document.getElementById('deleteModal');
+                    // const deleteModalInstance = HSOverlay.getInstance(modalElement, true); 
+                    // if (deleteModalInstance && typeof deleteModalInstance.open === 'function') {
+                    //     deleteModalInstance.open();
+                    // } else {
+                    //     console.warn('HSOverlay instance for #deleteModal not found or open is not a function. Using static open.');
+                    //     HSOverlay.open(document.querySelector('#deleteModal'));
+                    // }
+                    HSOverlay.open(document.querySelector('#deleteModal'));
+                    console.log('Called HSOverlay.open("#deleteModal")');
                 } catch (error) {
                     console.error('Error opening delete modal:', error);
                     document.getElementById('deleteModal').classList.remove('hidden');
-                    document.body.classList.add('overflow-hidden');
+                    document.body.classList.add('hs-overlay-body-scrolling'); 
                 }
             }
 
             function closeDeleteModal() {
+                console.log('closeDeleteModal called');
                 try {
-                    if (deleteModal && typeof deleteModal.close === 'function') {
-                        deleteModal.close();
-                    } else {
-                        document.getElementById('deleteModal').classList.add('hidden');
-                        document.body.classList.remove('overflow-hidden');
-                    }
+                    HSOverlay.close(document.querySelector('#deleteModal'));
+                    console.log('Called HSOverlay.close("#deleteModal")');
                 } catch (error) {
                     console.error('Error closing delete modal:', error);
                     document.getElementById('deleteModal').classList.add('hidden');
-                    document.body.classList.remove('overflow-hidden');
+                    document.body.classList.remove('hs-overlay-body-scrolling');
+                    const backdrop = document.querySelector('.hs-overlay-backdrop[data-hs-overlay-backdrop-template]');
+                    if (backdrop) backdrop.remove();
                 }
-
-                deleteModal = null;
                 deleteMagangId = null;
             }
 
-            function showSuccessModal(message) {
-                if (message) {
-                    document.getElementById('successMessage').textContent = message;
+            function showSuccessModal(message, title = 'Berhasil!') { 
+                const successModalLabel = document.getElementById('successModal-label');
+                if (successModalLabel) {
+                    successModalLabel.textContent = title;
                 }
 
-                try {
-                    const modalElement = document.getElementById('successModal');
+                const successModalActionTitle = document.getElementById('successModal-action-title'); // Get the h4 element
+                if (successModalActionTitle) { // Set its text to the same main title
+                    successModalActionTitle.textContent = title;
+                }
 
-                    if (typeof HSOverlay === 'function') {
-                        successModal = new HSOverlay(modalElement);
-                        successModal.open();
-                    } else if (typeof HSOverlay === 'object' && typeof HSOverlay.open === 'function') {
-                        HSOverlay.open(modalElement);
+                if (message) {
+                    const successMessageElement = document.getElementById('successMessage');
+                    if (successMessageElement) { 
+                        successMessageElement.textContent = message;
                     } else {
-                        modalElement.classList.remove('hidden');
-                        document.body.classList.add('overflow-hidden');
+                        console.error('#successMessage element not found');
                     }
+                }
+                console.log('Attempting to show success modal with title:', title, 'and message:', message);
+                try {
+                    HSOverlay.open(document.querySelector('#successModal'));
+                    console.log('Called HSOverlay.open("#successModal")');
                 } catch (error) {
                     console.error('Error opening success modal:', error);
-                    document.getElementById('successModal').classList.remove('hidden');
-                    document.body.classList.add('overflow-hidden');
+                    const modalElement = document.getElementById('successModal');
+                    if (modalElement) { 
+                         modalElement.classList.remove('hidden');
+                         document.body.classList.add('hs-overlay-body-scrolling'); 
+                    }
                 }
             }
 
             function closeSuccessModal() {
+                console.log('Attempting to close success modal.');
                 try {
-                    if (successModal && typeof successModal.close === 'function') {
-                        successModal.close();
-                    } else {
-                        document.getElementById('successModal').classList.add('hidden');
-                        document.body.classList.remove('overflow-hidden');
-                    }
+                    // const modalElement = document.getElementById('successModal');
+                    // const successModalInstance = HSOverlay.getInstance(modalElement);
+                    // if (successModalInstance && typeof successModalInstance.close === 'function') {
+                    //     successModalInstance.close();
+                    // } else {
+                    //     console.warn('HSOverlay instance for #successModal not found or close is not a function. Using static close. Element:', modalElement, 'Instance:', successModalInstance);
+                    //     HSOverlay.close(modalElement); // Try with element
+                    // }
+                    HSOverlay.close(document.querySelector('#successModal'));
+                    console.log('Called HSOverlay.close("#successModal")');
                 } catch (error) {
                     console.error('Error closing success modal:', error);
-                    document.getElementById('successModal').classList.add('hidden');
-                    document.body.classList.remove('overflow-hidden');
+                    const modalElement = document.getElementById('successModal');
+                    if (modalElement) { 
+                        modalElement.classList.add('hidden');
+                        document.body.classList.remove('hs-overlay-body-scrolling');
+                        const backdrop = document.querySelector('.hs-overlay-backdrop[data-hs-overlay-backdrop-template]');
+                        if (backdrop) backdrop.remove();
+                    }
                 }
-
-                successModal = null;
             }
 
             // Set up event listeners for delete functionality
@@ -587,66 +625,66 @@
             // Success modal buttons
             const closeSuccessBtn = document.getElementById('closeSuccessBtn');
             if (closeSuccessBtn) {
-                closeSuccessBtn.addEventListener('click', function () {
+                closeSuccessBtn.addEventListener('click', function() {
+                    console.log('Success modal "Selesai" button clicked.');
                     closeSuccessModal();
                     window.location.reload();
                 });
             }
 
-            const closeSuccessModalBtn = document.getElementById('closeSuccessModalBtn');
-            if (closeSuccessModalBtn) {
-                closeSuccessModalBtn.addEventListener('click', function () {
+            const closeSuccessModalBtnElement = document.getElementById('closeSuccessModalBtn');
+            if (closeSuccessModalBtnElement) {
+                closeSuccessModalBtnElement.addEventListener('click', function() {
+                    console.log('Success modal "X" button clicked.');
                     closeSuccessModal();
-                    window.location.reload();
+                    window.location.reload(); // Or just closeSuccessModal(); if reload is not desired for 'X'
                 });
             }
 
             // Delete confirmation button
             const confirmDeleteBtn = document.getElementById('confirmDelete');
             if (confirmDeleteBtn) {
-                confirmDeleteBtn.addEventListener('click', function () {
+                confirmDeleteBtn.addEventListener('click', function() {
+                    // ... (existing delete confirmation logic, ensure HSOverlay.getInstance is used if needed)
                     if (!deleteMagangId) return;
+                    console.log('Confirm delete button clicked for id:', deleteMagangId);
 
-                    // Show loading state
                     this.disabled = true;
                     document.getElementById('deleteButtonText').textContent = 'Menghapus...';
                     document.getElementById('deleteSpinner').classList.remove('hidden');
 
-                    // Send delete request
-                    fetch(`{{ route('admin.kelola-magang') }}/${deleteMagangId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                    })
+                    fetch(`{{ url('admin/kelola-magang') }}/${deleteMagangId}`, { // Use url() for consistency
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                        })
                         .then(response => {
+                            console.log('Delete response:', response);
                             if (!response.ok) {
-                                throw new Error(`HTTP error! Status: ${response.status}`);
+                                return response.json().then(errData => {
+                                    console.error('Delete error response data:', errData);
+                                    throw new Error(errData.message || `HTTP error! status: ${response.status}`);
+                                }).catch(() => {
+                                    throw new Error(`HTTP error! status: ${response.status} and response was not valid JSON.`);
+                                });
                             }
                             return response.json();
                         })
                         .then(data => {
-                            // Close delete modal first
+                            console.log('Delete success data:', data);
                             closeDeleteModal();
-                            // Show success modal
-                            showSuccessModal(data.message);
+                            showSuccessModal(data.message || 'Data berhasil dihapus.', 'Data Berhasil Dihapus'); // Updated call
                         })
                         .catch(error => {
-                            console.error('Error:', error);
-
-                            // Close the modal and show success message anyway since the deletion might have succeeded
-                            closeDeleteModal();
-
-                            // Check if we should reload
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1000);
+                            console.error('Error during delete operation:', error);
+                            alert('Gagal menghapus data: ' + error.message);
+                            closeDeleteModal(); // Still close modal on error
                         })
                         .finally(() => {
-                            // Reset button state
                             this.disabled = false;
                             document.getElementById('deleteButtonText').textContent = 'Hapus';
                             document.getElementById('deleteSpinner').classList.add('hidden');
@@ -659,99 +697,133 @@
 
             window.openEditModal = function(magangId) {
                 currentEditId = magangId;
-                
-                // Fetch magang data
-                fetch(`{{ route('admin.kelola-magang') }}/${magangId}/edit`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const magang = data.magang;
-                        
-                        // Populate form fields
-                        document.getElementById('edit-mahasiswa-name').value = magang.mahasiswa.user.name;
-                        document.getElementById('edit-lowongan-title').value = magang.lowongan.judul_lowongan;
-                        document.getElementById('edit-status-magang').value = magang.status_magang;
-                        document.getElementById('edit-dosen-pembimbing').value = magang.id_dosen_pembimbing || '';
-                        
-                        // Set form action
-                        document.getElementById('editMagangForm').action = `{{ route('admin.kelola-magang') }}/${magangId}`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching magang data:', error);
-                    alert('Gagal memuat data magang');
-                });
+                console.log('openEditModal called for id:', magangId);
+
+                fetch(`{{ url('admin/kelola-magang') }}/${magangId}/edit`, { // Use url() for consistency
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        console.log('Fetch magang data for edit response:', response);
+                        if (!response.ok) {
+                             return response.json().then(errData => {
+                                console.error('Fetch edit data error response data:', errData);
+                                throw new Error(errData.message || `HTTP error! status: ${response.status}`);
+                            }).catch(() => {
+                                throw new Error(`HTTP error! status: ${response.status} and response was not valid JSON.`);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Fetched magang data for edit:', data);
+                        if (data.success) {
+                            const magang = data.magang;
+                            document.getElementById('edit-mahasiswa-name').value = magang.mahasiswa.user.name;
+                            document.getElementById('edit-lowongan-title').value = magang.lowongan.judul_lowongan;
+                            document.getElementById('edit-status-magang').value = magang.status_magang;
+                            document.getElementById('edit-dosen-pembimbing').value = magang.id_dosen_pembimbing || '';
+                            // The form action is already set in the HTML, but if you need to dynamically set it:
+                            // document.getElementById('editMagangForm').action = `{{ url('admin/kelola-magang') }}/${magangId}`;
+                        } else {
+                            console.error('Failed to load magang data for edit:', data.message);
+                            alert('Gagal memuat data magang: ' + (data.message || 'Unknown error'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching magang data for edit:', error);
+                        alert('Gagal memuat data magang: ' + error.message);
+                    });
             };
 
-            // Handle edit form submission
             const editForm = document.getElementById('editMagangForm');
             if (editForm) {
                 editForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    
-                    const saveBtn = document.getElementById('saveEditBtn');
-                    const saveText = document.getElementById('saveEditText');
-                    const saveSpinner = document.getElementById('saveEditSpinner');
-                    
-                    // Show loading state
-                    saveBtn.disabled = true;
-                    saveText.textContent = 'Menyimpan...';
-                    saveSpinner.classList.remove('hidden');
-                    
-                    const formData = new FormData(editForm);
-                    
-                    fetch(editForm.action, {
+                    console.log('Edit form submitted');
+
+                    const saveEditBtn = document.getElementById('saveEditBtn');
+                    const saveEditText = document.getElementById('saveEditText');
+                    const saveEditSpinner = document.getElementById('saveEditSpinner');
+
+                    saveEditBtn.disabled = true;
+                    saveEditText.classList.add('hidden');
+                    saveEditSpinner.classList.remove('hidden');
+                    console.log('Loading state shown for edit save');
+
+                    const formData = new FormData(this);
+                    const actionUrl = `{{ url('admin/kelola-magang') }}/${currentEditId}`;
+                    console.log('Edit Action URL:', actionUrl);
+
+                    fetch(actionUrl, {
                         method: 'POST',
-                        body: formData,
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                            'X-HTTP-Method-Override': 'PUT'
+                        },
+                        body: formData
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log('Edit fetch response received:', response);
+                        if (!response.ok) {
+                            return response.json().then(errData => {
+                                console.error('Edit fetch error response data:', errData);
+                                throw new Error(errData.message || `HTTP error! status: ${response.status}`);
+                            }).catch(() => {
+                                throw new Error(`HTTP error! status: ${response.status} and response was not valid JSON.`);
+                            });
+                        }
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log('Edit response data (JSON):', data);
                         if (data.success) {
-                            // Close modal
-                            const modalElement = document.getElementById('edit-modal');
-                            if (typeof HSOverlay !== 'undefined') {
-                                const modalInstance = HSOverlay.getInstance(modalElement);
-                                if (modalInstance) {
-                                    modalInstance.close();
-                                } else {
-                                    modalElement.classList.add('hidden');
-                                }
-                            } else {
-                                modalElement.classList.add('hidden');
+                            console.log('Edit operation successful, attempting to close edit modal.');
+                            try {
+                                HSOverlay.close(document.querySelector('#edit-modal'));
+                                console.log('Called HSOverlay.close("#edit-modal")');
+                            } catch (closeError) {
+                                console.error('Error closing edit modal:', closeError);
+                                const modalElement = document.getElementById('edit-modal');
+                                if (modalElement) modalElement.classList.add('hidden'); // Fallback
+                                document.body.classList.remove('hs-overlay-body-scrolling');
+                                const backdrop = document.querySelector('.hs-overlay-backdrop[data-hs-overlay-backdrop-template]');
+                                if (backdrop) backdrop.remove();
                             }
-                            
-                            // Show success modal
-                            showSuccessModal(data.message);
+                            console.log('Showing success modal with message:', data.message || 'Data berhasil diperbarui.');
+                            showSuccessModal(data.message || 'Data berhasil diperbarui.', 'Data Berhasil Diperbarui'); // Updated call
                         } else {
-                            alert(data.message || 'Gagal menyimpan perubahan');
+                            let errorMessage = data.message || 'Gagal memperbarui data.';
+                            if (data.errors) {
+                                const errorMessages = Object.values(data.errors).flat();
+                                errorMessage += '\n- ' + errorMessages.join('\n- ');
+                            }
+                            console.error('Edit operation failed:', errorMessage);
+                            alert(errorMessage);
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan saat menyimpan');
+                        console.error('Error during edit form submission (fetch catch):', error);
+                        alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
                     })
                     .finally(() => {
-                        // Reset button state
-                        saveBtn.disabled = false;
-                        saveText.textContent = 'Simpan Perubahan';
-                        saveSpinner.classList.add('hidden');
+                        console.log('Edit finally block: Resetting button state.');
+                        saveEditBtn.disabled = false;
+                        saveEditText.classList.remove('hidden');
+                        saveEditSpinner.classList.add('hidden');
                     });
                 });
             }
 
             // Check for success message from session
-            @if(session('success') && session('message'))
-                showSuccessModal('{{ session('message') }}');
+            @if (session('success') && session('message'))
+                console.log('Session success message found, showing modal.');
+                showSuccessModal('{{ session('message') }}', 'Berhasil!'); // Updated call
             @endif
-                });
+        });
     </script>
 @endsection

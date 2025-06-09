@@ -680,6 +680,7 @@ class MagangController extends Controller
                     }
                 }
 
+                // Pastikan response adalah JSON yang valid dengan header yang benar
                 return response()->json([
                     'success' => true,
                     'message' => $message,
@@ -688,7 +689,9 @@ class MagangController extends Controller
                         'dosen_pembimbing' => $magang->dosenPembimbing ? $magang->dosenPembimbing->user->name : null,
                         'id_dosen_pembimbing' => $magang->id_dosen_pembimbing
                     ]
-                ], 200); // Explicitly set status code
+                ], 200, [
+                    'Content-Type' => 'application/json; charset=utf-8'
+                ]);
                 
             } catch (\Exception $dbError) {
                 DB::rollback();
@@ -705,7 +708,9 @@ class MagangController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Data magang tidak ditemukan'
-            ], 404);
+            ], 404, [
+                'Content-Type' => 'application/json; charset=utf-8'
+            ]);
 
         } catch (\Exception $e) {
             if (DB::transactionLevel() > 0) {
@@ -725,7 +730,9 @@ class MagangController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()
-            ], 500);
+            ], 500, [
+                'Content-Type' => 'application/json; charset=utf-8'
+            ]);
         }
     }
 
