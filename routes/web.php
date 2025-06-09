@@ -244,5 +244,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LogAktivitasController::class, 'update'])
                 ->name('mahasiswa.log_aktivitas.update');
         });
+        Route::post('/feedback/store', [FeedbackMagangController::class, 'store'])
+            ->name('mahasiswa.feedback.store');
     });
 });
