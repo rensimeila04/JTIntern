@@ -232,8 +232,12 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Feedback
-        Route::get('/feedback', [FeedbackMagangController::class, 'index'])
-            ->name('mahasiswa.feedback');
+        Route::prefix('feedback')->group(function () {
+            Route::get('/', [FeedbackMagangController::class, 'index'])
+                ->name('mahasiswa.feedback');
+            Route::post('/store', [FeedbackMagangController::class, 'store'])
+                ->name('mahasiswa.feedback.store');
+        });
 
         // Log Aktivitas
         Route::prefix('log-aktivitas')->group(function () {
@@ -244,7 +248,5 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [LogAktivitasController::class, 'update'])
                 ->name('mahasiswa.log_aktivitas.update');
         });
-        Route::post('/feedback/store', [FeedbackMagangController::class, 'store'])
-            ->name('mahasiswa.feedback.store');
     });
 });
