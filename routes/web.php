@@ -75,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.detail_admin');
         Route::get('/edit', [UserController::class, 'edit'])
             ->name('admin.edit_profile');
+        Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('admin.update_profile');
+        Route::post('/update-account', [UserController::class, 'updateAccount'])->name('admin.update_account');
 
 
 

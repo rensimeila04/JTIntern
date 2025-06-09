@@ -222,6 +222,58 @@ class UserController extends Controller
         ]);
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = UserModel::findOrFail(auth()->id());
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'nip' => 'nullable|string|max:50',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user->name = $request->name;
+
+        // Update NIP if admin relation exists
+        if ($user->admin) {
+            $user->admin->nip = $request->nip;
+            $user->admin->save();
+        }
+
+        // Handle profile photo upload
+        if ($request->hasFile('profile_photo')) {
+            $file = $request->file('profile_photo');
+            $path = $file->store('profile_photos', 'public');
+            $user->profile_photo = $path;
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'Data pribadi berhasil diperbarui.');
+    }
+
+    /**
+     * Update account data (email, password)
+     */
+    public function updateAccount(Request $request)
+    {
+        $authUser = auth()->user();
+        $user = UserModel::findOrFail($authUser->id_user);
+
+        $request->validate([
+            'email' => 'required|email|unique:user,email,' . $user->id_user . ',id_user',
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $user->email = $request->email;
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+
+        return redirect()->back()->with('success', 'Akun berhasil diperbarui.');
+    }
+
     public function create()
     {
         $breadcrumb = [
