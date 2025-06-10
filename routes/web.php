@@ -205,6 +205,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/detail-mahasiswa/{id}', [DosenMahasiswaController::class, 'detailMahasiswa'])
             ->name('dosen.detail_mahasiswa.id');
+        Route::get('/monitoring', [MonitoringController::class, 'index'])
+            ->name('dosen.monitoring_log_aktivitas');
         Route::get('/monitoring/{id_magang}/log/{id_log_aktivitas}', [MonitoringController::class, 'detail'])
             ->name('dosen.monitoring.detail');
         Route::post('/monitoring/{id_magang}/log/{id_log_aktivitas}/feedback', [MonitoringController::class, 'feedback'])
