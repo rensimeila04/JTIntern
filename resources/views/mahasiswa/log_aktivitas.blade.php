@@ -16,12 +16,77 @@
             </button>
         </div>
         <div class="hs-dropdown relative inline-flex">
-            <button id="hs-dropdown-default" type="button"
-                class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
-                aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+            <button id="datePickerBtn" type="button"
+                class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                 <x-lucide-calendar-days class="size-3.5 text-neutral-500" />
-                <x-lucide-chevron-down class="size-5 text-neutral-500" />
+                <span id="selectedDate">Pilih Tanggal</span>
+                <x-lucide-chevron-down class="size-5 text-neutral-500 hs-dropdown-open:-rotate-180 transition-transform duration-300" />
             </button>
+            
+            <!-- Calendar Dropdown -->
+            <div class="hs-dropdown-menu hs-dropdown-open:opacity-100 opacity-0 w-80 transition-[opacity,margin] duration-300 hs-dropdown-open:translate-y-0 translate-y-2 hidden z-50 mt-2">
+                <div class="w-80 flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-700">
+                    <!-- Calendar -->
+                    <div class="p-3 space-y-0.5">
+                        <!-- Months -->
+                        <div class="grid grid-cols-5 items-center gap-x-3 mx-1.5 pb-3">
+                            <!-- Prev Button -->
+                            <div class="col-span-1">
+                                <button type="button" id="prevMonth" class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" aria-label="Previous">
+                                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                                </button>
+                            </div>
+                            <!-- End Prev Button -->
+
+                            <!-- Month / Year -->
+                            <div class="col-span-3 flex justify-center items-center gap-x-1">
+                                <span id="currentMonth" class="font-medium text-gray-800 dark:text-neutral-200"></span>
+                                <span class="text-gray-800 dark:text-neutral-200">/</span>
+                                <span id="currentYear" class="font-medium text-gray-800 dark:text-neutral-200"></span>
+                            </div>
+                            <!-- End Month / Year -->
+
+                            <!-- Next Button -->
+                            <div class="col-span-1 flex justify-end">
+                                <button type="button" id="nextMonth" class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" aria-label="Next">
+                                    <svg class="shrink-0 size-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                </button>
+                            </div>
+                            <!-- End Next Button -->
+                        </div>
+                        <!-- Months -->
+
+                        <!-- Weeks -->
+                        <div class="flex pb-1.5">
+                            <span class="m-px w-10 block text-center text-sm text-gray-500 dark:text-neutral-500">Mo</span>
+                            <span class="m-px w-10 block text-center text-sm text-gray-500 dark:text-neutral-500">Tu</span>
+                            <span class="m-px w-10 block text-center text-sm text-gray-500 dark:text-neutral-500">We</span>
+                            <span class="m-px w-10 block text-center text-sm text-gray-500 dark:text-neutral-500">Th</span>
+                            <span class="m-px w-10 block text-center text-sm text-gray-500 dark:text-neutral-500">Fr</span>
+                            <span class="m-px w-10 block text-center text-sm text-gray-500 dark:text-neutral-500">Sa</span>
+                            <span class="m-px w-10 block text-center text-sm text-gray-500 dark:text-neutral-500">Su</span>
+                        </div>
+                        <!-- Weeks -->
+
+                        <!-- Days Container -->
+                        <div id="calendarDays" class="space-y-0">
+                            <!-- Days will be generated by JavaScript -->
+                        </div>
+                        <!-- Days Container -->
+                    </div>
+
+                    <!-- Button Group -->
+                    <div class="py-3 px-4 flex items-center justify-end gap-x-2 border-t border-gray-200 dark:border-neutral-700">
+                        <button type="button" id="cancelDate" class="py-2 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                            Cancel
+                        </button>
+                        <button type="button" id="applyDate" class="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-xs font-medium rounded-lg border-[1.5px] border-transparent bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:ring-2 focus:ring-primary-500">
+                            Apply
+                        </button>
+                    </div>
+                    <!-- End Button Group -->
+                </div>
+            </div>
         </div>
         <div class="flex flex-col mt-4 mb-6">
             <div class="-m-1.5 overflow-x-auto">
@@ -151,9 +216,7 @@
                     </div>
                 </div>
                 <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
-                    <button type="button"
-                        class="btn-primary"
-                        data-hs-overlay="#modal-detail-log">
+                    <button type="button" class="btn-primary" data-hs-overlay="#modal-detail-log">
                         Tutup
                     </button>
                 </div>
@@ -162,14 +225,20 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="modal-confirm-delete" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="modal-confirm-delete-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+    <div id="modal-confirm-delete"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="modal-confirm-delete-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="modal-confirm-delete-label" class="font-bold text-gray-800 dark:text-white">
                         Konfirmasi Hapus
                     </h3>
-                    <button type="button" id="closeModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" data-hs-overlay="#modal-confirm-delete" aria-label="Close">
+                    <button type="button" id="closeModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        data-hs-overlay="#modal-confirm-delete" aria-label="Close">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -187,16 +256,22 @@
                         </p>
                     </div>
                 </div>
-                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                    <button type="button" id="cancelDelete" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#modal-confirm-delete">
+                <div
+                    class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="cancelDelete"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800"
+                        data-hs-overlay="#modal-confirm-delete">
                         Batal
                     </button>
                     <form id="deleteForm" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" id="confirmDeleteBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                        <button type="submit" id="confirmDeleteBtn"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
                             <span id="deleteButtonText">Hapus</span>
-                            <div id="deleteSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading">
+                            <div id="deleteSpinner"
+                                class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full"
+                                role="status" aria-label="loading">
                             </div>
                         </button>
                     </form>
@@ -207,18 +282,138 @@
 @endsection
 
 <script>
-    function openModal() {
-        document.getElementById('modalTambahLog').classList.remove('hidden');
+    let currentDate = new Date();
+    let selectedDate = null;
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+
+    function generateCalendar(year, month) {
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startDate = new Date(firstDay);
+        const endDate = new Date(lastDay);
+        
+        // Adjust to start from Monday
+        startDate.setDate(startDate.getDate() - ((startDate.getDay() + 6) % 7));
+        endDate.setDate(endDate.getDate() + (7 - endDate.getDay()) % 7);
+
+        const calendarDays = document.getElementById('calendarDays');
+        calendarDays.innerHTML = '';
+
+        let currentWeek = document.createElement('div');
+        currentWeek.className = 'flex';
+
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+            const dayContainer = document.createElement('div');
+            const dayButton = document.createElement('button');
+            
+            dayButton.type = 'button';
+            dayButton.textContent = d.getDate();
+            
+            const isCurrentMonth = d.getMonth() === month;
+            const isToday = d.toDateString() === new Date().toDateString();
+            const isSelected = selectedDate && d.toDateString() === selectedDate.toDateString();
+            
+            let classes = 'm-px size-10 flex justify-center items-center border-[1.5px] border-transparent text-sm rounded-full focus:outline-hidden ';
+            
+            if (!isCurrentMonth) {
+                classes += 'text-gray-400 hover:border-primary-600 hover:text-primary-600 disabled:opacity-50 disabled:pointer-events-none focus:bg-gray-100 dark:text-neutral-500 dark:hover:border-neutral-500 dark:focus:bg-neutral-700';
+                dayButton.disabled = true;
+            } else if (isSelected) {
+                classes += 'bg-primary-600 text-white font-medium hover:border-primary-600 focus:border-primary-600 dark:bg-primary-500 dark:hover:border-neutral-700 dark:focus:border-neutral-700';
+            } else if (isToday) {
+                classes += 'bg-primary-100 text-primary-600 font-medium hover:border-primary-600 focus:border-primary-600 dark:bg-primary-800 dark:text-primary-400';
+            } else {
+                classes += 'text-gray-800 hover:border-primary-600 hover:text-primary-600 focus:border-primary-600 focus:text-primary-600 dark:text-neutral-200 dark:hover:border-primary-500 dark:hover:text-primary-500 dark:focus:border-primary-500 dark:focus:text-primary-500';
+            }
+            
+            dayButton.className = classes;
+            
+            if (isCurrentMonth) {
+                dayButton.addEventListener('click', function() {
+                    selectedDate = new Date(d);
+                    generateCalendar(year, month);
+                });
+            }
+            
+            dayContainer.appendChild(dayButton);
+            currentWeek.appendChild(dayContainer);
+            
+            if (d.getDay() === 0) { // Sunday
+                calendarDays.appendChild(currentWeek);
+                currentWeek = document.createElement('div');
+                currentWeek.className = 'flex';
+            }
+        }
+        
+        if (currentWeek.children.length > 0) {
+            calendarDays.appendChild(currentWeek);
+        }
     }
 
-    function closeModal() {
-        document.getElementById('modalTambahLog').classList.add('hidden');
-        document.getElementById('formTambahLog').reset();
-        document.getElementById('formError').classList.add('hidden');
+    function updateCalendarHeader() {
+        document.getElementById('currentMonth').textContent = monthNames[currentDate.getMonth()];
+        document.getElementById('currentYear').textContent = currentDate.getFullYear();
     }
 
-    // AJAX submit
+    function initCalendar() {
+        updateCalendarHeader();
+        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        
+        document.getElementById('prevMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendarHeader();
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+        
+        document.getElementById('nextMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendarHeader();
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+        
+        document.getElementById('cancelDate').addEventListener('click', function() {
+            selectedDate = null;
+            document.getElementById('selectedDate').textContent = 'Pilih Tanggal';
+            // Close dropdown
+            const dropdown = document.querySelector('.hs-dropdown');
+            if (dropdown) {
+                dropdown.classList.remove('hs-dropdown-open');
+            }
+        });
+        
+        document.getElementById('applyDate').addEventListener('click', function() {
+            if (selectedDate) {
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('selectedDate').textContent = selectedDate.toLocaleDateString('id-ID', options);
+                
+                // Here you can add functionality to filter the table based on selected date
+                filterLogsByDate(selectedDate);
+            }
+            
+            // Close dropdown
+            const dropdown = document.querySelector('.hs-dropdown');
+            if (dropdown) {
+                dropdown.classList.remove('hs-dropdown-open');
+            }
+        });
+    }
+
+    function filterLogsByDate(date) {
+        // Add your filtering logic here
+        // You can make an AJAX call to filter the logs or implement client-side filtering
+        console.log('Filter logs by date:', date);
+        
+        // Example: Reload page with date parameter
+        const dateString = date.toISOString().split('T')[0];
+        window.location.href = window.location.pathname + '?date=' + dateString;
+    }
+
+    // Initialize calendar when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
+        initCalendar();
+        
+        // AJAX submit
         const formTambahLog = document.getElementById('formTambahLog');
         if (formTambahLog) {
             formTambahLog.addEventListener('submit', function(e) {
@@ -251,25 +446,8 @@
                     });
             });
         }
-    });
 
-    function openEditModal(id, tanggal, jamMasuk, jamPulang, kegiatan) {
-        document.getElementById('modalEditLog').classList.remove('hidden');
-        document.getElementById('editId').value = id;
-        document.getElementById('editTanggal').value = tanggal;
-        document.getElementById('editWaktuAwal').value = jamMasuk;
-        document.getElementById('editWaktuAkhir').value = jamPulang;
-        document.getElementById('editDeskripsi').value = kegiatan;
-    }
-
-    function closeEditModal() {
-        document.getElementById('modalEditLog').classList.add('hidden');
-        document.getElementById('formEditLog').reset();
-        document.getElementById('editFormError').classList.add('hidden');
-    }
-
-    // AJAX submit edit
-    document.addEventListener('DOMContentLoaded', function() {
+        // Edit modal
         const formEditLog = document.getElementById('formEditLog');
         if (formEditLog) {
             formEditLog.addEventListener('submit', function(e) {
@@ -279,7 +457,7 @@
                 let data = new FormData(form);
                 let errorDiv = document.getElementById('editFormError');
                 errorDiv.classList.add('hidden');
-                
+
                 fetch('/mahasiswa/log-aktivitas/' + id, {
                         method: 'POST',
                         headers: {
@@ -305,76 +483,63 @@
                     });
             });
         }
-    });
 
-    function openDetailModal(id) {
-        let contentDiv = document.getElementById('detailContent');
-        contentDiv.innerHTML = 'Memuat...';
-        fetch('/mahasiswa/log-aktivitas/' + id)
-            .then(res => res.json())
-            .then(res => {
-                if (res.success) {
-                    let log = res.data;
-                    let waktu = `${log.jam_masuk} - ${log.jam_pulang}`;
-                    contentDiv.innerHTML = `
-                    <div class="flex flex-col gap-y-4">
-                        <div class="flex items-start gap-x-4">
-                            <div class="w-40 text-gray-400 font-medium">Hari, Tanggal</div>
-                            <div class="font-medium text-gray-900">${log.tanggal}</div>
-                        </div>
-                        <div class="flex items-start gap-x-4">
-                            <div class="w-40 text-gray-400 font-medium">Waktu</div>
-                            <div class="font-medium text-gray-900">${waktu}</div>
-                        </div>
-                        <div class="flex items-start gap-x-4">
-                            <div class="w-40 text-gray-400 font-medium">Kegiatan</div>
-                            <div class="font-medium text-gray-900 whitespace-pre-line">${log.kegiatan}</div>
-                        </div>
-                        <div class="flex items-start gap-x-4">
-                            <div class="w-40 text-gray-400 font-medium">Feedback</div>
-                            <div class="font-medium text-gray-900">${log.feedback_dospem ?? '-'}</div>
-                        </div>
-                    </div>
-                `;
-                } else {
-                    contentDiv.innerHTML = 'Gagal memuat detail.';
-                }
-            })
-            .catch(() => {
-                contentDiv.innerHTML = 'Gagal memuat detail.';
+        // Detail modal
+        document.querySelectorAll('[data-hs-overlay="#modal-detail-log"]').forEach(button => {
+            button.addEventListener('click', function() {
+                let id = this.getAttribute('data-id');
+                let contentDiv = document.getElementById('detailContent');
+                contentDiv.innerHTML = 'Memuat...';
+                fetch('/mahasiswa/log-aktivitas/' + id)
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            let log = res.data;
+                            let waktu = `${log.jam_masuk} - ${log.jam_pulang}`;
+                            contentDiv.innerHTML = `
+                            <div class="flex flex-col gap-y-4">
+                                <div class="flex items-start gap-x-4">
+                                    <div class="w-40 text-gray-400 font-medium">Hari, Tanggal</div>
+                                    <div class="font-medium text-gray-900">${log.tanggal}</div>
+                                </div>
+                                <div class="flex items-start gap-x-4">
+                                    <div class="w-40 text-gray-400 font-medium">Waktu</div>
+                                    <div class="font-medium text-gray-900">${waktu}</div>
+                                </div>
+                                <div class="flex items-start gap-x-4">
+                                    <div class="w-40 text-gray-400 font-medium">Kegiatan</div>
+                                    <div class="font-medium text-gray-900 whitespace-pre-line">${log.kegiatan}</div>
+                                </div>
+                                <div class="flex items-start gap-x-4">
+                                    <div class="w-40 text-gray-400 font-medium">Feedback</div>
+                                    <div class="font-medium text-gray-900">${log.feedback_dospem ?? '-'}</div>
+                                </div>
+                            </div>
+                        `;
+                        } else {
+                            contentDiv.innerHTML = 'Gagal memuat detail.';
+                        }
+                    })
+                    .catch(() => {
+                        contentDiv.innerHTML = 'Gagal memuat detail.';
+                    });
             });
-    }
+        });
 
-    function confirmDelete(id) {
-        document.getElementById('deleteForm').action = `/mahasiswa/log-aktivitas/${id}`;
-        
-        if (typeof HSOverlay !== 'undefined') {
-            HSOverlay.open(document.getElementById('modal-confirm-delete'));
-        } else {
-            document.getElementById('modal-confirm-delete').classList.remove('hidden');
-            document.getElementById('modal-confirm-delete').classList.add('opacity-100');
-            document.getElementById('modal-confirm-delete').classList.add('pointer-events-auto');
-        }
-    }
+        // Delete confirmation
+        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-    // Add this event listener for the delete form
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteForm = document.getElementById('deleteForm');
-        
-        if (deleteForm) {
-            deleteForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Show loading state
-                const deleteButton = document.getElementById('confirmDeleteBtn');
-                const deleteButtonText = document.getElementById('deleteButtonText');
-                const deleteSpinner = document.getElementById('deleteSpinner');
-                
-                deleteButton.disabled = true;
-                deleteButtonText.textContent = 'Menghapus...';
-                deleteSpinner.classList.remove('hidden');
-                
-                fetch(this.action, {
+            // Show loading state
+            const deleteButton = document.getElementById('confirmDeleteBtn');
+            const deleteButtonText = document.getElementById('deleteButtonText');
+            const deleteSpinner = document.getElementById('deleteSpinner');
+
+            deleteButton.disabled = true;
+            deleteButtonText.textContent = 'Menghapus...';
+            deleteSpinner.classList.remove('hidden');
+
+            fetch(this.action, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -396,11 +561,14 @@
                         if (typeof HSOverlay !== 'undefined') {
                             HSOverlay.close(document.getElementById('modal-confirm-delete'));
                         } else {
-                            document.getElementById('modal-confirm-delete').classList.add('hidden');
-                            document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
-                            document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
+                            document.getElementById('modal-confirm-delete').classList.add(
+                                'hidden');
+                            document.getElementById('modal-confirm-delete').classList.remove(
+                                'opacity-100');
+                            document.getElementById('modal-confirm-delete').classList.remove(
+                                'pointer-events-auto');
                         }
-                        
+
                         // Redirect to the log activities page with reload to refresh data
                         window.location = '/mahasiswa/log-aktivitas';
                     } else {
@@ -408,7 +576,7 @@
                         deleteButton.disabled = false;
                         deleteButtonText.textContent = 'Hapus';
                         deleteSpinner.classList.add('hidden');
-                        
+
                         alert(data.message || 'Gagal menghapus log aktivitas.');
                     }
                 })
@@ -417,11 +585,10 @@
                     deleteButton.disabled = false;
                     deleteButtonText.textContent = 'Hapus';
                     deleteSpinner.classList.add('hidden');
-                    
+
                     console.error('Error:', error);
                     alert('Terjadi kesalahan saat menghapus log aktivitas.');
                 });
-            });
-        }
+        });
     });
 </script>
