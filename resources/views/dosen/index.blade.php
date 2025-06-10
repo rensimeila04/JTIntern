@@ -41,7 +41,11 @@
         </div>
 
         <div class="bg-white h-fit p-4 rounded-lg space-y-6">
-            <p class="text-xl font-medium text-neutral-900">Aktivitas Terbaru</p>
+            <div class="flex items-center justify-between">
+                <p class="text-xl font-medium text-neutral-900">Aktivitas Terbaru</p>
+                <a href="{{ route('dosen.monitoring_log_aktivitas') }}" class="text-primary-600 text-sm font-medium hover:underline">Lihat Semua</a>
+            </div>
+            
             <div>
                 <div class="flex flex-col">
                     <div class="-m-1.5 overflow-x-auto">
@@ -72,25 +76,26 @@
                                             <tr>
                                                 <td
                                                     class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 w-auto">
-                                                    {{ $i + 1 }}
+                                                    {{ $log->id_log_aktivitas }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                                    {{ $log->magang->mahasiswa->nama ?? '-' }}
+                                                    {{ $log->magang->mahasiswa->user->name }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                                    {{ \Carbon\Carbon::parse($log->created_at)->translatedFormat('l, d F Y') }}
+                                                    {{ \Carbon\Carbon::parse($log->tanggal)->translatedFormat('l, d F Y') }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                                     {{ $log->kegiatan }}
                                                 </td>
                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 w-auto">
                                                     @php
-                                                        $statusClass = 'border-gray-400 text-teal-500';
-                                                        $statusText = 'Dinilai';
-
-                                                        if ($log->status_feedback == 'menunggu') {
+                                                        // Cek feedback_dospem, bukan hanya status_feedback
+                                                        if (empty($log->feedback_dospem)) {
                                                             $statusClass = 'border-yellow-400 text-yellow-500';
                                                             $statusText = 'Menunggu';
+                                                        } else {
+                                                            $statusClass = 'border-gray-400 text-teal-500';
+                                                            $statusText = 'Dinilai';
                                                         }
                                                     @endphp
                                                     <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border {{ $statusClass }}">

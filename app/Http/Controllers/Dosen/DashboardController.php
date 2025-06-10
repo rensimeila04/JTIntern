@@ -11,38 +11,59 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
+
 class DashboardController extends Controller
 {
     public function index()
     {
+        \Carbon\Carbon::setLocale('id');
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
             ['label' => 'Dashboard', 'url' => route('dosen.dashboard')],
         ];
         $activeMenu = 'dashboard';
 
-        $countMahasiswaBimbingan = MagangModel::where('id_dosen_pembimbing', auth()->user()->id_dosen_pembimbing)
-            ->whereIn('status_magang', ['magang', 'diterima'])
-            ->distinct('id_mahasiswa')
-            ->count('id_mahasiswa');
+        // Ambil id dosen pembimbing dari user yang sedang login
+        $user = auth()->user();
+        $idDosenPembimbing = $user->dosenPembimbing->id_dosen_pembimbing ?? null;
 
-        $countMagangAktif = MagangModel::where('id_dosen_pembimbing', auth()->user()->id_dosen_pembimbing)
-            ->where('status_magang', 'magang')
-            ->count();
+        // Hitung jumlah mahasiswa bimbingan
+        $countMahasiswaBimbingan = 0;
+        if ($idDosenPembimbing) {
+            $countMahasiswaBimbingan = \App\Models\MagangModel::where('id_dosen_pembimbing', $idDosenPembimbing)
+                ->whereNotNull('id_mahasiswa')
+                ->count();
+        }
 
-        $countMenungguFeedback = LogAktivitasModel::where('status_feedback', 'menunggu')
-            ->whereHas('magang', function ($query) {
-                $query->where('id_dosen_pembimbing', auth()->user()->id_dosen_pembimbing);
-            })
-            ->count();
+        // Hitung jumlah magang aktif (status: 'diterima' atau 'magang')
+        $countMagangAktif = 0;
+        if ($idDosenPembimbing) {
+            $countMagangAktif = \App\Models\MagangModel::where('id_dosen_pembimbing', $idDosenPembimbing)
+                ->whereIn('status_magang', ['diterima', 'magang'])
+                ->count();
+        }
 
-        $logAktivitasTerbaru = LogAktivitasModel::whereHas('magang', function ($query) {
-            $query->where('id_dosen_pembimbing', auth()->user()->id_dosen_pembimbing);
-        })
-            ->with(['magang.mahasiswa']) 
-            ->orderByDesc('created_at')
-            ->limit(10)
-            ->get();
+        // Hitung jumlah log aktivitas menunggu feedback (feedback_dospem masih null)
+        $countMenungguFeedback = 0;
+        if ($idDosenPembimbing) {
+            $countMenungguFeedback = \App\Models\LogAktivitasModel::whereHas('magang', function ($query) use ($idDosenPembimbing) {
+                    $query->where('id_dosen_pembimbing', $idDosenPembimbing);
+                })
+                ->whereNull('feedback_dospem')
+                ->count();
+        }
+
+        // Ambil 10 log aktivitas terbaru dari magang yang dibimbing dosen login
+        $logAktivitasTerbaru = [];
+        if ($idDosenPembimbing) {
+            $logAktivitasTerbaru = \App\Models\LogAktivitasModel::whereHas('magang', function ($query) use ($idDosenPembimbing) {
+                    $query->where('id_dosen_pembimbing', $idDosenPembimbing);
+                })
+                ->with(['magang.mahasiswa'])
+                ->orderByDesc('created_at')
+                ->limit(10)
+                ->get();
+        }
 
         return view('dosen.index', compact(
             'breadcrumb',
@@ -51,6 +72,7 @@ class DashboardController extends Controller
             'countMagangAktif',
             'countMenungguFeedback',
             'logAktivitasTerbaru'
+            // tambahkan variabel lain jika perlu
         ));
     }
 
