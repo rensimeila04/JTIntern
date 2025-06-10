@@ -136,28 +136,50 @@
         </div>
         @if(session('success'))
             <!-- Modal Success -->
-            <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm">
-                <div class="bg-white rounded-lg shadow-lg w-auto p-6 max-w-xs text-center">
+            <div id="successModal"
+                class="fixed inset-0 z-[80] flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                <div
+                    class="bg-white border border-gray-200 rounded-xl shadow-sm w-full max-w-xs sm:max-w-lg mx-3 sm:mx-auto pointer-events-auto transition-all">
+                    <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
+                        <h3 class="font-bold text-gray-800">
+                            Berhasil!
+                        </h3>
+                        <button type="button" id="closeSuccessModalBtn"
+                            class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200"
+                            aria-label="Close">
+                            <span class="sr-only">Close</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
                     <div class="p-4 overflow-y-auto">
                         <div class="text-center">
                             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
-                            <p class="mt-2 text-sm text-gray-600">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-2">Feedback Berhasil Dikirim</h4>
+                            <p class="text-sm text-gray-600 mb-4">
                                 {{ session('success') }}
                             </p>
                         </div>
                     </div>
-                    <button onclick="closeModal()"
-                        class="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Tutup</button>
+                    <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200">
+                        <button type="button" id="closeSuccessModalBtn2"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50">
+                            Tutup
+                        </button>
+                    </div>
                 </div>
             </div>
             <script>
-                function closeModal() {
+                function closeSuccessModal() {
                     document.getElementById('successModal').style.display = 'none';
                 }
+                document.getElementById('closeSuccessModalBtn').onclick = closeSuccessModal;
+                document.getElementById('closeSuccessModalBtn2').onclick = closeSuccessModal;
             </script>
         @endif
     </div>
