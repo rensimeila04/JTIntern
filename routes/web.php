@@ -26,6 +26,9 @@ use App\Http\Controllers\Mahasiswa\RincianController as MahasiswaRincianControll
 use App\Http\Controllers\mahasiswa\FeedbackMagangController;
 use App\Http\Controllers\mahasiswa\LogAktivitasController;
 
+// Dosen Controllers
+use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -171,9 +174,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Dosen Routes
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('dosen.index');
-        })->name('dosen.dashboard');
+        Route::get('/dashboard', [DosenDashboardController::class, 'index'])
+            ->name('dosen.dashboard');
     });
 
 
