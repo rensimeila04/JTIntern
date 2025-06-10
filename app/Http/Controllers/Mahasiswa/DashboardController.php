@@ -25,8 +25,7 @@ class DashboardController extends Controller
         $magang = null;
         if ($mahasiswa) {
             $magang = MagangModel::with(['lowongan.perusahaanMitra'])
-                ->where('id_mahasiswa', $mahasiswa->id_mahasiswa)
-                ->whereIn('status_magang', ['diterima', 'aktif']) // Sesuaikan dengan status yang menunjukkan magang aktif
+                ->where('id_mahasiswa', $mahasiswa->id_mahasiswa) // Sesuaikan dengan status yang menunjukkan magang aktif
                 ->orderByDesc('created_at')
                 ->first();
         }
