@@ -28,6 +28,7 @@ use App\Http\Controllers\mahasiswa\LogAktivitasController;
 
 // Dosen Controllers
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
+use App\Http\Controllers\Dosen\MahasiswaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -176,6 +177,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
         Route::get('/dashboard', [DosenDashboardController::class, 'index'])
             ->name('dosen.dashboard');
+        
+        Route::get('/mahasiswa', [MahasiswaController::class, 'index'])
+            ->name('dosen.mahasiswa');
     });
 
 
