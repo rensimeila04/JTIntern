@@ -21,10 +21,10 @@ class RincianController extends Controller
 
         // Ambil data magang mahasiswa yang sedang login
         $userId = Auth::id();
-        
+
         // Ambil data magang dengan relasi lowongan dan perusahaan
         $magang = MagangModel::with(['lowongan.perusahaan', 'lowongan.periode', 'mahasiswa'])
-            ->whereHas('mahasiswa', function($query) use ($userId) {
+            ->whereHas('mahasiswa', function ($query) use ($userId) {
                 $query->where('id_user', $userId);
             })
             ->orderByDesc('created_at') // atau ->orderByDesc('tanggal_diterima') jika ingin berdasarkan tanggal diterima
@@ -55,22 +55,23 @@ class RincianController extends Controller
         ]);
 
         $userId = Auth::id();
-        
-        $magang = MagangModel::whereHas('mahasiswa', function($query) use ($userId) {
+
+        $magang = MagangModel::whereHas('mahasiswa', function ($query) use ($userId) {
             $query->where('id_user', $userId);
-        })->first();
+        })
+            ->where('status_magang', 'magang')
+            ->orderByDesc('created_at')
+            ->first();
 
         if (!$magang) {
-            return redirect()->back()->with('error', 'Data magang tidak ditemukan.');
+            return redirect()->back()->with('error', 'Data magang tidak ditemukan atau status tidak valid.');
         }
 
-        // Upload sertifikat
         if ($request->hasFile('fileSertifikat')) {
             $file = $request->file('fileSertifikat');
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('sertifikat', $filename, 'public');
-            
-            // Update status magang dan path sertifikat
+
             $magang->update([
                 'status_magang' => 'selesai',
                 'path_sertifikat' => $path
@@ -85,7 +86,7 @@ class RincianController extends Controller
     public function mulaiMagang(Request $request)
     {
         $userId = Auth::id();
-        $magang = MagangModel::whereHas('mahasiswa', function($query) use ($userId) {
+        $magang = MagangModel::whereHas('mahasiswa', function ($query) use ($userId) {
             $query->where('id_user', $userId);
         })->orderByDesc('created_at')->first();
 
