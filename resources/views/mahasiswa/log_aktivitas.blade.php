@@ -25,7 +25,6 @@
                         class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <x-lucide-calendar-clock class="w-10 h-10 text-white" />
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Belum Ada Log Aktivitas</h3>
                     <p class="text-gray-600 mb-6 leading-relaxed">{{ $message }}</p>
 
                     <div class="mt-8 grid grid-cols-3 gap-4 text-center">

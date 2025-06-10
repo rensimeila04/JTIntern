@@ -8,6 +8,7 @@ use App\Models\LowonganModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\LogAktivitasModel;
 
 class RincianController extends Controller
 {
@@ -31,6 +32,9 @@ class RincianController extends Controller
             ->orderByDesc('created_at') // atau ->orderByDesc('tanggal_diterima') jika ingin berdasarkan tanggal diterima
             ->first();
 
+        $query = LogAktivitasModel::where('id_magang', $magang->id_magang);
+        $logAktivitas = $query->orderByDesc('tanggal')->paginate(100);
+
         // Jika tidak ada data magang, redirect atau tampilkan pesan
         if (!$magang) {
             return view('mahasiswa.rincian_magang', [
@@ -45,7 +49,8 @@ class RincianController extends Controller
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'magang' => $magang,
-            'status' => $magang->status_magang
+            'status' => $magang->status_magang,
+            'logAktivitas' => $logAktivitas,
         ]);
     }
 
@@ -80,7 +85,7 @@ class RincianController extends Controller
 
             // Debug: pastikan session tersimpan
             Log::info('Session success_selesai set');
-            
+
             return redirect()->back()
                 ->with('success_selesai', true)
                 ->with('show_success_modal', true);

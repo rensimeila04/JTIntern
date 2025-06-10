@@ -92,6 +92,78 @@
             </div>
         @endif
 
+        @if ($magang->status_magang === 'selesai')
+            <div class="flex flex-col mb-8">
+                <div class="-m-1.5 overflow-x-auto">
+                    <div class="p-1.5 min-w-full inline-block align-middle">
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <table class="min-w-full divide-y-2 divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium text-gray-500 w-fit">
+                                            Hari, Tanggal
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium text-gray-500 w-48">
+                                            Waktu
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium text-gray-500 w-auto">
+                                            Kegiatan
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium text-gray-500 w-44">
+                                            Status Feedback
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    @forelse($logAktivitas as $log)
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                                {{ \Carbon\Carbon::parse($log->tanggal)->translatedFormat('l, d F Y') }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                                @if ($log->jam_masuk && $log->jam_pulang)
+                                                    {{ \Carbon\Carbon::parse($log->jam_masuk)->format('H:i') }} -
+                                                    {{ \Carbon\Carbon::parse($log->jam_pulang)->format('H:i') }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-800">
+                                                {{ $log->kegiatan }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                @if ($log->feedback_dospem)
+                                                    <span
+                                                        class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-teal-500 text-teal-500">
+                                                        Dinilai
+                                                    </span>
+                                                @else
+                                                    <span
+                                                        class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-400 text-gray-400">
+                                                        Belum Dinilai
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center py-6 text-gray-500">Belum ada data log
+                                                aktivitas.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         {{-- Button berdasarkan status magang --}}
         @if ($magang && $magang->status_magang === 'diterima')
             <div class="flex justify-end">
@@ -124,7 +196,8 @@
             role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
             <div
                 class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
-                <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto">
+                <div
+                    class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto">
                     <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
                         <h3 id="hs-scale-animation-modal-label" class="font-bold text-gray-800 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-500" fill="none"
@@ -138,9 +211,9 @@
                             class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200"
                             aria-label="Close" data-hs-overlay="#hs-scale-animation-modal">
                             <span class="sr-only">Close</span>
-                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M18 6 6 18"></path>
                                 <path d="m6 6 12 12"></path>
                             </svg>
@@ -283,11 +356,14 @@
         <div id="success-selesai-modal"
             class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none bg-black/50 dark:bg-neutral-900/80"
             role="dialog" tabindex="-1" aria-labelledby="success-selesai-modal-label">
-            <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
+            <div
+                class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
                 <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70"
-                     id="success-modal-content">
-                    <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
-                        <h3 id="success-selesai-modal-label" class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                    id="success-modal-content">
+                    <div
+                        class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                        <h3 id="success-selesai-modal-label"
+                            class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4-4" />
@@ -313,15 +389,16 @@
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"
                                     fill="#dcfce7" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4-4"
-                                    stroke="#16a34a" stroke-width="3" fill="none" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4-4" stroke="#16a34a"
+                                    stroke-width="3" fill="none" />
                             </svg>
                         </div>
                         <p class="text-gray-800 dark:text-neutral-300 text-center mb-2">
                             Magang kamu telah berhasil diselesaikan dan sertifikat berhasil diunggah.
                         </p>
                     </div>
-                    <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <div
+                        class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
                         <button type="button" onclick="closeSuccessModal()"
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                             Tutup
