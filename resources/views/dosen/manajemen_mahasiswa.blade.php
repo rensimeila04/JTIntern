@@ -3,11 +3,6 @@
     <div class="w-full p-4 bg-white rounded-xl flex-col space-y-4">
         <div class="flex justify-between items-center w-full">
             <div class="text-neutral-900 text-xl font-medium">Manajemen Mahasiswa</div>
-            <div class="flex gap-2">
-                <a href="#" class="btn-primary bg-blue-500 hover:bg-blue-600">
-                    <i class="ph ph-export text-lg"></i> Export Data
-                </a>
-            </div>
         </div>
         <div class="flex space-x-4">
             <div class="flex justify-between items-center w-full">

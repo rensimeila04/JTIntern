@@ -205,6 +205,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('dosen.mahasiswa');
         Route::get('/mahasiswa/detail/{id}', [DosenMahasiswaController::class, 'detailMahasiswa'])
             ->name('dosen.detail_mahasiswa.id');
+        Route::get('/mahasiswa/detail/{id}/export-log', [DosenMahasiswaController::class, 'exportLogPdf'])
+            ->name('dosen.detail_mahasiswa.export_log');
             
         Route::get('/monitoring', [MonitoringController::class, 'index'])
             ->name('dosen.monitoring_log_aktivitas');

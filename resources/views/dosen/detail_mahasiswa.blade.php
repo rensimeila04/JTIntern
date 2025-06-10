@@ -3,6 +3,11 @@
     <div class="space-y-4">
         <div class="flex justify-between items-center">
             <p class="text-xl font-medium text-neutral-900">Detail Mahasiswa</p>
+            <div class="flex gap-2">
+                <button type="button" onclick="openExportModal()" class="btn-primary bg-blue-500 hover:bg-blue-600">
+                    <i class="ph ph-export text-lg"></i> Export PDF
+                </button>
+            </div>
         </div>
         <div class="bg-white h-fit p-6 rounded-lg space-y-6">
             <div class="flex items-center gap-8">
@@ -32,41 +37,7 @@
             <div class="flex justify-between items-center w-full">
                 <div class="text-neutral-900 text-xl font-medium">Dokumen Pendukung</div>
             </div>
-            {{--Debung--}}
-            {{-- @if (config('app.debug'))
-                <div class="bg-yellow-100 p-4 rounded mb-4">
-                    <h4 class="font-bold mb-2">Debug - Available Documents:</h4>
-                    <div class="text-sm">
-                        <p><strong>Total Documents:</strong> {{ $magang->mahasiswa->dokumen->count() }}</p>
-                        @foreach ($magang->mahasiswa->dokumen as $dok)
-                            <div class="mt-1 p-2 bg-white rounded">
-                                <p><strong>ID:</strong> {{ $dok->id_dokumen }}</p>
-                                <p><strong>Name:</strong> {{ $dok->nama_dokumen }}</p>
-                                <p><strong>Jenis:</strong> {{ $dok->jenisDokumen ? $dok->jenisDokumen->nama : 'NULL' }}</p>
-                                <p><strong>Jenis (lowercase):</strong>
-                                    {{ $dok->jenisDokumen ? strtolower(trim($dok->jenisDokumen->nama)) : 'NULL' }}</p>
-                                <p><strong>Path:</strong> {{ $dok->path_dokumen }}</p>
-                            </div>
-                        @endforeach
-
-                        <div class="mt-4 p-2 bg-blue-50 rounded">
-                            <h5 class="font-bold">Document Types We're Looking For:</h5>
-                            @php
-                                $searchTypes = [
-                                    'curriculum vitae',
-                                    'portofolio',
-                                    'sertifikat',
-                                    'surat pengantar',
-                                    'transkrip nilai',
-                                ];
-                            @endphp
-                            @foreach ($searchTypes as $type)
-                                <p><strong>{{ $type }}</strong> (lowercase: {{ strtolower(trim($type)) }})</p>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            @endif --}}
+            
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 @php
                     $documentTypes = [
@@ -279,7 +250,7 @@
                                 @foreach ($logAktivitas as $log)
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-5 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {{ \Carbon\Carbon::parse($log->tanggal)->translatedFormat('l, d F Y') }}
+                                            {{ \Carbon\Carbon::parse($log->tanggal)->locale('id')->translatedFormat('l, d F Y') }}
                                         </td>
                                         <td class="px-5 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                                             @if ($log->jam_masuk && $log->jam_pulang)
@@ -291,7 +262,7 @@
                                         </td>
                                         <td class="px-5 py-3 text-sm text-gray-900 max-w-xs">
                                             @php
-                                                $kegiatan = $log->deskripsi ?? 'Tidak ada deskripsi kegiatan';
+                                                $kegiatan = $log->kegiatan ?? 'Tidak ada deskripsi kegiatan';
                                             @endphp
                                             <div class="truncate" title="{{ $kegiatan }}">
                                                 {{ $kegiatan }}
@@ -925,6 +896,33 @@
         });
     </script>
 
-    {{-- Log Aktivitas Section --}}
-
+    {{-- Modal Pilih Log --}}
+    <div id="exportLogModal" class="fixed inset-0 z-80 bg-black/50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 w-full max-w-lg">
+            <h3 class="text-lg font-semibold mb-4">Pilih Log Aktivitas yang Akan Diexport</h3>
+            <form id="exportLogForm" method="GET" action="{{ route('dosen.detail_mahasiswa.export_log', $magang->id_magang) }}" target="_blank">
+                <div class="max-h-64 overflow-y-auto mb-4 border rounded p-2">
+                    @foreach($logAktivitas as $log)
+                        <div class="flex items-center mb-2">
+                            <input type="checkbox" name="log_ids[]" value="{{ $log->id_log_aktivitas }}" id="log-{{ $log->id_log_aktivitas }}" checked class="mr-2">
+                            <label for="log-{{ $log->id_log_aktivitas }}">
+                                {{ \Carbon\Carbon::parse($log->tanggal)->locale('id')->translatedFormat('l, d F Y') }} - {{ $log->kegiatan ? Str::limit($log->kegiatan, 40) : 'Tidak ada deskripsi' }}
+                            </div>
+                    @endforeach
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeExportModal()" class="btn-secondary">Batal</button>
+                    <button type="submit" class="btn-primary bg-blue-500 hover:bg-blue-600">Export PDF</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    function openExportModal() {
+        document.getElementById('exportLogModal').classList.remove('hidden');
+    }
+    function closeExportModal() {
+        document.getElementById('exportLogModal').classList.add('hidden');
+    }
+    </script>
 @endsection

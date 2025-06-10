@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\MagangModel;
 use App\Models\LogAktivitasModel;
 use Illuminate\Support\Facades\Auth;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class MahasiswaController extends Controller
 {
@@ -110,5 +112,40 @@ class MahasiswaController extends Controller
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu
         ]);
+    }
+
+    public function exportLogPdf(Request $request, $id)
+    {
+        $magang = \App\Models\MagangModel::with(['mahasiswa.user', 'mahasiswa.programStudi', 'lowongan.perusahaanMitra', 'dosenPembimbing.user'])
+            ->findOrFail($id);
+
+        // Ambil log yang dipilih, atau semua jika tidak ada yang dipilih
+        $selectedLogs = $request->input('log_ids', []);
+        $logsQuery = $magang->logAktivitas()->orderBy('tanggal');
+        if (!empty($selectedLogs)) {
+            $logsQuery->whereIn('id_log_aktivitas', $selectedLogs);
+        }
+        $logAktivitas = $logsQuery->get();
+
+        // Render view ke HTML
+        $html = view('dosen.export_log_mahasiswa', [
+            'magang' => $magang,
+            'logAktivitas' => $logAktivitas,
+        ])->render();
+
+        // PDF options
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $filename = 'logbook_' . $magang->mahasiswa->user->name . '_' . now()->format('Ymd_His') . '.pdf';
+        return response($dompdf->output())
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', "inline; filename=\"$filename\"");
     }
 }
