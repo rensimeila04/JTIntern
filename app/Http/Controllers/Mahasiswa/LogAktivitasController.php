@@ -51,6 +51,20 @@ class LogAktivitasController extends Controller
             'deskripsi' => 'required|string|max:100',
         ]);
 
+        // Check if log already exists for this date
+        $existingLog = LogAktivitasModel::where('id_magang', $magang->id_magang)
+            ->where('tanggal', $validated['tanggal_log'])
+            ->first();
+
+        if ($existingLog) {
+            // Format the date for Indonesian display
+            $tanggal = \Carbon\Carbon::parse($validated['tanggal_log'])->locale('id')->translatedFormat('l, d F Y');
+            return response()->json([
+                'success' => false, 
+                'message' => "Anda sudah menambahkan log aktivitas di hari {$tanggal}"
+            ]);
+        }
+
         try {
             $log = new \App\Models\LogAktivitasModel();
             $log->id_magang = $magang->id_magang;
