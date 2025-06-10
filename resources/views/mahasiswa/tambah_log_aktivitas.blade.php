@@ -121,7 +121,7 @@
 </div>
 
 <!-- Modal Notifikasi -->
-<div id="notifModal" class="fixed inset-0 z-[80] flex items-center justify-center bg-opacity-40 hidden transition-opacity duration-300">
+<div id="notifModal" class="fixed inset-0 z-[80] flex items-center justify-center bg-black/50 hidden transition-opacity duration-300">
     <div class="bg-white rounded-lg border border-gray-200 max-w-sm w-full p-6 text-center
         transform transition-all duration-300 scale-95 opacity-0"
         id="notifModalContent">
