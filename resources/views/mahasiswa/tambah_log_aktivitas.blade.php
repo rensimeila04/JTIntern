@@ -1,5 +1,5 @@
 <div id="modalTambahLog"
-    class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto bg-opacity-40 items-center justify-center transition-opacity duration-300">
+    class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto bg-black/50 items-center justify-center transition-opacity duration-300">
     <div class="bg-white rounded-lg w-full max-w-lg relative mx-auto my-16 border border-gray-200
         transform transition-all duration-300 scale-95 opacity-0"
         id="modalTambahLogContent">
@@ -95,7 +95,6 @@
                 <div class="flex flex-col gap-2.5 mt-4 mb-2">
                     <div class="flex justify-between">
                         <label for="deskripsi" class="text-sm font-medium w-full">Kegiatan</label>
-                        <span class="text-sm text-gray-500">0/100</span>
                     </div>
                     <div>
                         <textarea
