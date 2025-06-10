@@ -151,6 +151,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
             Route::post('/tambah', [LowonganController::class, 'storeLowongan'])->name('.store');
+            Route::get('/import', [LowonganController::class, 'importForm'])->name('.import');
+            Route::get('/template', [LowonganController::class, 'downloadTemplate'])->name('.template');
+            Route::post('/import', [LowonganController::class, 'importStore'])->name('.import.store');
+            Route::get('/export', [LowonganController::class, 'export'])->name('.export');
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
             Route::get('/{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
             Route::put('/{id}', [LowonganController::class, 'updateLowongan'])->name('.update');
