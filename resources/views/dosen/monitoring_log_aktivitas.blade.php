@@ -1,6 +1,9 @@
 @extends('layout.template')
 
 @section('content')
+    <?php
+    \Carbon\Carbon::setLocale('id');
+    ?>
     <div class="w-full p-4 bg-white rounded-xl flex-col space-y-4">
         <!-- Header dan tombol aksi -->
         <div class="flex justify-between items-center w-full">
@@ -87,7 +90,7 @@
                                             {{ $log->magang->mahasiswa->user->name }}
                                         </td>
                                         <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            {{ \Carbon\Carbon::parse($log->created_at)->translatedFormat('l, d F Y') }}
+                                            {{ \Carbon\Carbon::parse($log->tanggal)->locale('id')->translatedFormat('l, d F Y') }}
                                         </td>
                                         <td
                                             class="px-3 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 w-68 overflow-hidden truncate">

@@ -24,7 +24,7 @@ class MonitoringController extends Controller
                 $query->where('id_dosen_pembimbing', $dosenId);
             })
             ->with(['magang.mahasiswa.user'])
-            ->orderByDesc('created_at');
+            ->orderByDesc('tanggal'); // urutkan berdasarkan tanggal terbaru
 
         if ($request->filled('status')) {
             $query->where('status_feedback', $request->status);
