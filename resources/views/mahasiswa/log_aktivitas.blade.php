@@ -2,6 +2,7 @@
 @section('content')
     @php
         use Carbon\Carbon;
+        \Carbon\Carbon::setLocale('id');
     @endphp
     <div class="bg-white py-6 px-4 rounded-lg">
         <div class="flex flex-row justify-between mb-4">
@@ -54,11 +55,15 @@
                                             {{ \Carbon\Carbon::parse($log->tanggal)->translatedFormat('l, d F Y') }}
                                         </td>
                                         <td class="px-5 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800">
-                                            <!-- Jika ada field waktu, tampilkan. Jika tidak, bisa kosong atau custom -->
-                                            08.00 - 15.30
+                                            <!-- Tampilkan waktu_awal dan waktu_akhir dari database -->
+                                            @if($log->jam_masuk && $log->jam_pulang)
+                                                {{ \Carbon\Carbon::parse($log->jam_masuk)->format('H.i') }} - {{ \Carbon\Carbon::parse($log->jam_pulang)->format('H.i') }}
+                                            @else
+                                                -
+                                            @endif
                                         </td>
                                         <td class="px-5 py-1.5 whitespace-nowrap text-sm font-medium text-gray-800">
-                                            {{ $log->deskripsi }}
+                                            {{ $log->kegiatan }}
                                         </td>
                                         <td class="px-5 py-1.5 whitespace-nowrap text-sm text-gray-800">
                                             @if($log->feedback)
