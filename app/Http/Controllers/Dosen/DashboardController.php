@@ -9,7 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $breadcrumb = [];
+        $breadcrumb = [
+            ['label' => 'Home', 'url' => route('landing')],
+            ['label' => 'Dashboard', 'url' => route('dosen.dashboard')],
+        ];
         $activeMenu = 'dashboard';
 
         return view('dosen.index', compact(
