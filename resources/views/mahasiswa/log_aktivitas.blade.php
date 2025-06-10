@@ -19,10 +19,15 @@
             <button id="datePickerBtn" type="button"
                 class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                 <x-lucide-calendar-days class="size-3.5 text-neutral-500" />
-                <span id="selectedDate">Pilih Tanggal</span>
+                <span id="selectedDate">
+                    @if (!empty($startDate) && !empty($endDate))
+                        {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }}
+                    @else
+                        Pilih Tanggal
+                    @endif
+                </span>
                 <x-lucide-chevron-down class="size-5 text-neutral-500 hs-dropdown-open:-rotate-180 transition-transform duration-300" />
             </button>
-            
             <!-- Calendar Dropdown -->
             <div class="hs-dropdown-menu hs-dropdown-open:opacity-100 opacity-0 w-80 transition-[opacity,margin] duration-300 hs-dropdown-open:translate-y-0 translate-y-2 hidden z-50 mt-2">
                 <div class="w-80 flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-700">
@@ -88,6 +93,9 @@
                 </div>
             </div>
         </div>
+        <!-- Hidden inputs for range -->
+        <input type="hidden" id="startDateInput" value="{{ $startDate ?? '' }}">
+        <input type="hidden" id="endDateInput" value="{{ $endDate ?? '' }}">
         <div class="flex flex-col mt-4 mb-6">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
@@ -283,16 +291,23 @@
 
 <script>
     let currentDate = new Date();
-    let selectedDate = null;
+    let rangeStart = null;
+    let rangeEnd = null;
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
+
+    // If there is a range from backend, set it (set to local midnight)
+    @if (!empty($startDate) && !empty($endDate))
+        rangeStart = new Date("{{ $startDate }}T00:00:00");
+        rangeEnd = new Date("{{ $endDate }}T00:00:00");
+    @endif
 
     function generateCalendar(year, month) {
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const startDate = new Date(firstDay);
         const endDate = new Date(lastDay);
-        
+
         // Adjust to start from Monday
         startDate.setDate(startDate.getDate() - ((startDate.getDay() + 6) % 7));
         endDate.setDate(endDate.getDate() + (7 - endDate.getDay()) % 7);
@@ -306,46 +321,66 @@
         for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
             const dayContainer = document.createElement('div');
             const dayButton = document.createElement('button');
-            
+
             dayButton.type = 'button';
             dayButton.textContent = d.getDate();
-            
+
             const isCurrentMonth = d.getMonth() === month;
-            const isToday = d.toDateString() === new Date().toDateString();
-            const isSelected = selectedDate && d.toDateString() === selectedDate.toDateString();
-            
+            const isToday = d.toLocaleDateString() === new Date().toLocaleDateString();
+            const isInRange = rangeStart && rangeEnd && d >= rangeStart && d <= rangeEnd;
+            const isRangeStart = rangeStart && d.toLocaleDateString() === rangeStart.toLocaleDateString();
+            const isRangeEnd = rangeEnd && d.toLocaleDateString() === rangeEnd.toLocaleDateString();
+
             let classes = 'm-px size-10 flex justify-center items-center border-[1.5px] border-transparent text-sm rounded-full focus:outline-hidden ';
-            
+
             if (!isCurrentMonth) {
                 classes += 'text-gray-400 hover:border-primary-600 hover:text-primary-600 disabled:opacity-50 disabled:pointer-events-none focus:bg-gray-100 dark:text-neutral-500 dark:hover:border-neutral-500 dark:focus:bg-neutral-700';
                 dayButton.disabled = true;
-            } else if (isSelected) {
+            } else if (isRangeStart || isRangeEnd) {
                 classes += 'bg-primary-600 text-white font-medium hover:border-primary-600 focus:border-primary-600 dark:bg-primary-500 dark:hover:border-neutral-700 dark:focus:border-neutral-700';
-            } else if (isToday) {
+            } else if (isInRange) {
                 classes += 'bg-primary-100 text-primary-600 font-medium hover:border-primary-600 focus:border-primary-600 dark:bg-primary-800 dark:text-primary-400';
+            } else if (isToday) {
+                classes += 'bg-primary-50 text-primary-600 font-medium hover:border-primary-600 focus:border-primary-600 dark:bg-primary-800 dark:text-primary-400';
             } else {
                 classes += 'text-gray-800 hover:border-primary-600 hover:text-primary-600 focus:border-primary-600 focus:text-primary-600 dark:text-neutral-200 dark:hover:border-primary-500 dark:hover:text-primary-500 dark:focus:border-primary-500 dark:focus:text-primary-500';
             }
-            
+
             dayButton.className = classes;
-            
+
             if (isCurrentMonth) {
+                // Buat salinan tanggal baru untuk closure event, dan set ke waktu lokal midnight
+                const thisDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
                 dayButton.addEventListener('click', function() {
-                    selectedDate = new Date(d);
+                    if (!rangeStart || (rangeStart && rangeEnd)) {
+                        rangeStart = new Date(thisDay.getFullYear(), thisDay.getMonth(), thisDay.getDate());
+                        rangeStart.setHours(0,0,0,0);
+                        rangeEnd = null;
+                    } else if (rangeStart && !rangeEnd) {
+                        let picked = new Date(thisDay.getFullYear(), thisDay.getMonth(), thisDay.getDate());
+                        picked.setHours(0,0,0,0);
+                        if (picked < rangeStart) {
+                            rangeEnd = rangeStart;
+                            rangeStart = picked;
+                        } else {
+                            rangeEnd = picked;
+                        }
+                    }
+                    // Hanya update kalender, JANGAN close dropdown di sini!
                     generateCalendar(year, month);
                 });
             }
-            
+
             dayContainer.appendChild(dayButton);
             currentWeek.appendChild(dayContainer);
-            
+
             if (d.getDay() === 0) { // Sunday
                 calendarDays.appendChild(currentWeek);
                 currentWeek = document.createElement('div');
                 currentWeek.className = 'flex';
             }
         }
-        
+
         if (currentWeek.children.length > 0) {
             calendarDays.appendChild(currentWeek);
         }
@@ -359,21 +394,22 @@
     function initCalendar() {
         updateCalendarHeader();
         generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
-        
+
         document.getElementById('prevMonth').addEventListener('click', function() {
             currentDate.setMonth(currentDate.getMonth() - 1);
             updateCalendarHeader();
             generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
         });
-        
+
         document.getElementById('nextMonth').addEventListener('click', function() {
             currentDate.setMonth(currentDate.getMonth() + 1);
             updateCalendarHeader();
             generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
         });
-        
+
         document.getElementById('cancelDate').addEventListener('click', function() {
-            selectedDate = null;
+            rangeStart = null;
+            rangeEnd = null;
             document.getElementById('selectedDate').textContent = 'Pilih Tanggal';
             // Close dropdown
             const dropdown = document.querySelector('.hs-dropdown');
@@ -381,17 +417,23 @@
                 dropdown.classList.remove('hs-dropdown-open');
             }
         });
-        
+
         document.getElementById('applyDate').addEventListener('click', function() {
-            if (selectedDate) {
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                document.getElementById('selectedDate').textContent = selectedDate.toLocaleDateString('id-ID', options);
-                
-                // Here you can add functionality to filter the table based on selected date
-                filterLogsByDate(selectedDate);
+            if (rangeStart && rangeEnd) {
+                const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                document.getElementById('selectedDate').textContent =
+                    rangeStart.toLocaleDateString('id-ID', options) + ' - ' +
+                    rangeEnd.toLocaleDateString('id-ID', options);
+
+                filterLogsByRange(rangeStart, rangeEnd);
+            } else if (rangeStart) {
+                const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                document.getElementById('selectedDate').textContent =
+                    rangeStart.toLocaleDateString('id-ID', options);
+                filterLogsByRange(rangeStart, rangeStart);
             }
-            
-            // Close dropdown
+
+            // Close dropdown HANYA di sini
             const dropdown = document.querySelector('.hs-dropdown');
             if (dropdown) {
                 dropdown.classList.remove('hs-dropdown-open');
@@ -399,14 +441,11 @@
         });
     }
 
-    function filterLogsByDate(date) {
-        // Add your filtering logic here
-        // You can make an AJAX call to filter the logs or implement client-side filtering
-        console.log('Filter logs by date:', date);
-        
-        // Example: Reload page with date parameter
-        const dateString = date.toISOString().split('T')[0];
-        window.location.href = window.location.pathname + '?date=' + dateString;
+    function filterLogsByRange(start, end) {
+        // Format as yyyy-mm-dd (local time)
+        const startString = start.getFullYear() + '-' + String(start.getMonth() + 1).padStart(2, '0') + '-' + String(start.getDate()).padStart(2, '0');
+        const endString = end.getFullYear() + '-' + String(end.getMonth() + 1).padStart(2, '0') + '-' + String(end.getDate()).padStart(2, '0');
+        window.location.href = window.location.pathname + '?start_date=' + startString + '&end_date=' + endString;
     }
 
     // Initialize calendar when DOM is loaded

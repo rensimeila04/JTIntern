@@ -10,7 +10,7 @@ use App\Models\MagangModel;
 
 class LogAktivitasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -26,15 +26,29 @@ class LogAktivitasController extends Controller
         // Ambil magang aktif (atau sesuaikan kebutuhan)
         $magang = MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
 
-        // Ambil log aktivitas berdasarkan id_magang
-        $logAktivitas = LogAktivitasModel::where('id_magang', $magang->id_magang ?? null)
-            ->orderByDesc('tanggal')
-            ->paginate(10);
+        // Ambil filter tanggal dari request
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        // Ambil log aktivitas berdasarkan id_magang dan filter tanggal jika ada
+        $query = LogAktivitasModel::where('id_magang', $magang->id_magang ?? null);
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->where('tanggal', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->where('tanggal', '<=', $endDate);
+        }
+
+        $logAktivitas = $query->orderByDesc('tanggal')->paginate(10);
 
         return view('mahasiswa.log_aktivitas', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'logAktivitas' => $logAktivitas,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
     }
 
