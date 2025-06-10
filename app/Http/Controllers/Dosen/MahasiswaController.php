@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MagangModel;
 use App\Models\LogAktivitasModel;
+use Illuminate\Support\Facades\Auth;
 
 class MahasiswaController extends Controller
 {
@@ -18,11 +19,16 @@ class MahasiswaController extends Controller
 
         $activeMenu = 'mahasiswa';
 
+        // Get current logged in dosen
+        $dosenId = Auth::user()->dosenPembimbing->id_dosen_pembimbing;
+
         $query = MagangModel::with([
             'mahasiswa.user',
             'lowongan.perusahaanMitra', 
             'dosenPembimbing.user'
-        ]);
+        ])
+        // Filter by dosen pembimbing
+        ->where('id_dosen_pembimbing', $dosenId);
 
         // Filter by status
         if ($request->filled('status') && $request->status != 'all') {
@@ -67,7 +73,11 @@ class MahasiswaController extends Controller
 
         $activeMenu = 'kelola-magang';
 
+        // Get current logged in dosen
+        $dosenId = Auth::user()->dosenPembimbing->id_dosen_pembimbing;
+
         // Fetch magang data with relationships including documents and feedback
+        // Only allow access to students supervised by the logged-in dosen
         $magang = MagangModel::with([
             'mahasiswa.user',
             'mahasiswa.programStudi',
@@ -76,7 +86,9 @@ class MahasiswaController extends Controller
             'dosenPembimbing.user',
             'feedback',
             'logaktivitas'
-        ])->findOrFail($id);
+        ])
+        ->where('id_dosen_pembimbing', $dosenId)
+        ->findOrFail($id);
 
         // Get log aktivitas with pagination (latest first)
         $logAktivitas = LogAktivitasModel::where('id_magang', $id)

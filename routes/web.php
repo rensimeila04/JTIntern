@@ -195,6 +195,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
         Route::get('/dashboard', [DosenDashboardController::class, 'index'])
             ->name('dosen.dashboard');
+
         Route::get('/edit', [DosenDashboardController::class, 'edit'])
             ->name('dosen.edit_profile');
         Route::post('/update-profile', [DosenDashboardController::class, 'updateProfile'])->name('dosen.update_profile');
@@ -202,9 +203,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/mahasiswa', [DosenMahasiswaController::class, 'index'])
             ->name('dosen.mahasiswa');
-
-        Route::get('/detail-mahasiswa/{id}', [DosenMahasiswaController::class, 'detailMahasiswa'])
+        Route::get('/mahasiswa/detail/{id}', [DosenMahasiswaController::class, 'detailMahasiswa'])
             ->name('dosen.detail_mahasiswa.id');
+            
         Route::get('/monitoring', [MonitoringController::class, 'index'])
             ->name('dosen.monitoring_log_aktivitas');
         Route::get('/monitoring/{id_magang}/log/{id_log_aktivitas}', [MonitoringController::class, 'detail'])
