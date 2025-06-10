@@ -6,10 +6,10 @@
         <div class="flex justify-between items-center w-full">
             <div class="text-neutral-900 text-xl font-medium">Pengguna</div>
             <div class="flex gap-2">
-                <a href="#" class="btn-primary bg-blue-500 hover:bg-blue-600">
+                <a href="{{ route('admin.pengguna.export', request()->query()) }}" target="_blank" class="btn-primary bg-blue-500 hover:bg-blue-600">
                     <i class="ph ph-export text-lg"></i> Export
                 </a>
-                <a href="#" class="btn-primary bg-amber-500 hover:bg-amber-600">
+                <a href="{{ route('admin.pengguna.import') }}" class="btn-primary bg-amber-500 hover:bg-amber-600">
                     <i class="ph ph-arrow-square-in"></i> Import
                 </a>
                 <a href="{{ route('admin.pengguna.create') }}" class="btn-primary">

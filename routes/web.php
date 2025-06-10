@@ -93,6 +93,10 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/tambah', [UserController::class, 'store'])->name('.store');
             Route::put('/{id}', [UserController::class, 'update'])->name('.update');
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('.destroy');
+            Route::get('/import', [UserController::class, 'importForm'])->name('.import');
+            Route::get('/template', [UserController::class, 'downloadTemplate'])->name('.template');
+            Route::post('/import', [UserController::class, 'importStore'])->name('.import.store');
+            Route::get('/export', [UserController::class, 'export'])->name('.export');
         });
 
 
