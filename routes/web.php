@@ -135,6 +135,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat_magang');
             Route::get('/export', [MagangController::class, 'export'])->name('.export');
             Route::get('/permohonan-magang/export', [MagangController::class, 'exportPermohonanMagang'])->name('.export-permohonan-magang');
+            Route::get('/magang-aktif/export', [MagangController::class, 'exportMagangAktif'])->name('.export-magang-aktif');
+            Route::get('/pengajuan-ditolak/export', [MagangController::class, 'exportPengajuanDitolak'])->name('.export-pengajuan-ditolak');
+            Route::get('/riwayat-magang/export', [MagangController::class, 'exportRiwayatMagang'])->name('.export-riwayat-magang');
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
             Route::post('/{id}/terima', [MagangController::class, 'terimaMagang'])->name('.terima-magang');
             Route::post('/{id}/tolak', [MagangController::class, 'tolakMagang'])->name('.tolak-magang');

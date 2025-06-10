@@ -6,9 +6,11 @@
         <div class="flex justify-between items-center w-full">
             <div class="text-neutral-900 text-xl font-medium">Magang Aktif</div>
             <div class="flex gap-2">
-                <a href="#" class="btn-primary bg-blue-500 hover:bg-blue-600">
-                    <i class="ph ph-export text-lg"></i> Export Data
+                <a href="{{ route('admin.kelola-magang.export-magang-aktif', request()->query()) }}"
+                    class="btn-primary bg-blue-500 hover:bg-blue-600" target="_blank">
+                    <i class="ph ph-export text-lg"></i> Export PDF
                 </a>
+                <!-- tombol lainnya -->
             </div>
         </div>
 
@@ -88,7 +90,8 @@
             <form method="GET" action="{{ route('admin.kelola-magang.magang_aktif') }}" id="searchForm">
                 <input type="hidden" name="status" value="{{ request('status') }}">
                 <input type="hidden" name="pembimbing" value="{{ request('pembimbing') }}">
-                <x-search-input placeholder="Cari data magang..." name="search" value="{{ request('search') }}" id="searchInput" />
+                <x-search-input placeholder="Cari data magang..." name="search" value="{{ request('search') }}"
+                    id="searchInput" />
             </form>
         </div>
 
@@ -138,10 +141,12 @@
                                             <div class="truncate max-w-40">{{ $item->lowongan->judul_lowongan }}</div>
                                         </td>
                                         <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                            <div class="truncate max-w-36">{{ $item->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</div>
+                                            <div class="truncate max-w-36">
+                                                {{ $item->lowongan->perusahaanMitra->nama_perusahaan_mitra }}</div>
                                         </td>
                                         <td class="px-3 py-3 text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                            <span class="inline-flex items-center gap-x-1 py-1 px-2 rounded-md text-xs font-medium border {{ $item->status_magang === 'magang' ? 'border-blue-600 text-blue-600' : 'border-teal-500 text-teal-500' }}">
+                                            <span
+                                                class="inline-flex items-center gap-x-1 py-1 px-2 rounded-md text-xs font-medium border {{ $item->status_magang === 'magang' ? 'border-blue-600 text-blue-600' : 'border-teal-500 text-teal-500' }}">
                                                 {{ ucfirst($item->status_magang) }}
                                             </span>
                                         </td>
@@ -152,12 +157,11 @@
                                         </td>
                                         <td class="px-3 py-3 text-sm font-medium">
                                             <div class="flex justify-start gap-1">
-                                                <a href="{{ route('admin.kelola-magang.detail', $item->id_magang) }}" 
-                                                   class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500">
+                                                <a href="{{ route('admin.kelola-magang.detail', $item->id_magang) }}"
+                                                    class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500">
                                                     <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                 </a>
-                                                <button type="button"
-                                                    onclick="openEditModal({{ $item->id_magang }})"
+                                                <button type="button" onclick="openEditModal({{ $item->id_magang }})"
                                                     class="flex shrink-0 justify-center items-center size-9 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500"
                                                     data-hs-overlay="#edit-modal">
                                                     <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
@@ -269,7 +273,8 @@
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <x-lucide-check class="w-8 h-8 text-green-600" />
                         </div>
-                        <h4 id="successModal-action-title" class="text-lg font-semibold text-gray-900 mb-2">Data Berhasil Dihapus</h4>
+                        <h4 id="successModal-action-title" class="text-lg font-semibold text-gray-900 mb-2">Data Berhasil
+                            Dihapus</h4>
                         <p id="successMessage" class="text-sm text-gray-600 mb-4">
                             Data magang telah berhasil dihapus.
                         </p>
@@ -329,8 +334,8 @@
 
                             <!-- Status Magang -->
                             <div>
-                                <label for="edit-status-magang"
-                                    class="block text-sm font-medium text-gray-700 mb-1">Status Magang</label>
+                                <label for="edit-status-magang" class="block text-sm font-medium text-gray-700 mb-1">Status
+                                    Magang</label>
                                 <select name="status_magang" id="edit-status-magang"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                                     <option value="menunggu">Menunggu</option>
@@ -379,21 +384,21 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Search functionality with debounce
         const searchInput = document.getElementById('searchInput');
         const searchForm = document.getElementById('searchForm');
         let searchTimeout;
 
         if (searchInput && searchForm) {
-            searchInput.addEventListener('input', function() {
+            searchInput.addEventListener('input', function () {
                 clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(function() {
+                searchTimeout = setTimeout(function () {
                     searchForm.submit();
                 }, 500);
             });
 
-            searchInput.addEventListener('keypress', function(e) {
+            searchInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     clearTimeout(searchTimeout);
@@ -407,7 +412,7 @@
         let currentEditId = null;
 
         // Define global functions
-        window.confirmDeleteMagang = function(id, name) {
+        window.confirmDeleteMagang = function (id, name) {
             deleteMagangId = id;
             document.getElementById('deleteMagangName').textContent = name;
             console.log('confirmDeleteMagang called for id:', id);
@@ -417,25 +422,25 @@
             } catch (error) {
                 console.error('Error opening delete modal:', error);
                 document.getElementById('deleteModal').classList.remove('hidden');
-                document.body.classList.add('hs-overlay-body-scrolling'); 
+                document.body.classList.add('hs-overlay-body-scrolling');
             }
         };
 
-        window.openEditModal = function(magangId) {
+        window.openEditModal = function (magangId) {
             currentEditId = magangId;
             console.log('openEditModal called for id:', magangId);
 
             fetch(`{{ url('admin/kelola-magang') }}/${magangId}/edit`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(response => {
                     console.log('Fetch magang data for edit response:', response);
                     if (!response.ok) {
-                         return response.json().then(errData => {
+                        return response.json().then(errData => {
                             console.error('Fetch edit data error response data:', errData);
                             throw new Error(errData.message || `HTTP error! status: ${response.status}`);
                         }).catch(() => {
@@ -478,7 +483,7 @@
             deleteMagangId = null;
         }
 
-        function showSuccessModal(message, title = 'Berhasil!') { 
+        function showSuccessModal(message, title = 'Berhasil!') {
             const successModalLabel = document.getElementById('successModal-label');
             if (successModalLabel) {
                 successModalLabel.textContent = title;
@@ -491,7 +496,7 @@
 
             if (message) {
                 const successMessageElement = document.getElementById('successMessage');
-                if (successMessageElement) { 
+                if (successMessageElement) {
                     successMessageElement.textContent = message;
                 } else {
                     console.error('#successMessage element not found');
@@ -504,9 +509,9 @@
             } catch (error) {
                 console.error('Error opening success modal:', error);
                 const modalElement = document.getElementById('successModal');
-                if (modalElement) { 
-                     modalElement.classList.remove('hidden');
-                     document.body.classList.add('hs-overlay-body-scrolling'); 
+                if (modalElement) {
+                    modalElement.classList.remove('hidden');
+                    document.body.classList.add('hs-overlay-body-scrolling');
                 }
             }
         }
@@ -519,7 +524,7 @@
             } catch (error) {
                 console.error('Error closing success modal:', error);
                 const modalElement = document.getElementById('successModal');
-                if (modalElement) { 
+                if (modalElement) {
                     modalElement.classList.add('hidden');
                     document.body.classList.remove('hs-overlay-body-scrolling');
                     const backdrop = document.querySelector('.hs-overlay-backdrop[data-hs-overlay-backdrop-template]');
@@ -542,7 +547,7 @@
         // Success modal buttons
         const closeSuccessBtn = document.getElementById('closeSuccessBtn');
         if (closeSuccessBtn) {
-            closeSuccessBtn.addEventListener('click', function() {
+            closeSuccessBtn.addEventListener('click', function () {
                 console.log('Success modal "Selesai" button clicked.');
                 closeSuccessModal();
                 window.location.reload();
@@ -551,7 +556,7 @@
 
         const closeSuccessModalBtnElement = document.getElementById('closeSuccessModalBtn');
         if (closeSuccessModalBtnElement) {
-            closeSuccessModalBtnElement.addEventListener('click', function() {
+            closeSuccessModalBtnElement.addEventListener('click', function () {
                 console.log('Success modal "X" button clicked.');
                 closeSuccessModal();
                 window.location.reload();
@@ -561,7 +566,7 @@
         // Delete confirmation button
         const confirmDeleteBtn = document.getElementById('confirmDelete');
         if (confirmDeleteBtn) {
-            confirmDeleteBtn.addEventListener('click', function() {
+            confirmDeleteBtn.addEventListener('click', function () {
                 if (!deleteMagangId) return;
                 console.log('Confirm delete button clicked for id:', deleteMagangId);
 
@@ -570,14 +575,14 @@
                 document.getElementById('deleteSpinner').classList.remove('hidden');
 
                 fetch(`{{ url('admin/kelola-magang') }}/${deleteMagangId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                    })
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                })
                     .then(response => {
                         console.log('Delete response:', response);
                         if (!response.ok) {
@@ -611,7 +616,7 @@
         // Edit form submission
         const editForm = document.getElementById('editMagangForm');
         if (editForm) {
-            editForm.addEventListener('submit', function(e) {
+            editForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 console.log('Edit form submitted');
 
@@ -637,55 +642,55 @@
                     },
                     body: formData
                 })
-                .then(response => {
-                    console.log('Edit fetch response received:', response);
-                    if (!response.ok) {
-                        return response.json().then(errData => {
-                            console.error('Edit fetch error response data:', errData);
-                            throw new Error(errData.message || `HTTP error! status: ${response.status}`);
-                        }).catch(() => {
-                            throw new Error(`HTTP error! status: ${response.status} and response was not valid JSON.`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Edit response data (JSON):', data);
-                    if (data.success) {
-                        console.log('Edit operation successful, attempting to close edit modal.');
-                        try {
-                            HSOverlay.close(document.querySelector('#edit-modal'));
-                            console.log('Called HSOverlay.close("#edit-modal")');
-                        } catch (closeError) {
-                            console.error('Error closing edit modal:', closeError);
-                            const modalElement = document.getElementById('edit-modal');
-                            if (modalElement) modalElement.classList.add('hidden');
-                            document.body.classList.remove('hs-overlay-body-scrolling');
-                            const backdrop = document.querySelector('.hs-overlay-backdrop[data-hs-overlay-backdrop-template]');
-                            if (backdrop) backdrop.remove();
+                    .then(response => {
+                        console.log('Edit fetch response received:', response);
+                        if (!response.ok) {
+                            return response.json().then(errData => {
+                                console.error('Edit fetch error response data:', errData);
+                                throw new Error(errData.message || `HTTP error! status: ${response.status}`);
+                            }).catch(() => {
+                                throw new Error(`HTTP error! status: ${response.status} and response was not valid JSON.`);
+                            });
                         }
-                        console.log('Showing success modal with message:', data.message || 'Data berhasil diperbarui.');
-                        showSuccessModal(data.message || 'Data berhasil diperbarui.', 'Data Berhasil Diperbarui');
-                    } else {
-                        let errorMessage = data.message || 'Gagal memperbarui data.';
-                        if (data.errors) {
-                            const errorMessages = Object.values(data.errors).flat();
-                            errorMessage += '\n- ' + errorMessages.join('\n- ');
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Edit response data (JSON):', data);
+                        if (data.success) {
+                            console.log('Edit operation successful, attempting to close edit modal.');
+                            try {
+                                HSOverlay.close(document.querySelector('#edit-modal'));
+                                console.log('Called HSOverlay.close("#edit-modal")');
+                            } catch (closeError) {
+                                console.error('Error closing edit modal:', closeError);
+                                const modalElement = document.getElementById('edit-modal');
+                                if (modalElement) modalElement.classList.add('hidden');
+                                document.body.classList.remove('hs-overlay-body-scrolling');
+                                const backdrop = document.querySelector('.hs-overlay-backdrop[data-hs-overlay-backdrop-template]');
+                                if (backdrop) backdrop.remove();
+                            }
+                            console.log('Showing success modal with message:', data.message || 'Data berhasil diperbarui.');
+                            showSuccessModal(data.message || 'Data berhasil diperbarui.', 'Data Berhasil Diperbarui');
+                        } else {
+                            let errorMessage = data.message || 'Gagal memperbarui data.';
+                            if (data.errors) {
+                                const errorMessages = Object.values(data.errors).flat();
+                                errorMessage += '\n- ' + errorMessages.join('\n- ');
+                            }
+                            console.error('Edit operation failed:', errorMessage);
+                            alert(errorMessage);
                         }
-                        console.error('Edit operation failed:', errorMessage);
-                        alert(errorMessage);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error during edit form submission (fetch catch):', error);
-                    alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
-                })
-                .finally(() => {
-                    console.log('Edit finally block: Resetting button state.');
-                    saveEditBtn.disabled = false;
-                    saveEditText.classList.remove('hidden');
-                    saveEditSpinner.classList.add('hidden');
-                });
+                    })
+                    .catch(error => {
+                        console.error('Error during edit form submission (fetch catch):', error);
+                        alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
+                    })
+                    .finally(() => {
+                        console.log('Edit finally block: Resetting button state.');
+                        saveEditBtn.disabled = false;
+                        saveEditText.classList.remove('hidden');
+                        saveEditSpinner.classList.add('hidden');
+                    });
             });
         }
 
