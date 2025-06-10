@@ -13,7 +13,7 @@
                         </span>
                         <p class="text-base font-medium text-neutral-400">Mahasiswa Bimbingan</p>
                     </div>
-                    <p class="text-4xl font-medium">260</p>
+                    <p class="text-4xl font-medium">{{ $countMahasiswaBimbingan }}</p>
                 </div>
             </div>
             <div class="p-4 bg-white rounded-lg">
@@ -24,7 +24,7 @@
                         </span>
                         <p class="text-base font-medium text-neutral-400">Magang Aktif</p>
                     </div>
-                    <p class="text-4xl font-medium">260</p>
+                    <p class="text-4xl font-medium">{{ $countMagangAktif }}</p>
                 </div>
             </div>
             <div class="p-4 bg-white rounded-lg">
@@ -35,7 +35,7 @@
                         </span>
                         <p class="text-base font-medium text-neutral-400">Menunggu Feedback</p>
                     </div>
-                    <p class="text-4xl font-medium">260</p>
+                    <p class="text-4xl font-medium">{{ $countMenungguFeedback }}</p>
                 </div>
             </div>
         </div>
