@@ -33,8 +33,20 @@
         </ul>
         {{-- button --}}
         <div class="flex space-x-4">
-            <a href="{{ route('login') }}" class="btn-secondary">Masuk</a>
-            <a href="{{ route('register') }}" class="btn-primary">Mulai Sekarang</a>
+            @auth
+                @php
+                    $dashboardRoute = match(auth()->user()->level->kode_level) {
+                        'ADM' => 'admin.dashboard',
+                        'DSP' => 'dosen.dashboard', 
+                        'MHS' => 'mahasiswa.dashboard',
+                        default => 'landing'
+                    };
+                @endphp
+                <a href="{{ route($dashboardRoute) }}" class="btn-primary">Dashboard</a>
+            @else
+                <a href="{{ route('login') }}" class="btn-secondary">Masuk</a>
+                <a href="{{ route('register') }}" class="btn-primary">Mulai Sekarang</a>
+            @endauth
         </div>
     </nav>
 
