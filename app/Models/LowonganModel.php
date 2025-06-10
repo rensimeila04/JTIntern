@@ -31,7 +31,15 @@ class LowonganModel extends Model
         return $this->belongsTo(PerusahaanMitraModel::class, 'id_perusahaan_mitra', 'id_perusahaan_mitra');
     }
 
+    public function perusahaan() {
+        return $this->belongsTo(PerusahaanMitraModel::class, 'id_perusahaan_mitra', 'id_perusahaan_mitra');
+    }
+
     public function periodeMagang() {
+        return $this->belongsTo(PeriodeMagangModel::class, 'id_periode_magang', 'id_periode_magang');
+    }
+
+    public function periode() {
         return $this->belongsTo(PeriodeMagangModel::class, 'id_periode_magang', 'id_periode_magang');
     }
 

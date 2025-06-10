@@ -227,14 +227,8 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('rincian')->group(function () {
             Route::get('/', [MahasiswaRincianController::class, 'index'])
                 ->name('mahasiswa.rincian');
-            Route::get('/diterima', [MahasiswaRincianController::class, 'rincianDiterima'])
-                ->name('mahasiswa.rincian_diterima');
-            Route::get('/ditolak', [MahasiswaRincianController::class, 'rincianDitolak'])
-                ->name('mahasiswa.rincian_ditolak');
-            Route::get('/magang', [MahasiswaRincianController::class, 'rincianMagang'])
-                ->name('mahasiswa.rincian_magang');
-            Route::get('/selesai', [MahasiswaRincianController::class, 'rincianSelesai'])
-                ->name('mahasiswa.rincian_selesai');
+            Route::post('/selesaikan-magang', [MahasiswaRincianController::class, 'selesaikanMagang'])
+                ->name('mahasiswa.rincian.selesaikan-magang');
         });
 
         // Feedback

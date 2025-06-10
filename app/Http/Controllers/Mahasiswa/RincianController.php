@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\MagangModel;
 use App\Models\LowonganModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RincianController extends Controller
 {
@@ -17,66 +19,66 @@ class RincianController extends Controller
 
         $activeMenu = 'rincian-magang';
 
+        // Ambil data magang mahasiswa yang sedang login
+        $userId = Auth::id();
+        
+        // Ambil data magang dengan relasi lowongan dan perusahaan
+        $magang = MagangModel::with(['lowongan.perusahaan', 'lowongan.periode', 'mahasiswa'])
+            ->whereHas('mahasiswa', function($query) use ($userId) {
+                $query->where('id_user', $userId);
+            })
+            ->orderByDesc('created_at') // atau ->orderByDesc('tanggal_diterima') jika ingin berdasarkan tanggal diterima
+            ->first();
+
+        // Jika tidak ada data magang, redirect atau tampilkan pesan
+        if (!$magang) {
+            return view('mahasiswa.rincian_magang', [
+                'breadcrumb' => $breadcrumb,
+                'activeMenu' => $activeMenu,
+                'magang' => null,
+                'message' => 'Anda belum memiliki data magang.'
+            ]);
+        }
+
         return view('mahasiswa.rincian_magang', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
-            'status' => null
+            'magang' => $magang,
+            'status' => $magang->status_magang
         ]);
     }
 
-    public function rincianDiterima()
+    public function selesaikanMagang(Request $request)
     {
-        $breadcrumb = [
-            ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Rincian Diterima', 'url' => '#'],
-        ];
-        $activeMenu = 'rincian-diterima';
-        return view('mahasiswa.rincian_magang', [
-            'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu,
-            'status' => 'diterima'
+        $request->validate([
+            'fileSertifikat' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
         ]);
-    }
 
-    public function rincianDitolak()
-    {
-        $breadcrumb = [
-            ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Rincian Ditolak', 'url' => '#'],
-        ];
-        $activeMenu = 'rincian-ditolak';
-        return view('mahasiswa.rincian_magang', [
-            'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu,
-            'status' => 'ditolak'
-        ]);
-    }
+        $userId = Auth::id();
+        
+        $magang = MagangModel::whereHas('mahasiswa', function($query) use ($userId) {
+            $query->where('id_user', $userId);
+        })->first();
 
-    public function rincianMagang()
-    {
-        $breadcrumb = [
-            ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Rincian Magang', 'url' => '#'],
-        ];
-        $activeMenu = 'rincian-magang';
-        return view('mahasiswa.rincian_magang', [
-            'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu,
-            'status' => 'magang'
-        ]);
-    }
+        if (!$magang) {
+            return redirect()->back()->with('error', 'Data magang tidak ditemukan.');
+        }
 
-    public function rincianSelesai()
-    {
-        $breadcrumb = [
-            ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Rincian Magang', 'url' => '#'],
-        ];
-        $activeMenu = 'rincian-magang';
-        return view('mahasiswa.rincian_magang', [
-            'breadcrumb' => $breadcrumb,
-            'activeMenu' => $activeMenu,
-            'status' => 'selesai'
-        ]);
+        // Upload sertifikat
+        if ($request->hasFile('fileSertifikat')) {
+            $file = $request->file('fileSertifikat');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('sertifikat', $filename, 'public');
+            
+            // Update status magang dan path sertifikat
+            $magang->update([
+                'status_magang' => 'selesai',
+                'path_sertifikat' => $path
+            ]);
+
+            return redirect()->back()->with('success', 'Magang berhasil diselesaikan.');
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengunggah sertifikat.');
     }
 }
