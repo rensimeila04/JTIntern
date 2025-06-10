@@ -21,7 +21,7 @@
         <div class="flex flex-col gap-2">
             <p class="text-neutral-400 text-xs font-medium">Manajemen Magang</p>
             <div class="flex flex-col gap-2">
-                <a href="#"
+                <a href="{{ route('dosen.mahasiswa') }}"
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'mahasiswa' ? 'bg-primary-100' : '' }}">
                     <x-lucide-users class="size-6 {{ ($activeMenu ?? '') == 'mahasiswa' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />
