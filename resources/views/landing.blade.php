@@ -96,20 +96,18 @@
     </div>
 
     {{-- Tentang --}}
-    <div id="tentang" class="bg-white h-screen w-full flex justify-between items-center px-20">
-        <div class="space-y-6 w-[521px] animate-on-scroll" data-animation="animate-fade-in-right">
-            <p class="font-semibold text-4xl text-neutral-900"><span class="text-primary-500">Temukan, Lamar, dan
-                    Mulai</span>
-                <br>Magangmu dengan Lebih<br>Mudah
+    <div id="tentang" class="bg-white min-h-screen w-full flex flex-col lg:flex-row justify-between items-center px-4 sm:px-8 lg:px-20 py-12 lg:py-0 gap-8 lg:gap-0">
+        <div class="space-y-6 w-full lg:w-[521px] animate-on-scroll order-2 lg:order-1" data-animation="animate-fade-in-right">
+            <p class="font-semibold text-2xl sm:text-3xl lg:text-4xl text-neutral-900 text-center lg:text-left">
+                <span class="text-primary-500">Temukan, Lamar, dan Mulai</span>
+                <br>Magangmu dengan Lebih<br class="hidden lg:block">Mudah
             </p>
-            <p class="font-normal text-base text-neutral-500">Dengan JTIntern, menemukan tempat magang yang sesuai jadi
-                lebih cepat dan tepat. Nikmati pengalaman mencari magang yang lebih praktis lewat rekomendasi berbasis
-                profilmu. Pantau setiap langkah perjalananmu, dapatkan insight untuk berkembang, dan siapkan diri
-                menyambut dunia kerja dengan lebih percaya diri.</p>
+            <p class="font-normal text-sm sm:text-base text-neutral-500 text-center lg:text-left leading-relaxed">
+                Dengan JTIntern, menemukan tempat magang yang sesuai jadi lebih cepat dan tepat. Nikmati pengalaman mencari magang yang lebih praktis lewat rekomendasi berbasis profilmu. Pantau setiap langkah perjalananmu, dapatkan insight untuk berkembang, dan siapkan diri menyambut dunia kerja dengan lebih percaya diri.
+            </p>
         </div>
-        <div class="w-[627px] h-[627px] bg-neutral-50 rounded-2xl animate-on-scroll"
-            data-animation="animate-fade-in-left">
-            <img class="w-[586px] h-[585px] left-[28px] top-[22px] absolute" src="{{ asset('images/konten3.svg') }}" alt="Content Illustration" />
+        <div class="w-full max-w-[627px] sm:max-w-[600px] lg:w-[627px] h-[300px] sm:h-[400px] lg:h-[627px] bg-neutral-50 rounded-2xl animate-on-scroll order-1 lg:order-2 relative flex items-center justify-center" data-animation="animate-fade-in-left">
+            <img class="w-[85%] h-[85%] object-contain" src="{{ asset('images/konten3.svg') }}" alt="Content Illustration" />
         </div>
     </div>
 
@@ -127,47 +125,58 @@
         </div>
         {{-- show fitur --}}
         <div class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+            <!-- First row - 2 cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="w-full h-auto min-h-[280px] sm:min-h-[320px] lg:h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow relative overflow-hidden flex flex-col justify-between"
                     data-animation="animate-zoom-in">
-                    <p class="font-medium text-2xl text-neutral-900">Rekomendasi Magang</p>
-                    <p class="font-normal text-base text-neutral-500">Sistem pendukung keputusan mempermudah pencarian magang sesuai keahlian.</p>
-                    <img class="w-145 absolute left-8 top-38" src="{{ asset('images/fitur1.svg') }}" alt="Rekomendasi Magang" />
+                    <div class="space-y-2 z-10 relative">
+                        <p class="font-medium text-xl sm:text-2xl text-neutral-900">Rekomendasi Magang</p>
+                        <p class="font-normal text-sm sm:text-base text-neutral-500">Sistem pendukung keputusan mempermudah pencarian magang sesuai keahlian.</p>
+                    </div>
+                    <img class="w-145 sm:w-80 lg:w-145 absolute right-2 bottom-2 sm:right-4 sm:bottom-4 lg:left-8 lg:top-38" 
+                         src="{{ asset('images/fitur1.svg') }}" alt="Rekomendasi Magang" />
                 </div>
                 
-                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                <div class="w-full h-auto min-h-[280px] sm:min-h-[320px] lg:h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow relative overflow-hidden flex flex-col justify-between"
                     data-animation="animate-zoom-in">
-                    <p class="font-medium text-2xl text-neutral-900">Manajemen Pengajuan Magang</p>
-                    <p class="font-normal text-base text-neutral-500">Ajukan lamaran, pantau status, dan terima notifikasi dalam satu platform.</p>
-                    <img class="w-122 h-64 absolute left-18 top-30" src="{{ asset('images/fitur2.svg') }}" alt="Manajemen Pengajuan Magang" />
+                    <div class="space-y-2 z-10 relative">
+                        <p class="font-medium text-xl sm:text-2xl text-neutral-900">Manajemen Pengajuan Magang</p>
+                        <p class="font-normal text-sm sm:text-base text-neutral-500">Ajukan lamaran, pantau status, dan terima notifikasi dalam satu platform.</p>
+                    </div>
+                    <img class="w-122 h-32 sm:w-75 sm:h-40 lg:w-122 lg:h-64 absolute right-4 bottom-2 sm:right-6 sm:bottom-4 lg:left-18 lg:top-30" 
+                         src="{{ asset('images/fitur2.svg') }}" alt="Manajemen Pengajuan Magang" />
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
-                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+            <!-- Second row - 3 cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="w-full h-auto min-h-[280px] sm:min-h-[320px] lg:h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
                     data-animation="animate-zoom-in">
-                    <img class="w-80 h-60 absolute left-[32px] top-[32px]" src="{{ asset('images/fitur3.svg') }}" alt="Monitoring & Evaluasi Magang" />
-                    <div class="relative z-10">
-                        <p class="font-medium text-2xl text-neutral-900">Monitoring & Evaluasi Magang</p>
-                        <p class="font-normal text-base text-neutral-500">Catat progres, isi log aktivitas, dan dapatkan evaluasi dari dosen pembimbing.</p>
+                    <img class="w-65 sm:w-75 lg:w-80 lg:h-60 absolute left-4 top-4 sm:left-6 sm:top-6 lg:left-[32px] lg:top-[32px]" 
+                         src="{{ asset('images/fitur3.svg') }}" alt="Monitoring & Evaluasi Magang" />
+                    <div class="relative z-10 space-y-2 mt-16 sm:mt-20 lg:mt-0">
+                        <p class="font-medium text-xl sm:text-2xl text-neutral-900">Monitoring & Evaluasi Magang</p>
+                        <p class="font-normal text-sm sm:text-base text-neutral-500">Catat progres, isi log aktivitas, dan dapatkan evaluasi dari dosen pembimbing.</p>
                     </div>
                 </div>
                 
-                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                <div class="w-full h-auto min-h-[280px] sm:min-h-[320px] lg:h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
                     data-animation="animate-zoom-in">
-                    <img class="w-96 h-64 absolute left-[23.33px] top-[21px]" src="{{ asset('images/fitur4.svg') }}" alt="Platform Kolaborasi" />
-                    <div class="relative z-10">
-                        <p class="font-medium text-2xl text-neutral-900">Platform Kolaborasi</p>
-                        <p class="font-normal text-base text-neutral-500">Mahasiswa, dosen, dan koordinator magang terhubung untuk komunikasi efektif.</p>
+                    <img class="w-60 sm:w-65 lg:w-96 lg:h-64 absolute left-4 top-4 sm:left-6 sm:top-6 lg:left-[23.33px] lg:top-[21px]" 
+                         src="{{ asset('images/fitur4.svg') }}" alt="Platform Kolaborasi" />
+                    <div class="relative z-10 space-y-2 mt-16 sm:mt-20 lg:mt-0">
+                        <p class="font-medium text-xl sm:text-2xl text-neutral-900">Platform Kolaborasi</p>
+                        <p class="font-normal text-sm sm:text-base text-neutral-500">Mahasiswa, dosen, dan koordinator magang terhubung untuk komunikasi efektif.</p>
                     </div>
                 </div>
                 
-                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                <div class="w-full h-auto min-h-[280px] sm:min-h-[320px] lg:h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden md:col-span-2 lg:col-span-1"
                     data-animation="animate-zoom-in">
-                    <img class="w-96 h-72 absolute left-[14.67px] top-[32px]" src="{{ asset('images/fitur5.svg') }}" alt="Analisis & Laporan" />
-                    <div class="relative z-10">
-                        <p class="font-medium text-2xl text-neutral-900">Analisis & Laporan</p>
-                        <p class="font-normal text-base text-neutral-500">Pantau efektivitas magang dengan data terintegrasi dan laporan.</p>
+                    <img class="w-65 sm:w-70 lg:w-96 lg:h-72 absolute left-4 top-4 sm:left-6 sm:top-6 lg:left-[14.67px] lg:top-[32px]" 
+                         src="{{ asset('images/fitur5.svg') }}" alt="Analisis & Laporan" />
+                    <div class="relative z-10 space-y-2 mt-16 sm:mt-20 lg:mt-0">
+                        <p class="font-medium text-xl sm:text-2xl text-neutral-900">Analisis & Laporan</p>
+                        <p class="font-normal text-sm sm:text-base text-neutral-500">Pantau efektivitas magang dengan data terintegrasi dan laporan.</p>
                     </div>
                 </div>
             </div>
@@ -175,15 +184,15 @@
     </div>
 
     {{-- Panduan --}}
-    <div id="panduan" class="bg-white h-fit w-full px-20 py-24 space-y-22">
+    <div id="panduan" class="bg-white h-fit w-full px-4 sm:px-8 lg:px-20 py-12 sm:py-16 lg:py-24 space-y-12 sm:space-y-16 lg:space-y-22">
         <div class="space-y-4 flex flex-col items-center animate-on-scroll" data-animation="animate-fade-in-up">
-            <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200 px-6 py-2">
-                <i class="ph-fill ph-book-open text-primary-500 text-xl"></i>
-                <p class="text-base text-neutral-900">Panduan Singkat</p>
+            <div class="space-x-2 flex items-center w-fit rounded-full outline-1 outline-primary-200 px-4 sm:px-6 py-2">
+                <i class="ph-fill ph-book-open text-primary-500 text-lg sm:text-xl"></i>
+                <p class="text-sm sm:text-base text-neutral-900">Panduan Singkat</p>
             </div>
-            <p class="text-4xl text-neutral-900 font-semibold text-center">Maksimalkan Sistem Rekomendasi Magang</p>
-            <p class="text-center text-base text-neutral-500">Temukan peluang magang yang sesuai dengan minat dan
-                keahlianmu, ajukan lamaran dengan mudah, dan pantau<br>secara real-time dalam satu sistem terintegrasi.
+            <p class="text-2xl sm:text-3xl lg:text-4xl text-neutral-900 font-semibold text-center leading-tight">Maksimalkan Sistem Rekomendasi Magang</p>
+            <p class="text-center text-sm sm:text-base text-neutral-500 max-w-2xl px-4">Temukan peluang magang yang sesuai dengan minat dan
+                keahlianmu, ajukan lamaran dengan mudah, dan pantau secara real-time dalam satu sistem terintegrasi.
             </p>
         </div>
         {{-- show panduan --}}
@@ -207,34 +216,38 @@
                 ],
             ];
         @endphp
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-4">
             @foreach ($steps as $item)
                 <div class="w-full h-fit bg-white outline-1 outline-neutral-200 rounded-2xl py-6 px-6 
-                          hover:bg-primary-50 hover:outline-primary-500 space-y-6 animate-on-scroll"
+                          hover:bg-primary-50 hover:outline-primary-500 space-y-4 sm:space-y-6 animate-on-scroll"
                     data-animation="animate-scale-up" style="animation-delay: {{ 100 * $loop->index }}ms">
                     <div
-                        class="w-12 h-12 bg-white border-1 rounded-lg border-neutral-200 p-2 flex flex-col justify-center hover:!outline-none">
-                        <p class="text-xl font-semibold text-primary-500 text-center">{{ $loop->index + 1 }}</p>
+                        class="w-10 h-10 sm:w-12 sm:h-12 bg-white border-1 rounded-lg border-neutral-200 p-2 flex flex-col justify-center hover:!outline-none">
+                        <p class="text-lg sm:text-xl font-semibold text-primary-500 text-center">{{ $loop->index + 1 }}</p>
                     </div>
-                    <div class="space-y-1">
-                        <p class="text-xl text-medium text-neutral-900">{{ $item['title'] }}</p>
-                        <p class="text-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
+                    <div class="space-y-1 sm:space-y-2">
+                        <p class="text-lg sm:text-xl font-medium text-neutral-900">{{ $item['title'] }}</p>
+                        <p class="text-sm sm:text-base font-normal text-neutral-500 leading-relaxed">{{ $item['desc'] }}</p>
                     </div>
                 </div>
             @endforeach
         </div>
     </div>
 
-    <footer class="bg-white py-24 px-20 space-y-14">
-        <div class="flex justify-between items-center">
-            <p class="text-4xl font-semibold text-neutral-900 animate-on-scroll"
-                data-animation="animate-fade-in-right">
-                Mulai Magangmu<br>dan Raih Kesempatan<br>Terbaik!</p>
-            <div class="flex flex-col justify-start items-end space-y-4 animate-on-scroll"
+    <footer class="bg-white py-12 sm:py-16 lg:py-24 px-4 sm:px-8 lg:px-20 space-y-8 sm:space-y-12 lg:space-y-14">
+        <div class="flex flex-col lg:flex-row justify-between items-center lg:items-center gap-8 lg:gap-0">
+            <div class="text-center lg:text-left order-2 lg:order-1">
+                <p class="text-2xl sm:text-3xl lg:text-4xl font-semibold text-neutral-900 animate-on-scroll leading-tight"
+                    data-animation="animate-fade-in-right">
+                    Mulai Magangmu<br>dan Raih Kesempatan<br class="hidden sm:block">Terbaik!</p>
+            </div>
+            <div class="flex flex-col justify-start items-center lg:items-end space-y-4 animate-on-scroll order-1 lg:order-2"
                 data-animation="animate-fade-in-left">
-                <p class="text-normal text-base text-neutral-500 text-end">Jelajahi peluang magang terbaik sesuai
-                    minat dan keahlianmu,<br>ajukan lamaran dengan mudah, dan
-                    pantau perkembanganmu<br>dalam satu sistem terintegrasi.</p>
+                <p class="text-sm sm:text-base text-neutral-500 text-center lg:text-end leading-relaxed max-w-md lg:max-w-none">
+                    Jelajahi peluang magang terbaik sesuai minat dan keahlianmu,<br class="hidden lg:block">
+                    ajukan lamaran dengan mudah, dan pantau perkembanganmu<br class="hidden lg:block">
+                    dalam satu sistem terintegrasi.
+                </p>
                 <a href="{{ route('register') }}" class="btn-primary-animated">
                     Mulai Sekarang
                     <span><i class="ph ph-caret-double-right"></i></span>
@@ -242,22 +255,23 @@
             </div>
         </div>
         <hr class="border-neutral-300">
-        <div class="flex justify-between animate-on-scroll" data-animation="animate-fade-in">
-            <ul class="flex space-x-6 text-base">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 animate-on-scroll" data-animation="animate-fade-in">
+            <ul class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-6 text-sm sm:text-base">
                 <li><a href="#beranda"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Beranda</a>
+                        class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link transition-colors duration-200">Beranda</a>
                 </li>
                 <li><a href="#tentang"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Tentang</a>
+                        class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link transition-colors duration-200">Tentang</a>
                 </li>
                 <li><a href="#fitur"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Fitur</a>
+                        class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link transition-colors duration-200">Fitur</a>
                 </li>
                 <li><a href="#panduan"
-                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Panduan</a>
+                        class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link transition-colors duration-200">Panduan</a>
                 </li>
             </ul>
-            <p class="text-neutral-500 text-base font-normal">© Copyright 2025 . Kelompok 3 TI-2E . All right reserved
+            <p class="text-neutral-500 text-xs sm:text-sm lg:text-base font-normal text-center sm:text-right">
+                © Copyright 2025 . Kelompok 3 TI-2E . All right reserved
             </p>
         </div>
     </footer>
