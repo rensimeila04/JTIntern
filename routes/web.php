@@ -176,6 +176,10 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
         Route::get('/dashboard', [DosenDashboardController::class, 'index'])
             ->name('dosen.dashboard');
+        Route::get('/edit', [DosenDashboardController::class, 'edit'])
+            ->name('dosen.edit_profile');
+        Route::post('/update-profile', [DosenDashboardController::class, 'updateProfile'])->name('dosen.update_profile');
+        Route::post('/update-account', [DosenDashboardController::class, 'updateAccount'])->name('dosen.update_account');
     });
 
 
