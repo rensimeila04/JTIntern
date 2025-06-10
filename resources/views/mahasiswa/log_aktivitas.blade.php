@@ -18,7 +18,32 @@
             @endif
         </div>
         @if ($message)
-            <div class="text-center py-6 text-gray-500">{{ $message }}</div>
+            <div class="flex flex-col items-center justify-center py-16 px-4">
+                <div
+                    class="max-w-md w-full bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 text-center border border-blue-200">
+                    <div
+                        class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <x-lucide-calendar-clock class="w-10 h-10 text-white" />
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Belum Ada Log Aktivitas</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">{{ $message }}</p>
+
+                    <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-white/60 backdrop-blur-sm rounded-lg p-3">
+                            <x-lucide-clock class="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                            <p class="text-xs text-gray-600 font-medium">Catat Waktu</p>
+                        </div>
+                        <div class="bg-white/60 backdrop-blur-sm rounded-lg p-3">
+                            <x-lucide-list-checks class="w-6 h-6 text-green-600 mx-auto mb-2" />
+                            <p class="text-xs text-gray-600 font-medium">Track Kegiatan</p>
+                        </div>
+                        <div class="bg-white/60 backdrop-blur-sm rounded-lg p-3">
+                            <x-lucide-trending-up class="w-6 h-6 text-purple-600 mx-auto mb-2" />
+                            <p class="text-xs text-gray-600 font-medium">Monitor Progress</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @else
             <div class="hs-dropdown relative inline-flex">
                 <button id="datePickerBtn" type="button"
