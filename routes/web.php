@@ -29,6 +29,7 @@ use App\Http\Controllers\mahasiswa\LogAktivitasController;
 // Dosen Controllers
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\MahasiswaController as DosenMahasiswaController;
+use App\Http\Controllers\Dosen\MonitoringController;   
 
 /*
 |--------------------------------------------------------------------------
@@ -204,6 +205,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/detail-mahasiswa/{id}', [DosenMahasiswaController::class, 'detailMahasiswa'])
             ->name('dosen.detail_mahasiswa.id');
+        Route::get('/monitoring/{id_magang}/log/{id_log_aktivitas}', [MonitoringController::class, 'detail'])
+            ->name('dosen.monitoring.detail');
+        Route::post('/monitoring/{id_magang}/log/{id_log_aktivitas}/feedback', [MonitoringController::class, 'feedback'])
+            ->name('dosen.monitoring.feedback');
     });
 });
 
