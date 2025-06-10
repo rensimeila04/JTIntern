@@ -294,6 +294,7 @@
             const year = this.currentDate.getFullYear();
             const month = this.currentDate.getMonth();
             const today = new Date();
+            today.setHours(0,0,0,0); // normalize
             const firstDay = new Date(year, month, 1);
             const startDate = new Date(firstDay);
             const dayOfWeek = firstDay.getDay();
@@ -307,6 +308,7 @@
                 for (let day = 0; day < 7; day++) {
                     const currentDate = new Date(startDate);
                     currentDate.setDate(startDate.getDate() + (week * 7) + day);
+                    currentDate.setHours(0,0,0,0); // normalize
 
                     const dayDiv = document.createElement('div');
                     const button = document.createElement('button');
@@ -314,10 +316,9 @@
                     button.textContent = currentDate.getDate();
 
                     const isCurrentMonth = currentDate.getMonth() === month;
-                    const isToday = currentDate.toDateString() === today.toDateString();
-                    const isPast = currentDate < today && !isToday;
-                    const isSelected = this.selectedDate && currentDate.toDateString() === this.selectedDate
-                        .toDateString();
+                    const isToday = currentDate.getTime() === today.getTime();
+                    const isFuture = currentDate > today;
+                    const isSelected = this.selectedDate && currentDate.getTime() === this.selectedDate.getTime();
 
                     let classes =
                         'm-px size-10 flex justify-center items-center border-[1.5px] border-transparent text-sm rounded-full focus:outline-hidden';
@@ -326,7 +327,7 @@
                         classes +=
                             ' text-gray-400 hover:border-primary-600 hover:text-primary-600 disabled:opacity-50 disabled:pointer-events-none';
                         button.disabled = true;
-                    } else if (isPast) {
+                    } else if (isFuture) {
                         classes += ' text-gray-400 opacity-50 cursor-not-allowed';
                         button.disabled = true;
                     } else if (isSelected) {
@@ -341,7 +342,7 @@
 
                     button.className = classes;
 
-                    if (isCurrentMonth && !isPast) {
+                    if (isCurrentMonth && !isFuture) {
                         button.addEventListener('click', () => {
                             this.selectDate(currentDate);
                         });

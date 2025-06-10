@@ -38,4 +38,31 @@ class LogAktivitasController extends Controller
         ]);
     }
 
+    public function store(Request $request)
+    {
+        $user = auth()->user();
+        $mahasiswa = $user->mahasiswa;
+        $magang = \App\Models\MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
+
+        $validated = $request->validate([
+            'tanggal_log' => 'required|date',
+            'waktu_awal' => 'required|date_format:H:i',
+            'waktu_akhir' => 'required|date_format:H:i|after:waktu_awal',
+            'deskripsi' => 'required|string|max:100',
+        ]);
+
+        try {
+            $log = new \App\Models\LogAktivitasModel();
+            $log->id_magang = $magang->id_magang;
+            $log->tanggal = $validated['tanggal_log'];
+            $log->jam_masuk = $validated['waktu_awal'];
+            $log->jam_pulang = $validated['waktu_akhir'];
+            $log->kegiatan = $validated['deskripsi'];
+            $log->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Gagal menyimpan log aktivitas.']);
+        }
+    }
 }
