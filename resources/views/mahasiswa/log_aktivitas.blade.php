@@ -630,4 +630,20 @@
                 });
         });
     });
+
+    // Add this function to close the Edit Modal
+    function closeEditModal() {
+        // If using HSOverlay
+        if (typeof HSOverlay !== 'undefined') {
+            HSOverlay.close(document.getElementById('modal-edit-log'));
+        } else {
+            // Fallback: hide modal manually
+            const modal = document.getElementById('modal-edit-log');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('opacity-100');
+                modal.classList.remove('pointer-events-auto');
+            }
+        }
+    }
 </script>
