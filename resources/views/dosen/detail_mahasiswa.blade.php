@@ -250,10 +250,6 @@
         <div class="bg-white h-fit p-6 rounded-lg space-y-6">
             <div class="flex flex-row justify-between">
                 <p class="text-xl font-medium">Log Aktivitas</p>
-                <a href="{{ route('mahasiswa.feedback') }}" id="lihat-semua-aktivitas"
-                    class="text-base font-semibold text-primary-600">
-                    Lihat Semua
-                </a>
             </div>
             @if ($logAktivitas->count() > 0)
                 <div class="bg-neutral-50 rounded-lg overflow-hidden">

@@ -71,7 +71,7 @@ class MahasiswaController extends Controller
             ['label' => 'Detail Mahasiswa', 'url' => route('dosen.detail_mahasiswa.id', ['id' => $id])],
         ];
 
-        $activeMenu = 'kelola-magang';
+        $activeMenu = 'mahasiswa';
 
         // Get current logged in dosen
         $dosenId = Auth::user()->dosenPembimbing->id_dosen_pembimbing;
