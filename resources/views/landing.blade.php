@@ -14,15 +14,22 @@
 
 <body>
     {{-- Navbar --}}
-    <nav id="navbar" class="flex items-center justify-between bg-white px-20 py-6 w-full z-50 transition-all duration-300">
+    <nav id="navbar"
+        class="flex items-center justify-between bg-white px-20 py-6 w-full z-50 transition-all duration-300">
         {{-- logo --}}
         <img src="{{ asset('Images/logo.svg') }}" alt="Logo" class="h-8">
         {{-- menu --}}
         <ul class="flex space-x-8 text-base">
             <li><a href="#beranda" class="text-primary-500 font-semibold nav-link">Beranda</a></li>
-            <li><a href="#tentang" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Tentang</a></li>
-            <li><a href="#fitur" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Fitur</a></li>
-            <li><a href="#panduan" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Panduan</a></li>
+            <li><a href="#tentang"
+                    class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Tentang</a>
+            </li>
+            <li><a href="#fitur"
+                    class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Fitur</a>
+            </li>
+            <li><a href="#panduan"
+                    class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Panduan</a>
+            </li>
         </ul>
         {{-- button --}}
         <div class="flex space-x-4">
@@ -53,6 +60,10 @@
             <img src="{{ asset('images/konten_dashboard.png') }}" alt="Hero Illustration"
                 class="h-auto object-center object-cover w-[903px] border-1 rounded-3xl border-primary-200">
         </div>
+        <img class="w-90 left-27 top-149 absolute animate-on-scroll animate-float" data-animation="animate-fade-in-left"
+            src="{{ asset('images/card_konten1.svg') }}" />
+        <img class="w-60 left-267 top-180 absolute animate-on-scroll animate-float-reverse"
+            data-animation="animate-fade-in-right" src="{{ asset('images/card_konten2.svg') }}" />
     </div>
 
     {{-- Tentang --}}
@@ -68,7 +79,9 @@
                 menyambut dunia kerja dengan lebih percaya diri.</p>
         </div>
         <div class="w-[627px] h-[627px] bg-neutral-50 rounded-2xl animate-on-scroll"
-            data-animation="animate-fade-in-left"></div>
+            data-animation="animate-fade-in-left">
+            <img class="w-[586px] h-[585px] left-[28px] top-[22px] absolute" src="{{ asset('images/konten3.svg') }}" alt="Content Illustration" />
+        </div>
     </div>
 
     {{-- Fitur --}}
@@ -84,53 +97,50 @@
                 lamaran dengan mudah, serta memantau perkembangan dalam satu platform.</p>
         </div>
         {{-- show fitur --}}
-        @php
-            $firstRow = [
-                [
-                    'title' => 'Rekomendasi Magang',
-                    'desc' => 'Sistem pendukung keputusan mempermudah pencarian magang sesuai keahlian.',
-                ],
-                [
-                    'title' => 'Manajemen Pengajuan Magang',
-                    'desc' => 'Ajukan lamaran, pantau status, dan terima notifikasi dalam satu platform.',
-                ],
-            ];
-
-            $secondRow = [
-                [
-                    'title' => 'Monitoring & Evaluasi Magang',
-                    'desc' => 'Catat progres, isi log aktivitas, dan dapatkan evaluasi dari dosen pembimbing.',
-                ],
-                [
-                    'title' => 'Platform Kolaborasi',
-                    'desc' => 'Mahasiswa, dosen, dan koordinator magang terhubung untuk komunikasi efektif.',
-                ],
-                [
-                    'title' => 'Analisis & Laporan',
-                    'desc' => 'Pantau efektivitas magang dengan data terintegrasi dan laporan.',
-                ],
-            ];
-        @endphp
-
         <div class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
-                @foreach ($firstRow as $item)
-                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow"
-                        data-animation="animate-zoom-in">
-                        <p class="font-medium text-2xl text-neutral-900">{{ $item['title'] }}</p>
-                        <p class="font-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
-                    </div>
-                @endforeach
+                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                    data-animation="animate-zoom-in">
+                    <p class="font-medium text-2xl text-neutral-900">Rekomendasi Magang</p>
+                    <p class="font-normal text-base text-neutral-500">Sistem pendukung keputusan mempermudah pencarian magang sesuai keahlian.</p>
+                    <img class="w-145 absolute left-8 top-38" src="{{ asset('images/fitur1.svg') }}" alt="Rekomendasi Magang" />
+                </div>
+                
+                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                    data-animation="animate-zoom-in">
+                    <p class="font-medium text-2xl text-neutral-900">Manajemen Pengajuan Magang</p>
+                    <p class="font-normal text-base text-neutral-500">Ajukan lamaran, pantau status, dan terima notifikasi dalam satu platform.</p>
+                    <img class="w-122 h-64 absolute left-18 top-30" src="{{ asset('images/fitur2.svg') }}" alt="Manajemen Pengajuan Magang" />
+                </div>
             </div>
 
             <div class="grid grid-cols-3 gap-4">
-                @foreach ($secondRow as $item)
-                    <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow"
-                        data-animation="animate-zoom-in">
-                        <p class="font-medium text-2xl text-neutral-900">{{ $item['title'] }}</p>
-                        <p class="font-normal text-base text-neutral-500">{{ $item['desc'] }}</p>
+                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                    data-animation="animate-zoom-in">
+                    <img class="w-80 h-60 absolute left-[32px] top-[32px]" src="{{ asset('images/fitur3.svg') }}" alt="Monitoring & Evaluasi Magang" />
+                    <div class="relative z-10">
+                        <p class="font-medium text-2xl text-neutral-900">Monitoring & Evaluasi Magang</p>
+                        <p class="font-normal text-base text-neutral-500">Catat progres, isi log aktivitas, dan dapatkan evaluasi dari dosen pembimbing.</p>
                     </div>
-                @endforeach
+                </div>
+                
+                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                    data-animation="animate-zoom-in">
+                    <img class="w-96 h-64 absolute left-[23.33px] top-[21px]" src="{{ asset('images/fitur4.svg') }}" alt="Platform Kolaborasi" />
+                    <div class="relative z-10">
+                        <p class="font-medium text-2xl text-neutral-900">Platform Kolaborasi</p>
+                        <p class="font-normal text-base text-neutral-500">Mahasiswa, dosen, dan koordinator magang terhubung untuk komunikasi efektif.</p>
+                    </div>
+                </div>
+                
+                <div class="w-full h-110 bg-neutral-50 rounded-2xl py-6 px-6 flex flex-col justify-end animate-on-scroll hover-scale hover-shadow relative overflow-hidden"
+                    data-animation="animate-zoom-in">
+                    <img class="w-96 h-72 absolute left-[14.67px] top-[32px]" src="{{ asset('images/fitur5.svg') }}" alt="Analisis & Laporan" />
+                    <div class="relative z-10">
+                        <p class="font-medium text-2xl text-neutral-900">Analisis & Laporan</p>
+                        <p class="font-normal text-base text-neutral-500">Pantau efektivitas magang dengan data terintegrasi dan laporan.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -188,7 +198,8 @@
 
     <footer class="bg-white py-24 px-20 space-y-14">
         <div class="flex justify-between items-center">
-            <p class="text-4xl font-semibold text-neutral-900 animate-on-scroll" data-animation="animate-fade-in-right">
+            <p class="text-4xl font-semibold text-neutral-900 animate-on-scroll"
+                data-animation="animate-fade-in-right">
                 Mulai Magangmu<br>dan Raih Kesempatan<br>Terbaik!</p>
             <div class="flex flex-col justify-start items-end space-y-4 animate-on-scroll"
                 data-animation="animate-fade-in-left">
@@ -204,18 +215,27 @@
         <hr class="border-neutral-300">
         <div class="flex justify-between animate-on-scroll" data-animation="animate-fade-in">
             <ul class="flex space-x-6 text-base">
-                <li><a href="#beranda" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Beranda</a></li>
-                <li><a href="#tentang" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Tentang</a></li>
-                <li><a href="#fitur" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Fitur</a></li>
-                <li><a href="#panduan" class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Panduan</a></li>
+                <li><a href="#beranda"
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Beranda</a>
+                </li>
+                <li><a href="#tentang"
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Tentang</a>
+                </li>
+                <li><a href="#fitur"
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Fitur</a>
+                </li>
+                <li><a href="#panduan"
+                        class="text-neutral-500 font-normal text-base hover:text-primary-500 hover:font-semibold nav-link">Panduan</a>
+                </li>
             </ul>
-            <p class="text-neutral-500 text-base font-normal">© Copyright 2025 . Kelompok 3 TI-2E . All right reserved</p>
+            <p class="text-neutral-500 text-base font-normal">© Copyright 2025 . Kelompok 3 TI-2E . All right reserved
+            </p>
         </div>
     </footer>
 
     <!-- Back to Top Button -->
-    <button id="back-to-top" 
-        class="w-12 h-12 fixed bottom-8 right-8 bg-white border border-neutral-200 hover:bg-primary-50 text-primary-500 rounded-full p-3 shadow-lg opacity-0 transition-all duration-300 transform translate-y-10" 
+    <button id="back-to-top"
+        class="w-12 h-12 fixed bottom-8 right-8 bg-white border border-neutral-200 hover:bg-primary-50 text-primary-500 rounded-full p-3 shadow-lg opacity-0 transition-all duration-300 transform translate-y-10"
         aria-label="Back to top">
         <i class="ph ph-arrow-line-up text-xl"></i>
     </button>
@@ -249,7 +269,7 @@
                         element.classList.add(animationClass);
                     }
                 });
-                
+
                 // Show/hide back to top button
                 if (window.scrollY > 500) {
                     backToTopButton.classList.remove('opacity-0', 'translate-y-10');
@@ -258,10 +278,10 @@
                     backToTopButton.classList.add('opacity-0', 'translate-y-10');
                     backToTopButton.classList.remove('opacity-100', 'translate-y-0');
                 }
-                
+
                 // Highlight active section in navbar
                 let currentSection = '';
-                
+
                 // If at the top of the page, set Beranda as active
                 if (window.scrollY < 100) {
                     currentSection = 'beranda';
@@ -279,8 +299,8 @@
                 navLinks.forEach(link => {
                     link.classList.remove('text-primary-500', 'font-semibold');
                     link.classList.add('text-neutral-500', 'font-normal');
-                    
-                    if(link.getAttribute('href') === `#${currentSection}`) {
+
+                    if (link.getAttribute('href') === `#${currentSection}`) {
                         link.classList.remove('text-neutral-500', 'font-normal');
                         link.classList.add('text-primary-500', 'font-semibold');
                     }
@@ -291,10 +311,10 @@
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
+
                     const targetId = this.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
-                    
+
                     if (targetId === 'beranda') {
                         // For beranda, scroll to the very top of the page
                         window.scrollTo({
@@ -317,10 +337,10 @@
             const navbarPlaceholder = document.getElementById('navbar-placeholder');
             const heroSection = document.querySelector('.bg-gradient-to-b');
             let navbarHeight = navbar.offsetHeight;
-            
+
             const handleNavbarPosition = function() {
                 const heroBottom = heroSection.getBoundingClientRect().bottom;
-                
+
                 if (heroBottom <= 0) {
                     // Fix navbar to top
                     navbar.classList.add('fixed', 'top-0', 'shadow-md');
@@ -340,7 +360,8 @@
                 const featureCards = document.querySelectorAll('#fitur .grid > div');
                 featureCards.forEach(card => {
                     card.addEventListener('mouseenter', function() {
-                        this.classList.add('hover:transform', 'hover:scale-105', 'transition-transform', 'duration-300');
+                        this.classList.add('hover:transform', 'hover:scale-105',
+                            'transition-transform', 'duration-300');
                     });
                     card.addEventListener('mouseleave', function() {
                         setTimeout(() => {
@@ -348,30 +369,32 @@
                         }, 300);
                     });
                 });
-                
+
                 // Guide steps hover effect
                 const guideSteps = document.querySelectorAll('#panduan .grid > div');
                 guideSteps.forEach(step => {
                     step.addEventListener('mouseenter', function() {
-                        this.classList.add('shadow-md', 'transform', 'scale-105', 'transition-all', 'duration-300');
+                        this.classList.add('shadow-md', 'transform', 'scale-105',
+                            'transition-all', 'duration-300');
                     });
                     step.addEventListener('mouseleave', function() {
                         this.classList.remove('shadow-md', 'transform', 'scale-105');
                     });
                 });
-                
+
                 // Navbar links hover effect
                 navLinks.forEach(link => {
                     link.addEventListener('mouseenter', function() {
                         if (!this.classList.contains('text-primary-500')) {
-                            this.classList.add('transform', 'translate-y-[-2px]', 'transition-transform', 'duration-200');
+                            this.classList.add('transform', 'translate-y-[-2px]',
+                                'transition-transform', 'duration-200');
                         }
                     });
                     link.addEventListener('mouseleave', function() {
                         this.classList.remove('transform', 'translate-y-[-2px]');
                     });
                 });
-                
+
                 // Buttons hover effect
                 const buttons = document.querySelectorAll('.btn-primary, .btn-secondary');
                 buttons.forEach(button => {
@@ -382,18 +405,19 @@
                         this.classList.remove('shadow-md');
                     });
                 });
-                
+
                 // Hero image hover effect
                 const heroImage = document.querySelector('.bg-gradient-to-b img');
                 if (heroImage) {
                     heroImage.addEventListener('mouseenter', function() {
-                        this.classList.add('filter', 'brightness-105', 'transition-all', 'duration-300');
+                        this.classList.add('filter', 'brightness-105', 'transition-all',
+                            'duration-300');
                     });
                     heroImage.addEventListener('mouseleave', function() {
                         this.classList.remove('filter', 'brightness-105');
                     });
                 }
-                
+
                 // Back to top button enhanced hover
                 backToTopButton.addEventListener('mouseenter', function() {
                     this.classList.add('animate-pulse', 'shadow-lg');
