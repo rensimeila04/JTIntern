@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\JenisPerusahaanModel;
 use App\Models\PerusahaanMitraModel;
 use App\Models\LowonganModel;
+use App\Models\MagangModel;
 
 class DashboardController extends Controller
 {
@@ -18,14 +19,17 @@ class DashboardController extends Controller
         ];
         $activeMenu = 'dashboard';
 
-        $userId = auth()->user()->id_mahasiswa; 
-
-
-        $lowonganMagangSaya = \App\Models\LowonganModel::whereHas('magang', function($q) use ($userId) {
-            $q->where('id_mahasiswa', $userId)
-              ->where('status_magang', 'magang');
-        })->with('perusahaanMitra')->get();
-
+        // Ambil ID mahasiswa dari user yang login
+        $mahasiswa = auth()->user()->mahasiswa; // Asumsi ada relasi mahasiswa() di User model
+        
+        $magang = null;
+        if ($mahasiswa) {
+            $magang = MagangModel::with(['lowongan.perusahaanMitra'])
+                ->where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->whereIn('status_magang', ['diterima', 'aktif']) // Sesuaikan dengan status yang menunjukkan magang aktif
+                ->orderByDesc('created_at')
+                ->first();
+        }
 
         $lowonganList = LowonganModel::orderBy('created_at', 'desc')->take(6)->get();
 
@@ -33,7 +37,7 @@ class DashboardController extends Controller
             'breadcrumb',
             'activeMenu',
             'lowonganList',
-            'lowonganMagangSaya'
+            'magang'
         ));
     }
 

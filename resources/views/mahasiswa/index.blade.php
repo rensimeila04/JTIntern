@@ -13,13 +13,23 @@
                         </div>
                         <div class="flex flex-col gap-2.5">
                             <div class="flex gap-2.5 font-medium text-base">
-                                <p>UI/UX Designer</p>
-                                <span
-                                    class="inline-flex items-center gap-x-1.5 py-0.5 px-1 rounded-md text-[10px] font-medium border border-blue-400 bg-white text-blue-600">
-                                    Magang
-                                </span>
+                                @if($magang)
+                                    <p>{{ $magang->lowongan->judul_lowongan ?? '-' }}</p>
+                                    <span
+                                        class="inline-flex items-center gap-x-1.5 py-0.5 px-1 rounded-md text-[10px] font-medium border border-blue-400 bg-white text-blue-600">
+                                        Magang Aktif
+                                    </span>
+                                @else
+                                    <p>Magang</p>
+                                @endif
                             </div>
-                            <p class="text-neutral-400 text-xs">PT. Quantum Technology Nusantara</p>
+                            <p class="text-neutral-400 text-xs">
+                                @if($magang)
+                                    {{ $magang->lowongan->perusahaanMitra->nama_perusahaan_mitra ?? '-' }}
+                                @else
+                                    Jelajahi lowongan magang
+                                @endif
+                            </p>
                         </div>
                         <a class="text-sm font-medium text-primary-500 underline ml-auto"
                             href="{{ route('mahasiswa.rincian') }}">
