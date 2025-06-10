@@ -26,29 +26,43 @@ class LogAktivitasController extends Controller
         // Ambil magang aktif (atau sesuaikan kebutuhan)
         $magang = MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
 
-        // Ambil filter tanggal dari request
-        $startDate = $request->query('start_date');
-        $endDate = $request->query('end_date');
+        // Inisialisasi variabel
+        $logAktivitas = null;
+        $message = null;
 
-        // Ambil log aktivitas berdasarkan id_magang dan filter tanggal jika ada
-        $query = LogAktivitasModel::where('id_magang', $magang->id_magang ?? null);
+        if (!$magang) {
+            $message = 'Magang belum dimulai';
+        } else {
+            if ($magang->status_magang !== 'magang') {
+                $message = $magang->status_magang === 'selesai' ? 'Magang telah selesai' : 'Magang belum dimulai';
+            } else {
+                // Ambil filter tanggal dari request
+                $startDate = $request->query('start_date');
+                $endDate = $request->query('end_date');
 
-        if ($startDate && $endDate) {
-            $query->whereBetween('tanggal', [$startDate, $endDate]);
-        } elseif ($startDate) {
-            $query->where('tanggal', '>=', $startDate);
-        } elseif ($endDate) {
-            $query->where('tanggal', '<=', $endDate);
+                // Ambil log aktivitas berdasarkan id_magang dan filter tanggal jika ada
+                $query = LogAktivitasModel::where('id_magang', $magang->id_magang);
+
+                if ($startDate && $endDate) {
+                    $query->whereBetween('tanggal', [$startDate, $endDate]);
+                } elseif ($startDate) {
+                    $query->where('tanggal', '>=', $startDate);
+                } elseif ($endDate) {
+                    $query->where('tanggal', '<=', $endDate);
+                }
+
+                $logAktivitas = $query->orderByDesc('tanggal')->paginate(10);
+            }
         }
-
-        $logAktivitas = $query->orderByDesc('tanggal')->paginate(10);
 
         return view('mahasiswa.log_aktivitas', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'logAktivitas' => $logAktivitas,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'startDate' => $startDate ?? null,
+            'endDate' => $endDate ?? null,
+            'magang' => $magang,
+            'message' => $message,
         ]);
     }
 
@@ -56,7 +70,14 @@ class LogAktivitasController extends Controller
     {
         $user = auth()->user();
         $mahasiswa = $user->mahasiswa;
-        $magang = \App\Models\MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
+        $magang = MagangModel::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
+
+        if (!$magang || $magang->status_magang !== 'magang') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Magang belum dimulai atau telah selesai.'
+            ]);
+        }
 
         $validated = $request->validate([
             'tanggal_log' => 'required|date',
@@ -74,13 +95,13 @@ class LogAktivitasController extends Controller
             // Format the date for Indonesian display
             $tanggal = \Carbon\Carbon::parse($validated['tanggal_log'])->locale('id')->translatedFormat('l, d F Y');
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => "Anda sudah menambahkan log aktivitas di hari {$tanggal}"
             ]);
         }
 
         try {
-            $log = new \App\Models\LogAktivitasModel();
+            $log = new LogAktivitasModel();
             $log->id_magang = $magang->id_magang;
             $log->tanggal = $validated['tanggal_log'];
             $log->jam_masuk = $validated['waktu_awal'];
@@ -98,8 +119,8 @@ class LogAktivitasController extends Controller
     {
         \Carbon\Carbon::setLocale('id'); // Pastikan locale Indonesia
         $log = LogAktivitasModel::find($id);
-        if (!$log) {
-            return response()->json(['success' => false]);
+        if (!$log || $log->magang->status_magang !== 'magang') {
+            return response()->json(['success' => false, 'message' => 'Log tidak ditemukan atau magang tidak aktif.']);
         }
         return response()->json([
             'success' => true,
@@ -118,13 +139,16 @@ class LogAktivitasController extends Controller
     {
         try {
             $log = LogAktivitasModel::findOrFail($id);
+            if ($log->magang->status_magang !== 'magang') {
+                return response()->json(['success' => false, 'message' => 'Tidak dapat menghapus log karena magang tidak aktif.']);
+            }
             $log->delete();
-            
+
             // For AJAX requests
             if (request()->wantsJson()) {
                 return response()->json(['success' => true]);
             }
-            
+
             // For non-AJAX requests or to force redirect
             return redirect()->route('mahasiswa.log_aktivitas')->with('success', 'Log aktivitas berhasil dihapus.');
         } catch (\Exception $e) {
@@ -138,6 +162,10 @@ class LogAktivitasController extends Controller
     public function update(Request $request, $id)
     {
         $log = LogAktivitasModel::findOrFail($id);
+
+        if ($log->magang->status_magang !== 'magang') {
+            return response()->json(['success' => false, 'message' => 'Tidak dapat mengupdate log karena magang tidak aktif.']);
+        }
 
         // Ambil data lama jika field tidak dikirim
         $tanggal_log = $request->input('tanggal_log', $log->tanggal);
