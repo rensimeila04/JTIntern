@@ -6,14 +6,15 @@
         <div class="flex justify-between items-center w-full">
             <div class="text-neutral-900 text-xl font-medium">Perusahaan Mitra</div>
             <div class="flex gap-2">
-                <a href="#" class="btn-primary bg-blue-500 hover:bg-blue-600">
-                    <x-lucide-download class="size-4" /> Export
+                <a href="{{ route('admin.perusahaan.export', request()->query()) }}"
+                    class="btn-primary bg-blue-500 hover:bg-blue-600" target="_blank">
+                    <i class="ph ph-export text-lg"></i> Export PDF
                 </a>
-                <a href="#" class="btn-primary bg-amber-500 hover:bg-amber-600">
-                    <x-lucide-upload class="size-4" /> Import
+                <a href="{{ route('admin.perusahaan.import') }}" class="btn-primary bg-amber-500 hover:bg-amber-600">
+                    <i class="ph ph-arrow-square-in"></i> Import
                 </a>
                 <a href="{{ route('admin.perusahaan.create') }}" class="btn-primary">
-                    <x-lucide-plus class="size-4" /> Tambah Perusahaan
+                    <i class="ph ph-plus"></i> Tambah Perusahaan
                 </a>
             </div>
         </div>
@@ -51,8 +52,7 @@
 
             <!-- Search dengan komponen search-input -->
             <div class="flex items-center gap-2">
-                <form method="GET" action="{{ route('admin.perusahaan') }}" id="searchForm"
-                    class="flex items-center gap-2">
+                <form method="GET" action="{{ route('admin.perusahaan') }}" id="searchForm" class="flex items-center gap-2">
                     <x-search-input name="search" value="{{ $currentSearch }}" placeholder="Cari perusahaan..."
                         id="searchInput"
                         class="py-3 px-4 pl-11 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" />
@@ -172,14 +172,20 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="deleteModal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+    <div id="deleteModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="deleteModal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="deleteModal-label" class="font-bold text-gray-800 dark:text-white">
                         Konfirmasi Hapus
                     </h3>
-                    <button type="button" id="closeModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close">
+                    <button type="button" id="closeModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -190,20 +196,26 @@
                             <x-lucide-trash-2 class="w-8 h-8 text-red-600" />
                         </div>
                         <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
-                            Apakah Anda yakin ingin menghapus perusahaan <span id="companyName" class="font-semibold"></span>?
+                            Apakah Anda yakin ingin menghapus perusahaan <span id="companyName"
+                                class="font-semibold"></span>?
                         </p>
                         <p class="mt-1 text-xs text-red-600">
                             Tindakan ini tidak dapat dibatalkan!
                         </p>
                     </div>
                 </div>
-                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                    <button type="button" id="cancelDelete" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
+                <div
+                    class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="cancelDelete"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800">
                         Batal
                     </button>
-                    <button type="button" id="confirmDeleteBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <button type="button" id="confirmDeleteBtn"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
                         <span id="deleteButtonText">Hapus</span>
-                        <div id="deleteSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading">
+                        <div id="deleteSpinner"
+                            class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full"
+                            role="status" aria-label="loading">
                         </div>
                     </button>
                 </div>
@@ -212,14 +224,20 @@
     </div>
 
     <!-- Success Modal -->
-    <div id="successModal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="successModal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+    <div id="successModal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="successModal-label">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div
+                class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="successModal-label" class="font-bold text-gray-800 dark:text-white">
                         Berhasil
                     </h3>
-                    <button type="button" id="closeSuccessModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close">
+                    <button type="button" id="closeSuccessModalBtn"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close">
                         <span class="sr-only">Close</span>
                         <x-lucide-x class="size-4" />
                     </button>
@@ -234,8 +252,10 @@
                         </p>
                     </div>
                 </div>
-                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
-                    <button type="button" id="okSuccessBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
+                <div
+                    class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="okSuccessBtn"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none">
                         OK
                     </button>
                 </div>
@@ -244,7 +264,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('searchInput');
             const searchForm = document.getElementById('searchForm');
             let searchTimeout;
@@ -254,15 +274,15 @@
                 showSuccessModal('{{ session('message') }}');
             @endif
 
-            if (searchInput && searchForm) {
-                searchInput.addEventListener('input', function() {
+                if (searchInput && searchForm) {
+                searchInput.addEventListener('input', function () {
                     clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(function() {
+                    searchTimeout = setTimeout(function () {
                         searchForm.submit();
                     }, 500);
                 });
 
-                searchInput.addEventListener('keypress', function(e) {
+                searchInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         clearTimeout(searchTimeout);
@@ -279,7 +299,7 @@
         function confirmDelete(id, name) {
             deleteCompanyId = id;
             document.getElementById('companyName').textContent = name;
-            
+
             currentModal = new HSOverlay(document.getElementById('deleteModal'));
             currentModal.open();
         }
@@ -310,17 +330,17 @@
         document.getElementById('cancelDelete').addEventListener('click', closeModal);
 
         // Event listeners untuk success modal
-        document.getElementById('closeSuccessModalBtn').addEventListener('click', function() {
+        document.getElementById('closeSuccessModalBtn').addEventListener('click', function () {
             closeSuccessModal();
             window.location.reload();
         });
-        document.getElementById('okSuccessBtn').addEventListener('click', function() {
+        document.getElementById('okSuccessBtn').addEventListener('click', function () {
             closeSuccessModal();
             window.location.reload();
         });
 
         // Event listener untuk klik di luar modal
-        document.getElementById('deleteModal').addEventListener('click', function(e) {
+        document.getElementById('deleteModal').addEventListener('click', function (e) {
             const modalContent = this.querySelector('.bg-white');
             if (!modalContent.contains(e.target)) {
                 closeModal();
@@ -328,7 +348,7 @@
         });
 
         // Event listener untuk tombol Escape
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 if (currentModal) {
                     closeModal();
@@ -339,7 +359,7 @@
             }
         });
 
-        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
             if (!deleteCompanyId) return;
 
             const deleteBtn = this;
@@ -358,27 +378,27 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Close delete modal first
-                    closeModal();
-                    // Show success modal
-                    showSuccessModal(data.message);
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menghapus perusahaan');
-            })
-            .finally(() => {
-                // Reset button state
-                deleteBtn.disabled = false;
-                deleteText.textContent = 'Hapus';
-                deleteSpinner.classList.add('hidden');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Close delete modal first
+                        closeModal();
+                        // Show success modal
+                        showSuccessModal(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menghapus perusahaan');
+                })
+                .finally(() => {
+                    // Reset button state
+                    deleteBtn.disabled = false;
+                    deleteText.textContent = 'Hapus';
+                    deleteSpinner.classList.add('hidden');
+                });
         });
     </script>
 @endsection

@@ -5,8 +5,9 @@
         <div class="flex justify-between items-center w-full">
             <div class="text-neutral-900 text-xl font-medium">Riwayat Magang</div>
             <div class="flex gap-2">
-                <a href="#" class="btn-primary bg-blue-500 hover:bg-blue-600">
-                    <i class="ph ph-export text-lg"></i> Export Data
+                <a href="{{ route('admin.kelola-magang.export-riwayat-magang', request()->query()) }}"
+                    class="btn-primary bg-blue-500 hover:bg-blue-600" target="_blank">
+                    <i class="ph ph-export text-lg"></i> Export PDF
                 </a>
             </div>
         </div>
@@ -78,7 +79,8 @@
                                         <td class="px-6 py-1.5 whitespace-nowrap text-sm font-medium">
                                             <div class="flex justify-start gap-2">
                                                 @if ($item->path_sertifikat)
-                                                    <a href="{{ route('admin.kelola-magang.lihat-sertifikat', $item->id_magang) }}" target="_blank"
+                                                    <a href="{{ route('admin.kelola-magang.lihat-sertifikat', $item->id_magang) }}"
+                                                        target="_blank"
                                                         class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none"
                                                         title="Lihat Sertifikat">
                                                         <x-lucide-eye class="w-4 h-4 text-primary-500" />
@@ -108,8 +110,7 @@
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-primary-500 hover:bg-gray-200 focus:outline-hidden border border-primary-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                 </a>
-                                                <button type="button"
-                                                    onclick="openEditModal({{ $item->id_magang }})"
+                                                <button type="button" onclick="openEditModal({{ $item->id_magang }})"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-yellow-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none"
                                                     data-hs-overlay="#edit-modal">
                                                     <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
@@ -169,7 +170,7 @@
             // Delete functionality
             let deleteMagangId = null;
 
-            window.confirmDeleteMagang = function(id, name) {
+            window.confirmDeleteMagang = function (id, name) {
                 deleteMagangId = id;
                 document.getElementById('deleteMagangName').textContent = name;
                 HSOverlay.open(document.querySelector('#deleteModal'));
@@ -180,7 +181,7 @@
                 deleteMagangId = null;
             }
 
-            function showSuccessModal(message, title = 'Berhasil!') { 
+            function showSuccessModal(message, title = 'Berhasil!') {
                 document.getElementById('successModal-label').textContent = title;
                 document.getElementById('successModal-action-title').textContent = title;
                 if (message) {
@@ -198,31 +199,31 @@
             document.getElementById('closeDeleteModalBtn').addEventListener('click', closeDeleteModal);
 
             // Success modal buttons
-            document.getElementById('closeSuccessBtn').addEventListener('click', function() {
+            document.getElementById('closeSuccessBtn').addEventListener('click', function () {
                 closeSuccessModal();
                 window.location.reload();
             });
-            document.getElementById('closeSuccessModalBtn').addEventListener('click', function() {
+            document.getElementById('closeSuccessModalBtn').addEventListener('click', function () {
                 closeSuccessModal();
                 window.location.reload();
             });
 
             // Delete confirmation button
-            document.getElementById('confirmDelete').addEventListener('click', function() {
+            document.getElementById('confirmDelete').addEventListener('click', function () {
                 if (!deleteMagangId) return;
                 this.disabled = true;
                 document.getElementById('deleteButtonText').textContent = 'Menghapus...';
                 document.getElementById('deleteSpinner').classList.remove('hidden');
 
                 fetch(`{{ url('admin/kelola-magang') }}/${deleteMagangId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                    })
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                })
                     .then(response => {
                         if (!response.ok) {
                             return response.json().then(errData => {
@@ -251,15 +252,15 @@
             // Edit Modal functionality
             let currentEditId = null;
 
-            window.openEditModal = function(magangId) {
+            window.openEditModal = function (magangId) {
                 currentEditId = magangId;
                 fetch(`{{ url('admin/kelola-magang') }}/${magangId}/edit`, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
                     .then(response => {
                         if (!response.ok) {
                             return response.json().then(errData => {
@@ -286,7 +287,7 @@
                     });
             };
 
-            document.getElementById('editMagangForm').addEventListener('submit', function(e) {
+            document.getElementById('editMagangForm').addEventListener('submit', function (e) {
                 e.preventDefault();
                 const saveEditBtn = document.getElementById('saveEditBtn');
                 const saveEditText = document.getElementById('saveEditText');
@@ -308,44 +309,44 @@
                     },
                     body: formData
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(errData => {
-                            throw new Error(errData.message || `HTTP error! status: ${response.status}`);
-                        }).catch(() => {
-                            throw new Error(`HTTP error! status: ${response.status} and response was not valid JSON.`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        HSOverlay.close(document.querySelector('#edit-modal'));
-                        showSuccessModal(data.message || 'Data berhasil diperbarui.', 'Data Berhasil Diperbarui');
-                    } else {
-                        let errorMessage = data.message || 'Gagal memperbarui data.';
-                        if (data.errors) {
-                            const errorMessages = Object.values(data.errors).flat();
-                            errorMessage += '\n- ' + errorMessages.join('\n- ');
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errData => {
+                                throw new Error(errData.message || `HTTP error! status: ${response.status}`);
+                            }).catch(() => {
+                                throw new Error(`HTTP error! status: ${response.status} and response was not valid JSON.`);
+                            });
                         }
-                        alert(errorMessage);
-                    }
-                })
-                .catch(error => {
-                    alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
-                })
-                .finally(() => {
-                    saveEditBtn.disabled = false;
-                    saveEditText.classList.remove('hidden');
-                    saveEditSpinner.classList.add('hidden');
-                });
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            HSOverlay.close(document.querySelector('#edit-modal'));
+                            showSuccessModal(data.message || 'Data berhasil diperbarui.', 'Data Berhasil Diperbarui');
+                        } else {
+                            let errorMessage = data.message || 'Gagal memperbarui data.';
+                            if (data.errors) {
+                                const errorMessages = Object.values(data.errors).flat();
+                                errorMessage += '\n- ' + errorMessages.join('\n- ');
+                            }
+                            alert(errorMessage);
+                        }
+                    })
+                    .catch(error => {
+                        alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
+                    })
+                    .finally(() => {
+                        saveEditBtn.disabled = false;
+                        saveEditText.classList.remove('hidden');
+                        saveEditSpinner.classList.add('hidden');
+                    });
             });
 
             // Show success modal if session has message
             @if (session('success') && session('message'))
                 showSuccessModal('{{ session('message') }}', 'Berhasil!');
             @endif
-        });
+            });
     </script>
 
     <!-- Delete Confirmation Modal -->
@@ -425,7 +426,8 @@
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <x-lucide-check class="w-8 h-8 text-green-600" />
                         </div>
-                        <h4 id="successModal-action-title" class="text-lg font-semibold text-gray-900 mb-2">Data Berhasil Dihapus</h4>
+                        <h4 id="successModal-action-title" class="text-lg font-semibold text-gray-900 mb-2">Data Berhasil
+                            Dihapus</h4>
                         <p id="successMessage" class="text-sm text-gray-600 mb-4">
                             Data magang telah berhasil dihapus.
                         </p>
@@ -483,8 +485,8 @@
                             </div>
                             <!-- Status Magang -->
                             <div>
-                                <label for="edit-status-magang"
-                                    class="block text-sm font-medium text-gray-700 mb-1">Status Magang</label>
+                                <label for="edit-status-magang" class="block text-sm font-medium text-gray-700 mb-1">Status
+                                    Magang</label>
                                 <select name="status_magang" id="edit-status-magang"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                                     <option value="menunggu">Menunggu</option>

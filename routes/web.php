@@ -86,6 +86,10 @@ Route::middleware(['auth'])->group(function () {
         // User management routes
         Route::prefix('pengguna')->name('admin.pengguna')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('');
+            Route::get('/import', [UserController::class, 'importForm'])->name('.import');
+            Route::get('/template', [UserController::class, 'downloadTemplate'])->name('.template');
+            Route::post('/import', [UserController::class, 'importStore'])->name('.import.store');
+            Route::get('/export', [UserController::class, 'export'])->name('.export');
             Route::get('/dospem/{id}', [UserController::class, 'detailDospem'])->name('.detail_dospem');
             Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])->name('.detail_mahasiswa');
             Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])->name('.detail_admin');
@@ -101,6 +105,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [PerusahaanController::class, 'index'])->name('');
             Route::get('/tambah', [PerusahaanController::class, 'create'])->name('.create');
             Route::post('/tambah', [PerusahaanController::class, 'store'])->name('.store');
+            Route::get('/import', [PerusahaanController::class, 'importForm'])->name('.import');
+            Route::get('/template', [PerusahaanController::class, 'downloadTemplate'])->name('.template');
+            Route::post('/import', [PerusahaanController::class, 'importStore'])->name('.import.store');
+            Route::get('/export', [PerusahaanController::class, 'export'])->name('.export');
             Route::get('/{id}/edit', [PerusahaanController::class, 'edit'])->name('.edit');
             Route::put('/{id}', [PerusahaanController::class, 'update'])->name('.update');
             Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('.destroy');
@@ -125,6 +133,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/magang-aktif', [MagangController::class, 'magangAktif'])->name('.magang_aktif');
             Route::get('/pengajuan-ditolak', [MagangController::class, 'pengajuanDitolak'])->name('.pengajuan_ditolak');
             Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat_magang');
+            Route::get('/export', [MagangController::class, 'export'])->name('.export');
+            Route::get('/permohonan-magang/export', [MagangController::class, 'exportPermohonanMagang'])->name('.export-permohonan-magang');
+            Route::get('/magang-aktif/export', [MagangController::class, 'exportMagangAktif'])->name('.export-magang-aktif');
+            Route::get('/pengajuan-ditolak/export', [MagangController::class, 'exportPengajuanDitolak'])->name('.export-pengajuan-ditolak');
+            Route::get('/riwayat-magang/export', [MagangController::class, 'exportRiwayatMagang'])->name('.export-riwayat-magang');
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
             Route::post('/{id}/terima', [MagangController::class, 'terimaMagang'])->name('.terima-magang');
             Route::post('/{id}/tolak', [MagangController::class, 'tolakMagang'])->name('.tolak-magang');
@@ -143,6 +156,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [LowonganController::class, 'index']);
             Route::get('/tambah', [LowonganController::class, 'tambahLowongan'])->name('.tambah');
             Route::post('/tambah', [LowonganController::class, 'storeLowongan'])->name('.store');
+            Route::get('/import', [LowonganController::class, 'importForm'])->name('.import');
+            Route::get('/template', [LowonganController::class, 'downloadTemplate'])->name('.template');
+            Route::post('/import', [LowonganController::class, 'importStore'])->name('.import.store');
+            Route::get('/export', [LowonganController::class, 'export'])->name('.export');
             Route::get('/{id}', [LowonganController::class, 'detailLowongan'])->name('.detail');
             Route::get('/{id}/edit', [LowonganController::class, 'editLowongan'])->name('.edit');
             Route::put('/{id}', [LowonganController::class, 'updateLowongan'])->name('.update');
