@@ -802,4 +802,97 @@ class MagangController extends Controller
         }
         return response()->download(storage_path('app/public/' . $magang->path_sertifikat), 'Sertifikat-Magang-'.$magang->mahasiswa->user->name.'.pdf');
     }
+
+    public function export(Request $request)
+    {
+        // Query builder untuk magang dengan semua relasi yang diperlukan
+        $query = MagangModel::with([
+            'mahasiswa.user',
+            'mahasiswa.programStudi',
+            'lowongan.perusahaanMitra',
+            'dosenPembimbing.user'
+        ]);
+        
+        // Filter berdasarkan status
+        if ($request->filled('status') && $request->status != 'all') {
+            $query->where('status_magang', $request->status);
+        }
+
+        // Filter berdasarkan lowongan
+        if ($request->filled('lowongan_id') && $request->lowongan_id != 'all') {
+            $query->where('id_lowongan', $request->lowongan_id);
+        }
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->whereHas('mahasiswa.user', function($q) use ($searchTerm) {
+                    $q->where('name', 'LIKE', "%{$searchTerm}%");
+                })
+                ->orWhereHas('lowongan', function($q) use ($searchTerm) {
+                    $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%");
+                })
+                ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($searchTerm) {
+                    $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
+                });
+            });
+        }
+
+        $magang = $query->get();
+
+        try {
+            // Hitung statistik berdasarkan status
+            $statuses = [
+                'menunggu' => ['label' => 'Menunggu', 'count' => 0, 'color' => '#FFA000'],
+                'diterima' => ['label' => 'Diterima', 'count' => 0, 'color' => '#1E88E5'],
+                'magang' => ['label' => 'Sedang Magang', 'count' => 0, 'color' => '#43A047'],
+                'selesai' => ['label' => 'Selesai', 'count' => 0, 'color' => '#8E24AA'],
+                'ditolak' => ['label' => 'Ditolak', 'count' => 0, 'color' => '#E53935']
+            ];
+            
+            // Hitung jumlah tiap status
+            foreach ($magang as $item) {
+                if (isset($statuses[$item->status_magang])) {
+                    $statuses[$item->status_magang]['count']++;
+                }
+            }
+            
+            // Hitung persentase
+            $totalMagang = $magang->count();
+            foreach ($statuses as $key => $value) {
+                $statuses[$key]['percentage'] = $totalMagang > 0 ? 
+                    round(($value['count'] / $totalMagang) * 100, 2) : 0;
+            }
+
+            // Generate file name
+            $fileName = 'data_magang_' . date('Y-m-d_H-i-s') . '.pdf';
+
+            // Get view content
+            $html = view('admin.export_kelola_magang', [
+                'magang' => $magang,
+                'totalMagang' => $totalMagang,
+                'statuses' => $statuses,
+                'filterStatus' => $request->status ?? 'all',
+            ])->render();
+
+            // Set options and generate PDF
+            $options = new \Dompdf\Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', true);
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+
+            // Output PDF (inline view)
+            return response($dompdf->output())
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', "inline; filename=\"$fileName\"");
+        } catch (\Exception $e) {
+            Log::error('PDF export error: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
+        }
+    }
 }

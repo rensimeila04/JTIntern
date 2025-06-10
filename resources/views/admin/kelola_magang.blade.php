@@ -78,7 +78,7 @@
             <div class="flex justify-between items-center w-full">
                 <div class="text-neutral-900 text-xl font-medium">Data Magang</div>
                 <div class="flex gap-2">
-                    <a href="#" class="btn-primary bg-blue-500 hover:bg-blue-600">
+                    <a href="{{ route('admin.kelola-magang.export') }}" class="btn-primary bg-blue-500 hover:bg-blue-600" target="_blank">
                         <i class="ph ph-export text-lg"></i> Export Data
                     </a>
                 </div>
