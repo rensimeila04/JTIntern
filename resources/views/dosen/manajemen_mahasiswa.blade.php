@@ -99,23 +99,23 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                                             @if($item->status_magang == 'diterima')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md border border-teal-700 bg-blue-50 text-teal-700">
+                                                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-teal-500 text-teal-500">
                                                     Diterima
                                                 </span>
                                             @elseif($item->status_magang == 'magang')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md border border-blue-700 bg-blue-50 text-blue-700">
+                                                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-blue-500 text-blue-500">
                                                     Magang
                                                 </span>
                                             @elseif($item->status_magang == 'selesai')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md border border-gray-700 bg-blue-50 text-gray-700">
+                                                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-500 text-gray-500">
                                                     Selesai
                                                 </span>
                                             @endif
                                         </td>
                                         <td class="px-5 py-4 whitespace-nowrap text-sm font-medium text-end">
                                             <div class="flex justify-end gap-2">
-                                                <a href="#"
-                                                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors duration-200">
+                                                <a href="{{ route('dosen.detail_mahasiswa.id', $item->id_magang) }}"
+                                                    class="btn-primary">
                                                     Detail
                                                 </a>
                                             </div>
