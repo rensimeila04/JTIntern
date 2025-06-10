@@ -282,4 +282,3 @@ Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
                 ->name('mahasiswa.log_aktivitas.destroy');
         });
     });
-});
