@@ -86,6 +86,10 @@ Route::middleware(['auth'])->group(function () {
         // User management routes
         Route::prefix('pengguna')->name('admin.pengguna')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('');
+            Route::get('/import', [UserController::class, 'importForm'])->name('.import');
+            Route::get('/template', [UserController::class, 'downloadTemplate'])->name('.template');
+            Route::post('/import', [UserController::class, 'importStore'])->name('.import.store');
+            Route::get('/export', [UserController::class, 'export'])->name('.export');
             Route::get('/dospem/{id}', [UserController::class, 'detailDospem'])->name('.detail_dospem');
             Route::get('/mahasiswa/{id}', [UserController::class, 'detailMahasiswa'])->name('.detail_mahasiswa');
             Route::get('/admin/{id}', [UserController::class, 'detailAdmin'])->name('.detail_admin');
@@ -93,10 +97,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/tambah', [UserController::class, 'store'])->name('.store');
             Route::put('/{id}', [UserController::class, 'update'])->name('.update');
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('.destroy');
-            Route::get('/import', [UserController::class, 'importForm'])->name('.import');
-            Route::get('/template', [UserController::class, 'downloadTemplate'])->name('.template');
-            Route::post('/import', [UserController::class, 'importStore'])->name('.import.store');
-            Route::get('/export', [UserController::class, 'export'])->name('.export');
         });
 
 
@@ -105,6 +105,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [PerusahaanController::class, 'index'])->name('');
             Route::get('/tambah', [PerusahaanController::class, 'create'])->name('.create');
             Route::post('/tambah', [PerusahaanController::class, 'store'])->name('.store');
+            Route::get('/import', [PerusahaanController::class, 'importForm'])->name('.import');
+            Route::get('/template', [PerusahaanController::class, 'downloadTemplate'])->name('.template');
+            Route::post('/import', [PerusahaanController::class, 'importStore'])->name('.import.store');
+            Route::get('/export', [PerusahaanController::class, 'export'])->name('.export');
             Route::get('/{id}/edit', [PerusahaanController::class, 'edit'])->name('.edit');
             Route::put('/{id}', [PerusahaanController::class, 'update'])->name('.update');
             Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('.destroy');
