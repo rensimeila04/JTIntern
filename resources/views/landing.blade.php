@@ -15,11 +15,17 @@
 <body>
     {{-- Navbar --}}
     <nav id="navbar"
-        class="flex items-center justify-between bg-white px-20 py-6 w-full z-50 transition-all duration-300">
+        class="flex items-center justify-between bg-white px-4 sm:px-8 lg:px-20 py-4 lg:py-6 w-full z-50 transition-all duration-300">
         {{-- logo --}}
-        <img src="{{ asset('Images/logo.svg') }}" alt="Logo" class="h-8">
+        <img src="{{ asset('Images/logo.svg') }}" alt="Logo" class="h-6 sm:h-8">
+        
+        {{-- Mobile menu button --}}
+        <button id="mobile-menu-button" class="lg:hidden text-neutral-500 hover:text-primary-500">
+            <i class="ph ph-list text-2xl"></i>
+        </button>
+        
         {{-- menu --}}
-        <ul class="flex space-x-8 text-base">
+        <ul id="navbar-menu" class="hidden lg:flex space-x-4 xl:space-x-8 text-sm xl:text-base">
             <li><a href="#beranda" class="text-primary-500 font-semibold nav-link">Beranda</a></li>
             <li><a href="#tentang"
                     class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Tentang</a>
@@ -31,8 +37,19 @@
                     class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link">Panduan</a>
             </li>
         </ul>
+        
+        {{-- Mobile menu --}}
+        <div id="mobile-menu" class="hidden lg:hidden fixed top-16 left-0 right-0 bg-white shadow-lg z-40 py-4">
+            <ul class="flex flex-col space-y-4 px-4">
+                <li><a href="#beranda" class="text-primary-500 font-semibold nav-link block py-2">Beranda</a></li>
+                <li><a href="#tentang" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link block py-2">Tentang</a></li>
+                <li><a href="#fitur" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link block py-2">Fitur</a></li>
+                <li><a href="#panduan" class="text-neutral-500 font-normal hover:text-primary-500 hover:font-semibold nav-link block py-2">Panduan</a></li>
+            </ul>
+        </div>
+        
         {{-- button --}}
-        <div class="flex space-x-4">
+        <div class="hidden lg:flex space-x-2 xl:space-x-4">
             @auth
                 @php
                     $dashboardRoute = match(auth()->user()->level->kode_level) {
@@ -42,10 +59,10 @@
                         default => 'landing'
                     };
                 @endphp
-                <a href="{{ route($dashboardRoute) }}" class="btn-primary">Dashboard</a>
+                <a href="{{ route($dashboardRoute) }}" class="btn-primary text-sm xl:text-base px-3 xl:px-4 py-2">Dashboard</a>
             @else
-                <a href="{{ route('login') }}" class="btn-secondary">Masuk</a>
-                <a href="{{ route('register') }}" class="btn-primary">Mulai Sekarang</a>
+                <a href="{{ route('login') }}" class="btn-secondary text-sm xl:text-base px-3 xl:px-4 py-2">Masuk</a>
+                <a href="{{ route('register') }}" class="btn-primary text-sm xl:text-base px-3 xl:px-4 py-2">Mulai Sekarang</a>
             @endauth
         </div>
     </nav>
@@ -254,6 +271,32 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let isMobileMenuOpen = false;
+
+            mobileMenuButton.addEventListener('click', function() {
+                isMobileMenuOpen = !isMobileMenuOpen;
+                if (isMobileMenuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenuButton.innerHTML = '<i class="ph ph-x text-2xl"></i>';
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.innerHTML = '<i class="ph ph-list text-2xl"></i>';
+                }
+            });
+
+            // Close mobile menu when clicking on a link
+            const mobileNavLinks = mobileMenu.querySelectorAll('.nav-link');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                    isMobileMenuOpen = false;
+                    mobileMenuButton.innerHTML = '<i class="ph ph-list text-2xl"></i>';
+                });
+            });
+
             // Animation on scroll
             const animatedElements = document.querySelectorAll('.animate-on-scroll');
             const navLinks = document.querySelectorAll('.nav-link');
@@ -335,7 +378,7 @@
                         });
                     } else {
                         // For other sections, apply the offset for fixed navbar
-                        const offset = 80; // Offset for fixed navbar height
+                        const offset = window.innerWidth < 1024 ? 60 : 80; // Responsive offset
                         window.scrollTo({
                             top: targetSection.offsetTop - offset,
                             behavior: 'smooth'
@@ -442,7 +485,7 @@
             // Check on load
             handleNavbarPosition();
             animateOnScroll();
-            addHoverInteractions(); // Add this line to initialize hover effects
+            addHoverInteractions();
 
             // Check on scroll for both animations and navbar
             window.addEventListener('scroll', function() {
@@ -454,6 +497,13 @@
             window.addEventListener('resize', function() {
                 navbarHeight = navbar.offsetHeight;
                 handleNavbarPosition();
+                
+                // Close mobile menu on resize to desktop
+                if (window.innerWidth >= 1024) {
+                    mobileMenu.classList.add('hidden');
+                    isMobileMenuOpen = false;
+                    mobileMenuButton.innerHTML = '<i class="ph ph-list text-2xl"></i>';
+                }
             });
         });
     </script>
