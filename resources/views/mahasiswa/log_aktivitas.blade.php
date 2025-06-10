@@ -90,7 +90,7 @@
                                                     <x-lucide-files class="w-4 h-4 text-primary-500" />
                                                 </a>
                                                 <button type="button"
-                                                    onclick="openEditModal({{ $log->id }}, '{{ $log->tanggal }}', '{{ $log->waktu_awal }}', '{{ $log->waktu_akhir }}', `{{ $log->deskripsi }}`)"
+                                                    onclick="openEditModal({{ $log->id_log_aktivitas }}, '{{ $log->tanggal }}', '{{ $log->jam_masuk }}', '{{ $log->jam_pulang }}', `{{ $log->kegiatan }}`)"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
                                                 </button>
@@ -122,6 +122,7 @@
     </div>
 
     @include('mahasiswa.tambah_log_aktivitas')
+    @include('mahasiswa.edit_log_aktivitas')
 
     <div id="modal-detail-log"
         class="hs-overlay hs-overlay-open:opacity-100 hs-overlay-open:duration-500 hidden size-full fixed top-0 start-0 z-80 opacity-0 overflow-x-hidden transition-all overflow-y-auto pointer-events-none"
@@ -217,43 +218,48 @@
     }
 
     // AJAX submit
-    document.getElementById('formTambahLog').addEventListener('submit', function(e) {
-        e.preventDefault();
-        let form = this;
-        let data = new FormData(form);
-        let errorDiv = document.getElementById('formError');
-        errorDiv.classList.add('hidden');
-        fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-                body: data
-            })
-            .then(res => res.json())
-            .then(res => {
-                if (res.success) {
-                    closeModal();
-                    location.reload(); // Atau update tabel via JS tanpa reload
-                } else {
-                    errorDiv.textContent = res.message || 'Terjadi kesalahan.';
-                    errorDiv.classList.remove('hidden');
-                }
-            })
-            .catch(err => {
-                errorDiv.textContent = 'Terjadi kesalahan.';
-                errorDiv.classList.remove('hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+        const formTambahLog = document.getElementById('formTambahLog');
+        if (formTambahLog) {
+            formTambahLog.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let form = this;
+                let data = new FormData(form);
+                let errorDiv = document.getElementById('formError');
+                errorDiv.classList.add('hidden');
+                fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: data
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            closeModal();
+                            location.reload(); // Atau update tabel via JS tanpa reload
+                        } else {
+                            errorDiv.textContent = res.message || 'Terjadi kesalahan.';
+                            errorDiv.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        errorDiv.textContent = 'Terjadi kesalahan.';
+                        errorDiv.classList.remove('hidden');
+                    });
             });
+        }
     });
 
-    function openEditModal(id, tanggal, waktuAwal, waktuAkhir, deskripsi) {
+    function openEditModal(id, tanggal, jamMasuk, jamPulang, kegiatan) {
         document.getElementById('modalEditLog').classList.remove('hidden');
         document.getElementById('editId').value = id;
         document.getElementById('editTanggal').value = tanggal;
-        document.getElementById('editWaktuAwal').value = waktuAwal;
-        document.getElementById('editWaktuAkhir').value = waktuAkhir;
-        document.getElementById('editDeskripsi').value = deskripsi;
+        document.getElementById('editWaktuAwal').value = jamMasuk;
+        document.getElementById('editWaktuAkhir').value = jamPulang;
+        document.getElementById('editDeskripsi').value = kegiatan;
     }
 
     function closeEditModal() {
@@ -263,36 +269,42 @@
     }
 
     // AJAX submit edit
-    document.getElementById('formEditLog').addEventListener('submit', function(e) {
-        e.preventDefault();
-        let form = this;
-        let id = document.getElementById('editId').value;
-        let data = new FormData(form);
-        let errorDiv = document.getElementById('editFormError');
-        errorDiv.classList.add('hidden');
-        fetch('/mahasiswa/log_aktivitas/' + id, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'X-HTTP-Method-Override': 'PUT'
-                },
-                body: data
-            })
-            .then(res => res.json())
-            .then(res => {
-                if (res.success) {
-                    closeEditModal();
-                    location.reload();
-                } else {
-                    errorDiv.textContent = res.message || 'Terjadi kesalahan.';
-                    errorDiv.classList.remove('hidden');
-                }
-            })
-            .catch(err => {
-                errorDiv.textContent = 'Terjadi kesalahan.';
-                errorDiv.classList.remove('hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+        const formEditLog = document.getElementById('formEditLog');
+        if (formEditLog) {
+            formEditLog.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let form = this;
+                let id = document.getElementById('editId').value;
+                let data = new FormData(form);
+                let errorDiv = document.getElementById('editFormError');
+                errorDiv.classList.add('hidden');
+                
+                fetch('/mahasiswa/log-aktivitas/' + id, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'X-HTTP-Method-Override': 'PUT'
+                        },
+                        body: data
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            closeEditModal();
+                            location.reload();
+                        } else {
+                            errorDiv.textContent = res.message || 'Terjadi kesalahan.';
+                            errorDiv.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        errorDiv.textContent = 'Terjadi kesalahan.';
+                        errorDiv.classList.remove('hidden');
+                    });
             });
+        }
     });
 
     function openDetailModal(id) {
@@ -333,10 +345,6 @@
             });
     }
 
-    function closeDetailModal() {
-        document.getElementById('modalDetailLog').classList.add('hidden');
-    }
-
     function confirmDelete(id) {
         document.getElementById('deleteForm').action = `/mahasiswa/log-aktivitas/${id}`;
         
@@ -353,82 +361,67 @@
     document.addEventListener('DOMContentLoaded', function() {
         const deleteForm = document.getElementById('deleteForm');
         
-        deleteForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show loading state
-            const deleteButton = document.getElementById('confirmDeleteBtn');
-            const deleteButtonText = document.getElementById('deleteButtonText');
-            const deleteSpinner = document.getElementById('deleteSpinner');
-            
-            deleteButton.disabled = true;
-            deleteButtonText.textContent = 'Menghapus...';
-            deleteSpinner.classList.remove('hidden');
-            
-            fetch(this.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-HTTP-Method-Override': 'DELETE'
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Close the modal
-                    if (typeof HSOverlay !== 'undefined') {
-                        HSOverlay.close(document.getElementById('modal-confirm-delete'));
-                    } else {
-                        document.getElementById('modal-confirm-delete').classList.add('hidden');
-                        document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
-                        document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
+        if (deleteForm) {
+            deleteForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const deleteButton = document.getElementById('confirmDeleteBtn');
+                const deleteButtonText = document.getElementById('deleteButtonText');
+                const deleteSpinner = document.getElementById('deleteSpinner');
+                
+                deleteButton.disabled = true;
+                deleteButtonText.textContent = 'Menghapus...';
+                deleteSpinner.classList.remove('hidden');
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-HTTP-Method-Override': 'DELETE'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                    
-                    // Redirect to the log activities page with reload to refresh data
-                    window.location = '/mahasiswa/log-aktivitas';
-                } else {
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Close the modal
+                        if (typeof HSOverlay !== 'undefined') {
+                            HSOverlay.close(document.getElementById('modal-confirm-delete'));
+                        } else {
+                            document.getElementById('modal-confirm-delete').classList.add('hidden');
+                            document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
+                            document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
+                        }
+                        
+                        // Redirect to the log activities page with reload to refresh data
+                        window.location = '/mahasiswa/log-aktivitas';
+                    } else {
+                        // Reset button state
+                        deleteButton.disabled = false;
+                        deleteButtonText.textContent = 'Hapus';
+                        deleteSpinner.classList.add('hidden');
+                        
+                        alert(data.message || 'Gagal menghapus log aktivitas.');
+                    }
+                })
+                .catch(error => {
                     // Reset button state
                     deleteButton.disabled = false;
                     deleteButtonText.textContent = 'Hapus';
                     deleteSpinner.classList.add('hidden');
                     
-                    alert(data.message || 'Gagal menghapus log aktivitas.');
-                }
-            })
-            .catch(error => {
-                // Reset button state
-                deleteButton.disabled = false;
-                deleteButtonText.textContent = 'Hapus';
-                deleteSpinner.classList.add('hidden');
-                
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menghapus log aktivitas.');
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menghapus log aktivitas.');
+                });
             });
-        });
-        
-        // Add handler for close and cancel buttons if needed
-        document.getElementById('closeModalBtn').addEventListener('click', function() {
-            if (typeof HSOverlay === 'undefined') {
-                document.getElementById('modal-confirm-delete').classList.add('hidden');
-                document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
-                document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
-            }
-        });
-        
-        document.getElementById('cancelDelete').addEventListener('click', function() {
-            if (typeof HSOverlay === 'undefined') {
-                document.getElementById('modal-confirm-delete').classList.add('hidden');
-                document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
-                document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
-            }
-        });
+        }
     });
 </script>

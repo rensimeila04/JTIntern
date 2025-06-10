@@ -120,4 +120,60 @@ class LogAktivitasController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus log aktivitas.');
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        $log = LogAktivitasModel::findOrFail($id);
+
+        // Ambil data lama jika field tidak dikirim
+        $tanggal_log = $request->input('tanggal_log', $log->tanggal);
+        $waktu_awal = $request->input('waktu_awal', $log->jam_masuk);
+        $waktu_akhir = $request->input('waktu_akhir', $log->jam_pulang);
+        $deskripsi = $request->input('deskripsi', $log->kegiatan);
+
+        // Validasi hanya field yang dikirim, gunakan value fallback jika tidak ada
+        $validated = $request->validate([
+            'tanggal_log' => ['nullable', 'date'],
+            'waktu_awal' => ['nullable', 'date_format:H:i'],
+            'waktu_akhir' => ['nullable', 'date_format:H:i', 'after:waktu_awal'],
+            'deskripsi' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        // Gunakan value fallback jika field tidak dikirim
+        $tanggal_log = $validated['tanggal_log'] ?? $log->tanggal;
+        $waktu_awal = $validated['waktu_awal'] ?? $log->jam_masuk;
+        $waktu_akhir = $validated['waktu_akhir'] ?? $log->jam_pulang;
+        $deskripsi = $validated['deskripsi'] ?? $log->kegiatan;
+
+        try {
+            // Cek duplikasi tanggal jika tanggal diubah
+            if ($tanggal_log != $log->tanggal) {
+                $existingLog = LogAktivitasModel::where('id_magang', $log->id_magang)
+                    ->where('tanggal', $tanggal_log)
+                    ->where('id_log_aktivitas', '!=', $id)
+                    ->first();
+                if ($existingLog) {
+                    $tanggal = \Carbon\Carbon::parse($tanggal_log)->locale('id')->translatedFormat('l, d F Y');
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Anda sudah memiliki log aktivitas di hari {$tanggal}"
+                    ]);
+                }
+            }
+
+            $log->tanggal = $tanggal_log;
+            $log->jam_masuk = $waktu_awal;
+            $log->jam_pulang = $waktu_akhir;
+            $log->kegiatan = $deskripsi;
+            $log->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengupdate log aktivitas.',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }
