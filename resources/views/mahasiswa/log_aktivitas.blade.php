@@ -94,10 +94,11 @@
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-warning-500 hover:bg-gray-200 focus:outline-hidden border border-yellow-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-file-edit class="w-4 h-4 text-yellow-500" />
                                                 </button>
-                                                <a href="#"
+                                                <button type="button"
+                                                    onclick="confirmDelete({{ $log->id_log_aktivitas }})"
                                                     class="flex shrink-0 justify-center items-center gap-2 size-9.5 text-sm font-medium rounded-lg bg-white text-error-500 hover:bg-gray-200 focus:outline-hidden border border-red-500 disabled:opacity-50 disabled:pointer-events-none">
                                                     <x-lucide-trash-2 class="w-4 h-4 text-red-500" />
-                                                </a>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -154,6 +155,37 @@
                         data-hs-overlay="#modal-detail-log">
                         Tutup
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="modal-confirm-delete" class="hs-overlay hs-overlay-open:opacity-100 hs-overlay-open:duration-500 hidden size-full fixed top-0 start-0 z-80 opacity-0 overflow-x-hidden transition-all overflow-y-auto pointer-events-none" role="dialog" tabindex="-1">
+        <div class="sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
+                    <h3 class="font-bold text-gray-800">Konfirmasi Hapus</h3>
+                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200" data-hs-overlay="#modal-confirm-delete">
+                        <span class="sr-only">Close</span>
+                        <x-lucide-x class="w-4 h-4" />
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <p class="text-gray-800">Apakah Anda yakin ingin menghapus log aktivitas ini?</p>
+                    <p class="text-gray-500 text-sm mt-2">Tindakan ini tidak dapat dibatalkan.</p>
+                </div>
+                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
+                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50" data-hs-overlay="#modal-confirm-delete">
+                        Batal
+                    </button>
+                    <form id="deleteForm" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600">
+                            Hapus
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -291,4 +323,58 @@
     function closeDetailModal() {
         document.getElementById('modalDetailLog').classList.add('hidden');
     }
+
+    function confirmDelete(id) {
+        document.getElementById('deleteForm').action = `/mahasiswa/log-aktivitas/${id}`;
+        
+        if (typeof HSOverlay !== 'undefined') {
+            HSOverlay.open(document.getElementById('modal-confirm-delete'));
+        } else {
+            document.getElementById('modal-confirm-delete').classList.remove('hidden');
+            document.getElementById('modal-confirm-delete').classList.add('opacity-100');
+            document.getElementById('modal-confirm-delete').classList.add('pointer-events-auto');
+        }
+    }
+
+    // Add this event listener for the delete form
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteForm = document.getElementById('deleteForm');
+        
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-HTTP-Method-Override': 'DELETE'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Close the modal
+                    if (typeof HSOverlay !== 'undefined') {
+                        HSOverlay.close(document.getElementById('modal-confirm-delete'));
+                    } else {
+                        document.getElementById('modal-confirm-delete').classList.add('hidden');
+                        document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
+                        document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
+                    }
+                    
+                    // Redirect to the log activities page
+                    window.location.href = '/mahasiswa/log-aktivitas';
+                } else {
+                    alert(data.message || 'Gagal menghapus log aktivitas.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menghapus log aktivitas.');
+            });
+    });
+    });
 </script>

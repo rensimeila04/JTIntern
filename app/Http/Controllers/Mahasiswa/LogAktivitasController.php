@@ -85,4 +85,25 @@ class LogAktivitasController extends Controller
             ]
         ]);
     }
+
+    public function destroy($id)
+    {
+        try {
+            $log = LogAktivitasModel::findOrFail($id);
+            $log->delete();
+            
+            // For AJAX requests
+            if (request()->wantsJson()) {
+                return response()->json(['success' => true]);
+            }
+            
+            // For non-AJAX requests or to force redirect
+            return redirect()->route('mahasiswa.log_aktivitas')->with('success', 'Log aktivitas berhasil dihapus.');
+        } catch (\Exception $e) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Gagal menghapus log aktivitas.']);
+            }
+            return redirect()->back()->with('error', 'Gagal menghapus log aktivitas.');
+        }
+    }
 }
