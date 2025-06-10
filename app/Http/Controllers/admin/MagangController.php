@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MagangModel;
 use App\Models\LowonganModel;
-use App\Models\DosenPembimbingModel; // Add this import
+use App\Models\DosenPembimbingModel;
+use App\Models\NotifikasiModel; // Add this import
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -392,6 +393,33 @@ class MagangController extends Controller
             // Reload relationship to get updated data
             $magang->load('dosenPembimbing.user', 'mahasiswa.user', 'lowongan.perusahaanMitra', 'lowongan.periodeMagang');
 
+            // Create notification for student
+            try {
+                NotifikasiModel::create([
+                    'id_user' => $magang->mahasiswa->id_user,
+                    'judul_notifikasi' => 'Pengajuan Magang Diterima',
+                    'pesan' => "Selamat! Pengajuan magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah diterima. Dosen pembimbing: {$magang->dosenPembimbing->user->name}",
+                    'is_read' => false,
+                    'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
+                    'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
+                ]);
+
+                Log::info('Notification created for accepted magang', [
+                    'magang_id' => $id,
+                    'user_id' => $magang->mahasiswa->id_user,
+                    'mahasiswa' => $magang->mahasiswa->user->name,
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+            } catch (\Exception $notifError) {
+                Log::error('Failed to create notification for accepted magang', [
+                    'magang_id' => $id,
+                    'user_id' => $magang->mahasiswa->id_user,
+                    'error' => $notifError->getMessage(),
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+                // Continue process even if notification fails
+            }
+
             // Send email notification
             try {
                 Mail::to($magang->mahasiswa->user->email)->send(new MagangDiterimaMail($magang));
@@ -423,7 +451,7 @@ class MagangController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan magang berhasil diterima dan email notifikasi telah dikirim. Dosen pembimbing: ' . $magang->dosenPembimbing->user->name,
+                'message' => 'Pengajuan magang berhasil diterima, notifikasi dan email telah dikirim. Dosen pembimbing: ' . $magang->dosenPembimbing->user->name,
                 'data' => [
                     'status' => 'diterima',
                     'dosen_pembimbing' => $magang->dosenPembimbing->user->name,
@@ -484,6 +512,40 @@ class MagangController extends Controller
             // Reload relationships for email
             $magang->load('mahasiswa.user', 'lowongan.perusahaanMitra');
 
+            // Create notification for student
+            try {
+                $pesanNotifikasi = "Pengajuan magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah ditolak.";
+                
+                if ($request->alasan_penolakan) {
+                    $pesanNotifikasi .= " Alasan: {$request->alasan_penolakan}";
+                }
+
+                NotifikasiModel::create([
+                    'id_user' => $magang->mahasiswa->id_user,
+                    'judul_notifikasi' => 'Pengajuan Magang Ditolak',
+                    'pesan' => $pesanNotifikasi,
+                    'is_read' => false,
+                    'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
+                    'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
+                ]);
+
+                Log::info('Notification created for rejected magang', [
+                    'magang_id' => $id,
+                    'user_id' => $magang->mahasiswa->id_user,
+                    'mahasiswa' => $magang->mahasiswa->user->name,
+                    'alasan' => $request->alasan_penolakan,
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+            } catch (\Exception $notifError) {
+                Log::error('Failed to create notification for rejected magang', [
+                    'magang_id' => $id,
+                    'user_id' => $magang->mahasiswa->id_user,
+                    'error' => $notifError->getMessage(),
+                    'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                ]);
+                // Continue process even if notification fails
+            }
+
             // Send email notification
             try {
                 Mail::to($magang->mahasiswa->user->email)->send(new MagangDitolakMail($magang));
@@ -514,7 +576,7 @@ class MagangController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan magang berhasil ditolak dan email notifikasi telah dikirim',
+                'message' => 'Pengajuan magang berhasil ditolak, notifikasi dan email telah dikirim',
                 'data' => [
                     'status' => 'ditolak',
                     'tanggal_ditolak' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i') . ' WIB'
@@ -531,37 +593,6 @@ class MagangController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses pengajuan'
-            ], 500);
-        }
-    }
-
-    public function edit($id)
-    {
-        try {
-            $magang = MagangModel::with([
-                'mahasiswa.user',
-                'lowongan.perusahaanMitra',
-                'dosenPembimbing.user'
-            ])->findOrFail($id);
-
-            // Get all dosen pembimbing for dropdown
-            $dosenList = DosenPembimbingModel::with('user')->get();
-
-            return response()->json([
-                'success' => true,
-                'magang' => $magang,
-                'dosenList' => $dosenList
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error fetching magang data for edit', [
-                'magang_id' => $id,
-                'error' => $e->getMessage(),
-                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal memuat data magang'
             ], 500);
         }
     }
@@ -662,6 +693,66 @@ class MagangController extends Controller
                 // Reload relationships
                 $magang->load('mahasiswa.user', 'lowongan.perusahaanMitra', 'dosenPembimbing.user');
 
+                // Create notification if status changed to diterima or ditolak
+                if ($oldStatus !== $request->status_magang) {
+                    try {
+                        if ($request->status_magang === 'diterima') {
+                            $dosenName = $magang->dosenPembimbing ? $magang->dosenPembimbing->user->name : 'Belum ditentukan';
+                            NotifikasiModel::create([
+                                'id_user' => $magang->mahasiswa->id_user,
+                                'judul_notifikasi' => 'Status Magang Diperbarui - Diterima',
+                                'pesan' => "Status magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah diperbarui menjadi DITERIMA. Dosen pembimbing: {$dosenName}",
+                                'is_read' => false,
+                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
+                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
+                            ]);
+                        } elseif ($request->status_magang === 'ditolak') {
+                            NotifikasiModel::create([
+                                'id_user' => $magang->mahasiswa->id_user,
+                                'judul_notifikasi' => 'Status Magang Diperbarui - Ditolak',
+                                'pesan' => "Status magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah diperbarui menjadi DITOLAK.",
+                                'is_read' => false,
+                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
+                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
+                            ]);
+                        } elseif ($request->status_magang === 'magang') {
+                            NotifikasiModel::create([
+                                'id_user' => $magang->mahasiswa->id_user,
+                                'judul_notifikasi' => 'Status Magang Diperbarui - Sedang Magang',
+                                'pesan' => "Status magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah diperbarui menjadi SEDANG MAGANG. Selamat memulai magang!",
+                                'is_read' => false,
+                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
+                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
+                            ]);
+                        } elseif ($request->status_magang === 'selesai') {
+                            NotifikasiModel::create([
+                                'id_user' => $magang->mahasiswa->id_user,
+                                'judul_notifikasi' => 'Status Magang Diperbarui - Selesai',
+                                'pesan' => "Selamat! Magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah SELESAI. Terima kasih atas dedikasi Anda!",
+                                'is_read' => false,
+                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
+                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
+                            ]);
+                        }
+
+                        Log::info('Notification created for status change', [
+                            'magang_id' => $id,
+                            'user_id' => $magang->mahasiswa->id_user,
+                            'old_status' => $oldStatus,
+                            'new_status' => $request->status_magang,
+                            'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                        ]);
+                    } catch (\Exception $notifError) {
+                        Log::error('Failed to create notification for status change', [
+                            'magang_id' => $id,
+                            'user_id' => $magang->mahasiswa->id_user,
+                            'error' => $notifError->getMessage(),
+                            'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+                        ]);
+                        // Continue process even if notification fails
+                    }
+                }
+
                 DB::commit();
 
                 // Log the successful action
@@ -679,6 +770,7 @@ class MagangController extends Controller
                 $message = 'Data magang berhasil diperbarui';
                 if ($oldStatus !== $request->status_magang) {
                     $message .= '. Status berubah dari ' . ucfirst($oldStatus) . ' menjadi ' . ucfirst($request->status_magang);
+                    $message .= '. Notifikasi telah dikirim ke mahasiswa';
                 }
                 if ($oldDosenId !== $magang->id_dosen_pembimbing) {
                     if ($magang->dosenPembimbing) {
