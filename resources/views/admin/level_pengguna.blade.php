@@ -579,34 +579,6 @@
                 });
         };
 
-        document.querySelectorAll('.detail-btn').forEach(btn => {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                const url = this.getAttribute('href');
-                fetch(url, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                    .then(async response => {
-                        if (response.ok) {
-                            const json = await response.json();
-                            // Jika responsenya {success: true, data: {...}}
-                            const data = json.data ?? json;
-                            document.getElementById('detailIdLevel').textContent = data.id_level ?? '-';
-                            document.getElementById('detailKodeLevel').textContent = data.kode_level ?? '-';
-                            document.getElementById('detailNamaLevel').textContent = data.nama_level ?? '-';
-                            detailLevelModal = new HSOverlay(document.getElementById('detailLevelModal'));
-                            detailLevelModal.open();
-                        } else {
-                            showErrorLevelModal('Gagal mengambil detail data.');
-                        }
-                    })
-                    .catch(() => showErrorLevelModal('Terjadi kesalahan jaringan.'));
-            });
-        });
-
         // Modal detail
         document.addEventListener('click', function(e) {
             if (e.target.closest('.detail-btn')) {
