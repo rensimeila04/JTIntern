@@ -65,4 +65,24 @@ class LogAktivitasController extends Controller
             return response()->json(['success' => false, 'message' => 'Gagal menyimpan log aktivitas.']);
         }
     }
+
+    public function show($id)
+    {
+        \Carbon\Carbon::setLocale('id'); // Pastikan locale Indonesia
+        $log = LogAktivitasModel::find($id);
+        if (!$log) {
+            return response()->json(['success' => false]);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'tanggal' => $log->tanggal->translatedFormat('l, d F Y'),
+                'jam_masuk' => $log->jam_masuk ? \Carbon\Carbon::parse($log->jam_masuk)->format('H.i') : '-',
+                'jam_pulang' => $log->jam_pulang ? \Carbon\Carbon::parse($log->jam_pulang)->format('H.i') : '-',
+                'kegiatan' => $log->kegiatan,
+                'status_feedback' => $log->status_feedback,
+                'feedback_dospem' => $log->feedback_dospem,
+            ]
+        ]);
+    }
 }

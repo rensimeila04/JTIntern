@@ -252,6 +252,8 @@ Route::middleware(['auth'])->group(function () {
                 ->name('mahasiswa.log_aktivitas.store');
             Route::put('/{id}', [LogAktivitasController::class, 'update'])
                 ->name('mahasiswa.log_aktivitas.update');
+            Route::get('/{id}', [LogAktivitasController::class, 'show'])
+                ->name('mahasiswa.log_aktivitas.show');
         });
     });
 });
