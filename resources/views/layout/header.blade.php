@@ -12,7 +12,14 @@
                     <div class="size-6 relative overflow-hidden">
                         <x-lucide-bell class="size-6 text-neutral-500" stroke-width="1.5" />
                         <!-- Notification indicator dot -->
-                        <span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full"></span>
+                        @php
+                            $unreadCount = App\Models\NotifikasiModel::where('id_user', Auth::id())
+                                ->where('is_read', false)
+                                ->count();
+                        @endphp
+                        @if($unreadCount > 0)
+                            <span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full"></span>
+                        @endif
                     </div>
                 </button>
 
@@ -20,61 +27,39 @@
                     role="menu" aria-orientation="vertical" aria-labelledby="notification-dropdown">
                     <div class="py-3 px-4 border-b border-neutral-200 flex justify-between items-center">
                         <p class="text-sm font-medium text-neutral-800">Notifikasi</p>
-                        <span
-                            class="inline-flex items-center justify-center size-5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full">3</span>
+                        @if($unreadCount > 0)
+                            <span class="inline-flex items-center justify-center size-5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full">
+                                {{ $unreadCount }}
+                            </span>
+                        @endif
                     </div>
                     <div class="max-h-96 overflow-y-auto">
-                        <!-- Unread notification -->
-                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100"
-                            href="#">
-                            <div class="grow">
-                                <p class="text-sm font-medium text-neutral-800">Pendaftaran berhasil divalidasi</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Pendaftaran mahasiswa baru telah
-                                    berhasil divalidasi.</p>
-                                <p class="text-xs text-neutral-400 mt-1">15 menit yang lalu</p>
+                        @php
+                            $notifications = App\Models\NotifikasiModel::where('id_user', Auth::id())
+                                ->orderBy('created_at', 'desc')
+                                ->limit(5)
+                                ->get();
+                        @endphp
+                        
+                        @forelse($notifications as $notification)
+                            <a class="flex p-4 border-b border-neutral-200 {{ !$notification->is_read ? 'bg-neutral-50' : '' }} hover:bg-neutral-100"
+                                href="#" onclick="markAsRead({{ $notification->id_notifikasi }})">
+                                <div class="grow">
+                                    <p class="text-sm font-medium text-neutral-800">{{ $notification->judul_notifikasi }}</p>
+                                    <p class="text-xs text-neutral-500 line-clamp-2">{{ $notification->pesan }}</p>
+                                    <p class="text-xs text-neutral-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                                </div>
+                                @if(!$notification->is_read)
+                                    <div class="shrink-0 self-start ms-3">
+                                        <span class="size-2 bg-blue-500 rounded-full block"></span>
+                                    </div>
+                                @endif
+                            </a>
+                        @empty
+                            <div class="p-4 text-center">
+                                <p class="text-sm text-neutral-500">Tidak ada notifikasi</p>
                             </div>
-                            <div class="shrink-0 self-start ms-3">
-                                <span class="size-2 bg-blue-500 rounded-full block"></span>
-                            </div>
-                        </a>
-
-                        <!-- Unread notification -->
-                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100"
-                            href="#">
-                            <div class="grow">
-                                <p class="text-sm font-medium text-neutral-800">Pengguna baru terdaftar</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Pengguna baru telah mendaftar dan
-                                    menunggu persetujuan.</p>
-                                <p class="text-xs text-neutral-400 mt-1">1 jam yang lalu</p>
-                            </div>
-                            <div class="shrink-0 self-start ms-3">
-                                <span class="size-2 bg-blue-500 rounded-full block"></span>
-                            </div>
-                        </a>
-
-                        <!-- Unread notification -->
-                        <a class="flex p-4 border-b border-neutral-200 bg-neutral-50 hover:bg-neutral-100"
-                            href="#">
-                            <div class="grow">
-                                <p class="text-sm font-medium text-neutral-800">Aksi diperlukan</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Mohon tinjau laporan magang yang telah
-                                    dikirimkan.</p>
-                                <p class="text-xs text-neutral-400 mt-1">2 jam yang lalu</p>
-                            </div>
-                            <div class="shrink-0 self-start ms-3">
-                                <span class="size-2 bg-blue-500 rounded-full block"></span>
-                            </div>
-                        </a>
-
-                        <!-- Read notification -->
-                        <a class="flex p-4 border-b border-neutral-200 hover:bg-neutral-100" href="#">
-                            <div class="grow">
-                                <p class="text-sm font-medium text-neutral-800">Pembaruan sistem</p>
-                                <p class="text-xs text-neutral-500 line-clamp-2">Sistem telah diperbarui ke versi
-                                    terbaru.</p>
-                                <p class="text-xs text-neutral-400 mt-1">Kemarin</p>
-                            </div>
-                        </a>
+                        @endforelse
                     </div>
                     <div class="py-2 px-4 border-t border-neutral-200">
                         <a class="text-sm font-medium text-blue-600 hover:text-blue-700 flex justify-center items-center"
@@ -129,4 +114,23 @@
         </div>
     </nav>
 </header>
+
+<script>
+function markAsRead(notificationId) {
+    fetch(`/notifications/${notificationId}/mark-read`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload notifications or update UI
+            location.reload();
+        }
+    });
+}
+</script>
 <!-- End Header -->
