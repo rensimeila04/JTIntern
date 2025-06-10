@@ -28,7 +28,7 @@ use App\Http\Controllers\mahasiswa\LogAktivitasController;
 
 // Dosen Controllers
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
-use App\Http\Controllers\Dosen\MahasiswaController;
+use App\Http\Controllers\Dosen\MahasiswaController as DosenMahasiswaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -194,12 +194,14 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
         Route::get('/dashboard', [DosenDashboardController::class, 'index'])
             ->name('dosen.dashboard');
+        Route::get('/detail-mahasiswa/{id}', [DosenMahasiswaController::class, 'detailMahasiswa'])
+            ->name('dosen.detail_mahasiswa.id');
         Route::get('/edit', [DosenDashboardController::class, 'edit'])
             ->name('dosen.edit_profile');
         Route::post('/update-profile', [DosenDashboardController::class, 'updateProfile'])->name('dosen.update_profile');
         Route::post('/update-account', [DosenDashboardController::class, 'updateAccount'])->name('dosen.update_account');
-        
-        Route::get('/mahasiswa', [MahasiswaController::class, 'index'])
+
+        Route::get('/mahasiswa', [DosenMahasiswaController::class, 'index'])
             ->name('dosen.mahasiswa');
     });
 
