@@ -7,6 +7,7 @@ use App\Models\MagangModel;
 use App\Models\LowonganModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RincianController extends Controller
 {
@@ -77,7 +78,12 @@ class RincianController extends Controller
                 'path_sertifikat' => $path
             ]);
 
-            return redirect()->back()->with('success', 'Magang berhasil diselesaikan.');
+            // Debug: pastikan session tersimpan
+            Log::info('Session success_selesai set');
+            
+            return redirect()->back()
+                ->with('success_selesai', true)
+                ->with('show_success_modal', true);
         }
 
         return redirect()->back()->with('error', 'Gagal mengunggah sertifikat.');

@@ -22,7 +22,7 @@
                             <p class="text-neutral-400 text-xs">PT. Quantum Technology Nusantara</p>
                         </div>
                         <a class="text-sm font-medium text-primary-500 underline ml-auto"
-                            href="{{ route('mahasiswa.rincian_magang') }}">
+                            href="{{ route('mahasiswa.rincian') }}">
                             Detail
                         </a>
                     </div>
