@@ -161,29 +161,42 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="modal-confirm-delete" class="hs-overlay hs-overlay-open:opacity-100 hs-overlay-open:duration-500 hidden size-full fixed top-0 start-0 z-80 opacity-0 overflow-x-hidden transition-all overflow-y-auto pointer-events-none" role="dialog" tabindex="-1">
-        <div class="sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto">
-                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
-                    <h3 class="font-bold text-gray-800">Konfirmasi Hapus</h3>
-                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200" data-hs-overlay="#modal-confirm-delete">
+    <div id="modal-confirm-delete" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="modal-confirm-delete-label">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800">
+                <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    <h3 id="modal-confirm-delete-label" class="font-bold text-gray-800 dark:text-white">
+                        Konfirmasi Hapus
+                    </h3>
+                    <button type="button" id="closeModalBtn" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" data-hs-overlay="#modal-confirm-delete" aria-label="Close">
                         <span class="sr-only">Close</span>
-                        <x-lucide-x class="w-4 h-4" />
+                        <x-lucide-x class="size-4" />
                     </button>
                 </div>
                 <div class="p-4 overflow-y-auto">
-                    <p class="text-gray-800">Apakah Anda yakin ingin menghapus log aktivitas ini?</p>
-                    <p class="text-gray-500 text-sm mt-2">Tindakan ini tidak dapat dibatalkan.</p>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <x-lucide-trash-2 class="w-8 h-8 text-red-600" />
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                            Apakah Anda yakin ingin menghapus log aktivitas ini?
+                        </p>
+                        <p class="mt-1 text-xs text-red-600">
+                            Tindakan ini tidak dapat dibatalkan!
+                        </p>
+                    </div>
                 </div>
-                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
-                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50" data-hs-overlay="#modal-confirm-delete">
+                <div class="flex justify-center items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    <button type="button" id="cancelDelete" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800" data-hs-overlay="#modal-confirm-delete">
                         Batal
                     </button>
                     <form id="deleteForm" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600">
-                            Hapus
+                        <button type="submit" id="confirmDeleteBtn" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                            <span id="deleteButtonText">Hapus</span>
+                            <div id="deleteSpinner" class="hidden animate-spin size-4 border-[3px] border-current border-t-transparent text-white rounded-full" role="status" aria-label="loading">
+                            </div>
                         </button>
                     </form>
                 </div>
@@ -343,6 +356,15 @@
         deleteForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Show loading state
+            const deleteButton = document.getElementById('confirmDeleteBtn');
+            const deleteButtonText = document.getElementById('deleteButtonText');
+            const deleteSpinner = document.getElementById('deleteSpinner');
+            
+            deleteButton.disabled = true;
+            deleteButtonText.textContent = 'Menghapus...';
+            deleteSpinner.classList.remove('hidden');
+            
             fetch(this.action, {
                 method: 'POST',
                 headers: {
@@ -353,7 +375,12 @@
                 },
                 body: JSON.stringify({})
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Close the modal
@@ -365,16 +392,43 @@
                         document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
                     }
                     
-                    // Redirect to the log activities page
-                    window.location.href = '/mahasiswa/log-aktivitas';
+                    // Redirect to the log activities page with reload to refresh data
+                    window.location = '/mahasiswa/log-aktivitas';
                 } else {
+                    // Reset button state
+                    deleteButton.disabled = false;
+                    deleteButtonText.textContent = 'Hapus';
+                    deleteSpinner.classList.add('hidden');
+                    
                     alert(data.message || 'Gagal menghapus log aktivitas.');
                 }
             })
             .catch(error => {
+                // Reset button state
+                deleteButton.disabled = false;
+                deleteButtonText.textContent = 'Hapus';
+                deleteSpinner.classList.add('hidden');
+                
                 console.error('Error:', error);
                 alert('Terjadi kesalahan saat menghapus log aktivitas.');
             });
-    });
+        });
+        
+        // Add handler for close and cancel buttons if needed
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            if (typeof HSOverlay === 'undefined') {
+                document.getElementById('modal-confirm-delete').classList.add('hidden');
+                document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
+                document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
+            }
+        });
+        
+        document.getElementById('cancelDelete').addEventListener('click', function() {
+            if (typeof HSOverlay === 'undefined') {
+                document.getElementById('modal-confirm-delete').classList.add('hidden');
+                document.getElementById('modal-confirm-delete').classList.remove('opacity-100');
+                document.getElementById('modal-confirm-delete').classList.remove('pointer-events-auto');
+            }
+        });
     });
 </script>
