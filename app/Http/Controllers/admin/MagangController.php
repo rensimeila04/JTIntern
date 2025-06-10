@@ -895,4 +895,84 @@ class MagangController extends Controller
             return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Export permohonan magang (status menunggu) ke PDF
+     */
+    public function exportPermohonanMagang(Request $request)
+    {
+        // Query untuk permohonan magang dengan status menunggu
+        $query = MagangModel::with([
+            'mahasiswa.user',
+            'mahasiswa.programStudi',
+            'lowongan.perusahaanMitra'
+        ])->where('status_magang', 'menunggu');
+        
+        // Filter berdasarkan lowongan
+        if ($request->filled('lowongan_id') && $request->lowongan_id != 'all') {
+            $query->where('id_lowongan', $request->lowongan_id);
+        }
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->whereHas('mahasiswa.user', function($q) use ($searchTerm) {
+                    $q->where('name', 'LIKE', "%{$searchTerm}%");
+                })
+                ->orWhereHas('lowongan', function($q) use ($searchTerm) {
+                    $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%");
+                })
+                ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($searchTerm) {
+                    $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
+                });
+            });
+        }
+
+        $permohonan = $query->get();
+        $totalPermohonan = $permohonan->count();
+
+        try {
+            // Hitung statistik berdasarkan lowongan
+            $lowonganStats = [];
+            $lowonganCounts = $permohonan->groupBy('id_lowongan')
+                ->map(function ($items, $lowonganId) use ($totalPermohonan) {
+                    $lowongan = $items->first()->lowongan;
+                    return [
+                        'judul_lowongan' => $lowongan->judul_lowongan,
+                        'nama_perusahaan' => $lowongan->perusahaanMitra->nama_perusahaan_mitra,
+                        'count' => $items->count(),
+                        'percentage' => $totalPermohonan > 0 ? round(($items->count() / $totalPermohonan) * 100, 2) : 0
+                    ];
+                })->sortByDesc('count')->values()->all();
+
+            // Generate file name
+            $fileName = 'permohonan_magang_' . date('Y-m-d_H-i-s') . '.pdf';
+
+            // Get view content
+            $html = view('admin.export_permohonan_magang', [
+                'permohonan' => $permohonan,
+                'totalPermohonan' => $totalPermohonan,
+                'lowonganStats' => $lowonganCounts
+            ])->render();
+
+            // Set options and generate PDF
+            $options = new \Dompdf\Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', true);
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+
+            // Output PDF (inline view)
+            return response($dompdf->output())
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', "inline; filename=\"$fileName\"");
+        } catch (\Exception $e) {
+            Log::error('PDF export error: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
+        }
+    }
 }

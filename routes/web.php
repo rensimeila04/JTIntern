@@ -134,6 +134,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/pengajuan-ditolak', [MagangController::class, 'pengajuanDitolak'])->name('.pengajuan_ditolak');
             Route::get('/riwayat-magang', [MagangController::class, 'riwayatMagang'])->name('.riwayat_magang');
             Route::get('/export', [MagangController::class, 'export'])->name('.export');
+            Route::get('/permohonan-magang/export', [MagangController::class, 'exportPermohonanMagang'])->name('.export-permohonan-magang');
             Route::get('/{id}', [MagangController::class, 'detailMagang'])->name('.detail');
             Route::post('/{id}/terima', [MagangController::class, 'terimaMagang'])->name('.terima-magang');
             Route::post('/{id}/tolak', [MagangController::class, 'tolakMagang'])->name('.tolak-magang');
