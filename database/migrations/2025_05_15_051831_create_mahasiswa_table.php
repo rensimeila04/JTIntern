@@ -22,11 +22,7 @@ return new class extends Migration
             $table->decimal('latitude_preferensi', 10, 8)->nullable();
             $table->decimal('longitude_preferensi', 11, 8)->nullable();
             $table->unsignedBigInteger('id_jenis_perusahaan')->index();
-            $table->unsignedBigInteger('id_kompetensi')->index()->nullable();
-            $table->unsignedBigInteger('id_program_studi')->index()->nullable();
-            $table->string('preferensi_lokasi')->nullable();
-            $table->unsignedBigInteger('id_jenis_perusahaan')->index()->nullable();
-            $table->timestamps();
+                       $table->timestamps();
 
 
             $table->foreign('id_user')->references('id_user')->on('user');

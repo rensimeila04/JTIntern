@@ -29,7 +29,7 @@
                         Mahasiswa
                     </div>
                 </a>
-                <a href="#"
+                <a href="{{ route('dosen.monitoring_log_aktivitas') }}"
                     class="p-2 flex items-center gap-2 hover:bg-primary-100 rounded-lg group {{ ($activeMenu ?? '') == 'monitoring' ? 'bg-primary-100' : '' }}">
                     <x-lucide-monitor class="size-6 {{ ($activeMenu ?? '') == 'monitoring' ? 'text-primary-600' : 'text-neutral-500' }} group-hover:text-primary-600"
                         stroke-width="1.5" />

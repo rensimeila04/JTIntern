@@ -28,6 +28,7 @@ use App\Http\Controllers\mahasiswa\LogAktivitasController;
 
 // Dosen Controllers
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
+use App\Http\Controllers\Dosen\MonitoringLogAktivitasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -176,83 +177,86 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check.level:DSP'])->prefix('dosen')->group(function () {
         Route::get('/dashboard', [DosenDashboardController::class, 'index'])
             ->name('dosen.dashboard');
+
+        // Monitoring Log Aktivitas
+        Route::get('/monitoring_log_aktivitas', [DosenDashboardController::class, 'monitoring'])
+            ->name('dosen.monitoring_log_aktivitas');
+    });
+});
+
+// Mahasiswa Routes
+Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
+        ->name('mahasiswa.dashboard');
+    Route::get('/semua-lowongan', [MahasiswaDashboardController::class, 'show'])
+        ->name('mahasiswa.semua-lowongan');
+
+    // Lowongan
+    Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])
+        ->name('mahasiswa.lowongan');
+    Route::get('/lowongan/{id}', [MahasiswaLowonganController::class, 'detail'])
+        ->name('mahasiswa.lowongan.detail');
+    Route::post('/lowongan/{id}/check-documents', [MahasiswaLowonganController::class, 'checkDocuments'])
+        ->name('mahasiswa.lowongan.check-documents');
+    Route::post('/lowongan/{id}/apply', [MahasiswaLowonganController::class, 'applyInternship'])
+        ->name('mahasiswa.lowongan.apply');
+
+    // Profile Management
+    Route::prefix('profile')->group(function () {
+        Route::get('/edit', [MahasiswaProfileController::class, 'edit'])
+            ->name('mahasiswa.edit_profile');
+        Route::post('/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])
+            ->name('mahasiswa.profile.update-preferensi');
+        Route::post('/upload-dokumen', [MahasiswaProfileController::class, 'uploadDokumen'])
+            ->name('mahasiswa.profile.upload-dokumen');
+        Route::delete('/hapus-dokumen', [MahasiswaProfileController::class, 'hapusDokumen'])
+            ->name('mahasiswa.profile.hapus-dokumen');
+        Route::post('/upload-profile-photo', [MahasiswaProfileController::class, 'uploadProfilePhoto'])
+            ->name('mahasiswa.profile.upload-profile-photo');
+        Route::post('/update-data-pribadi', [MahasiswaProfileController::class, 'updateDataPribadi'])
+            ->name('mahasiswa.profile.update-data-pribadi');
+        Route::post('/update-akun', [MahasiswaProfileController::class, 'updateAkun'])
+            ->name('mahasiswa.profile.update-akun');
     });
 
+    // Decision Support System
+    Route::prefix('decision')->group(function () {
+        Route::get('/mabac/hitung', [MabacController::class, 'hitungMabac'])
+            ->name('mahasiswa.mabac.hitung');
+        Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])
+            ->name('mahasiswa.topsis.hitung');
+    });
 
-    // Mahasiswa Routes
-    Route::middleware(['check.level:MHS'])->prefix('mahasiswa')->group(function () {
-        // Dashboard
-        Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
-            ->name('mahasiswa.dashboard');
-        Route::get('/semua-lowongan', [MahasiswaDashboardController::class, 'show'])
-            ->name('mahasiswa.semua-lowongan');
+    // Rincian Management
+    Route::prefix('rincian')->group(function () {
+        Route::get('/', [MahasiswaRincianController::class, 'index'])
+            ->name('mahasiswa.rincian');
+        Route::get('/diterima', [MahasiswaRincianController::class, 'rincianDiterima'])
+            ->name('mahasiswa.rincian_diterima');
+        Route::get('/ditolak', [MahasiswaRincianController::class, 'rincianDitolak'])
+            ->name('mahasiswa.rincian_ditolak');
+        Route::get('/magang', [MahasiswaRincianController::class, 'rincianMagang'])
+            ->name('mahasiswa.rincian_magang');
+        Route::get('/selesai', [MahasiswaRincianController::class, 'rincianSelesai'])
+            ->name('mahasiswa.rincian_selesai');
+    });
 
-        // Lowongan
-        Route::get('/lowongan', [MahasiswaLowonganController::class, 'index'])
-            ->name('mahasiswa.lowongan');
-        Route::get('/lowongan/{id}', [MahasiswaLowonganController::class, 'detail'])
-            ->name('mahasiswa.lowongan.detail');
-        Route::post('/lowongan/{id}/check-documents', [MahasiswaLowonganController::class, 'checkDocuments'])
-            ->name('mahasiswa.lowongan.check-documents');
-        Route::post('/lowongan/{id}/apply', [MahasiswaLowonganController::class, 'applyInternship'])
-            ->name('mahasiswa.lowongan.apply');
+    // Feedback
+    Route::prefix('feedback')->group(function () {
+        Route::get('/', [FeedbackMagangController::class, 'index'])
+            ->name('mahasiswa.feedback');
+        Route::post('/store', [FeedbackMagangController::class, 'store'])
+            ->name('mahasiswa.feedback.store');
+    });
 
-        // Profile Management
-        Route::prefix('profile')->group(function () {
-            Route::get('/edit', [MahasiswaProfileController::class, 'edit'])
-                ->name('mahasiswa.edit_profile');
-            Route::post('/update-preferensi', [MahasiswaProfileController::class, 'updatePreferensi'])
-                ->name('mahasiswa.profile.update-preferensi');
-            Route::post('/upload-dokumen', [MahasiswaProfileController::class, 'uploadDokumen'])
-                ->name('mahasiswa.profile.upload-dokumen');
-            Route::delete('/hapus-dokumen', [MahasiswaProfileController::class, 'hapusDokumen'])
-                ->name('mahasiswa.profile.hapus-dokumen');
-            Route::post('/upload-profile-photo', [MahasiswaProfileController::class, 'uploadProfilePhoto'])
-                ->name('mahasiswa.profile.upload-profile-photo');
-            Route::post('/update-data-pribadi', [MahasiswaProfileController::class, 'updateDataPribadi'])
-                ->name('mahasiswa.profile.update-data-pribadi');
-            Route::post('/update-akun', [MahasiswaProfileController::class, 'updateAkun'])
-                ->name('mahasiswa.profile.update-akun');
-        });
-
-        // Decision Support System
-        Route::prefix('decision')->group(function () {
-            Route::get('/mabac/hitung', [MabacController::class, 'hitungMabac'])
-                ->name('mahasiswa.mabac.hitung');
-            Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])
-                ->name('mahasiswa.topsis.hitung');
-        });
-
-        // Rincian Management
-        Route::prefix('rincian')->group(function () {
-            Route::get('/', [MahasiswaRincianController::class, 'index'])
-                ->name('mahasiswa.rincian');
-            Route::get('/diterima', [MahasiswaRincianController::class, 'rincianDiterima'])
-                ->name('mahasiswa.rincian_diterima');
-            Route::get('/ditolak', [MahasiswaRincianController::class, 'rincianDitolak'])
-                ->name('mahasiswa.rincian_ditolak');
-            Route::get('/magang', [MahasiswaRincianController::class, 'rincianMagang'])
-                ->name('mahasiswa.rincian_magang');
-            Route::get('/selesai', [MahasiswaRincianController::class, 'rincianSelesai'])
-                ->name('mahasiswa.rincian_selesai');
-        });
-
-        // Feedback
-        Route::prefix('feedback')->group(function () {
-            Route::get('/', [FeedbackMagangController::class, 'index'])
-                ->name('mahasiswa.feedback');
-            Route::post('/store', [FeedbackMagangController::class, 'store'])
-                ->name('mahasiswa.feedback.store');
-        });
-
-        // Log Aktivitas
-        Route::prefix('log-aktivitas')->group(function () {
-            Route::get('/', [LogAktivitasController::class, 'index'])
-                ->name('mahasiswa.log_aktivitas');
-            Route::post('/', [LogAktivitasController::class, 'store'])
-                ->name('mahasiswa.log_aktivitas.store');
-            Route::put('/{id}', [LogAktivitasController::class, 'update'])
-                ->name('mahasiswa.log_aktivitas.update');
-        });
+    // Log Aktivitas
+    Route::prefix('log-aktivitas')->group(function () {
+        Route::get('/', [LogAktivitasController::class, 'index'])
+            ->name('mahasiswa.log_aktivitas');
+        Route::post('/', [LogAktivitasController::class, 'store'])
+            ->name('mahasiswa.log_aktivitas.store');
+        Route::put('/{id}', [LogAktivitasController::class, 'update'])
+            ->name('mahasiswa.log_aktivitas.update');
     });
 });
