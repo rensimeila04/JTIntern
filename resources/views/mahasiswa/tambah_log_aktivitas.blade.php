@@ -369,7 +369,13 @@
             const displayDate = `${day} ${monthName} ${year}`;
 
             tanggalInput.value = displayDate;
-            tanggalHidden.value = this.selectedDate.toISOString().split('T')[0];
+            
+            // Format tanggal dengan timezone lokal untuk menghindari masalah UTC
+            const year_str = this.selectedDate.getFullYear();
+            const month_str = String(this.selectedDate.getMonth() + 1).padStart(2, '0');
+            const day_str = String(this.selectedDate.getDate()).padStart(2, '0');
+            tanggalHidden.value = `${year_str}-${month_str}-${day_str}`;
+            
             datePicker.classList.add('hidden');
             this.updateCalendar();
         }
