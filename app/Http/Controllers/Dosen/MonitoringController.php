@@ -17,10 +17,13 @@ class MonitoringController extends Controller
         ];
         $activeMenu = 'monitoring';
 
-        $query = LogAktivitasModel::whereHas('magang', function ($query) {
-                $query->where('id_dosen_pembimbing', auth()->user()->id_dosen_pembimbing);
+        // Get current logged in dosen - using same pattern as MahasiswaController
+        $dosenId = auth()->user()->dosenPembimbing->id_dosen_pembimbing;
+
+        $query = LogAktivitasModel::whereHas('magang', function ($query) use ($dosenId) {
+                $query->where('id_dosen_pembimbing', $dosenId);
             })
-            ->with(['magang.mahasiswa'])
+            ->with(['magang.mahasiswa.user'])
             ->orderByDesc('created_at');
 
         if ($request->filled('status')) {
@@ -38,6 +41,8 @@ class MonitoringController extends Controller
 
     public function detail($id_magang, $id_log_aktivitas)
     {
+        // Get current logged in dosen - using same pattern as MahasiswaController
+        $dosenId = auth()->user()->dosenPembimbing->id_dosen_pembimbing;
 
         $magang = MagangModel::with([
             'mahasiswa.user',
@@ -46,11 +51,8 @@ class MonitoringController extends Controller
             'lowongan.periodeMagang',
             'lowongan.kompetensi',
             'dosenPembimbing.user'
-        ])->findOrFail($id_magang);
-
-        if ($magang->dosen_pembimbing_id != auth()->user()->id) {
-            abort(403, 'Unauthorized access');
-        }
+        ])->where('id_dosen_pembimbing', $dosenId)
+          ->findOrFail($id_magang);
 
         $logAktivitas = LogAktivitasModel::where('id_magang', $magang->id_magang)
             ->where('id_log_aktivitas', $id_log_aktivitas)
@@ -80,6 +82,14 @@ class MonitoringController extends Controller
         $request->validate([
             'komentar' => 'required|string|max:100',
         ]);
+
+        // Get current logged in dosen - using same pattern as MahasiswaController
+        $dosenId = auth()->user()->dosenPembimbing->id_dosen_pembimbing;
+
+        // Verify that this magang belongs to the logged-in lecturer
+        $magang = MagangModel::where('id_dosen_pembimbing', $dosenId)
+                            ->where('id_magang', $id_magang)
+                            ->firstOrFail();
 
         $logAktivitas = LogAktivitasModel::where('id_magang', $id_magang)
             ->where('id_log_aktivitas', $id_log_aktivitas)

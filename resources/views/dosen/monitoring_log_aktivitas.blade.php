@@ -109,10 +109,10 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <button type="button"
+                                            <a href="{{ route('dosen.monitoring.detail', ['id_magang' => $log->magang->id_magang, 'id_log_aktivitas' => $log->id_log_aktivitas]) }}"
                                                 class="py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-hidden focus:bg-primary-600 disabled:opacity-50 disabled:pointer-events-none">
                                                 Detail
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 @empty
