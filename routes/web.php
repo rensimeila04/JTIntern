@@ -28,6 +28,7 @@ use App\Http\Controllers\mahasiswa\LogAktivitasController;
 
 // Dosen Controllers
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
+use App\Http\Controllers\Dosen\MahasiswaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -197,6 +198,9 @@ Route::middleware(['auth'])->group(function () {
             ->name('dosen.edit_profile');
         Route::post('/update-profile', [DosenDashboardController::class, 'updateProfile'])->name('dosen.update_profile');
         Route::post('/update-account', [DosenDashboardController::class, 'updateAccount'])->name('dosen.update_account');
+        
+        Route::get('/mahasiswa', [MahasiswaController::class, 'index'])
+            ->name('dosen.mahasiswa');
     });
 
 
