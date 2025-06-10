@@ -229,6 +229,7 @@ Route::middleware(['auth'])->group(function () {
                 ->name('mahasiswa.rincian');
             Route::post('/selesaikan-magang', [MahasiswaRincianController::class, 'selesaikanMagang'])
                 ->name('mahasiswa.rincian.selesaikan-magang');
+            Route::post('/mulai-magang', [MahasiswaRincianController::class, 'mulaiMagang'])->name('mahasiswa.rincian.mulai-magang');
         });
 
         // Feedback

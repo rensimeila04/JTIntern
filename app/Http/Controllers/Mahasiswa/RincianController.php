@@ -81,4 +81,19 @@ class RincianController extends Controller
 
         return redirect()->back()->with('error', 'Gagal mengunggah sertifikat.');
     }
+
+    public function mulaiMagang(Request $request)
+    {
+        $userId = Auth::id();
+        $magang = MagangModel::whereHas('mahasiswa', function($query) use ($userId) {
+            $query->where('id_user', $userId);
+        })->orderByDesc('created_at')->first();
+
+        if (!$magang || $magang->status_magang !== 'diterima') {
+            return redirect()->back()->with('error', 'Status magang tidak valid untuk dimulai.');
+        }
+
+        $magang->update(['status_magang' => 'magang']);
+        return redirect()->back()->with('success', 'Status magang berhasil diubah. Selamat memulai perjalanan magang!');
+    }
 }
