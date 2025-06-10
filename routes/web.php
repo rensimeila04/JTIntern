@@ -181,8 +181,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('dosen.edit_profile');
         Route::post('/update-profile', [DosenDashboardController::class, 'updateProfile'])->name('dosen.update_profile');
         Route::post('/update-account', [DosenDashboardController::class, 'updateAccount'])->name('dosen.update_account');
-        Route::get('/monitoring/{id}', [MonitoringController::class, 'detail'])
+        Route::get('/monitoring/{id_magang}/log/{id_log_aktivitas}', [MonitoringController::class, 'detail'])
             ->name('dosen.monitoring.detail');
+        Route::post('/monitoring/{id_magang}/log/{id_log_aktivitas}/feedback', [MonitoringController::class, 'feedback'])
+            ->name('dosen.monitoring.feedback');
     });
 
 

@@ -14,9 +14,9 @@ class MonitoringController extends Controller
         
     }
 
-    public function detail($id)
+    public function detail($id_magang, $id_log_aktivitas)
     {
-        // Get data magang dengan relasi yang diperlukan
+
         $magang = MagangModel::with([
             'mahasiswa.user',
             'mahasiswa.programStudi',
@@ -24,16 +24,15 @@ class MonitoringController extends Controller
             'lowongan.periodeMagang',
             'lowongan.kompetensi',
             'dosenPembimbing.user'
-        ])->findOrFail($id);
+        ])->findOrFail($id_magang);
 
-        // Pastikan dosen hanya bisa melihat mahasiswa yang dibimbingnya
         if ($magang->dosen_pembimbing_id != auth()->user()->id) {
             abort(403, 'Unauthorized access');
         }
 
-        // Get log aktivitas mahasiswa berdasarkan id_mahasiswa
-        $logAktivitas = LogAktivitasModel::where('mahasiswa_id', $magang->mahasiswa->id_mahasiswa)
-            ->orderBy('tanggal_aktivitas', 'desc');
+        $logAktivitas = LogAktivitasModel::where('id_magang', $magang->id_magang)
+            ->where('id_log_aktivitas', $id_log_aktivitas)
+            ->firstOrFail();
 
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
@@ -52,5 +51,22 @@ class MonitoringController extends Controller
             'lowongan' => $magang->lowongan, 
             'logAktivitas' => $logAktivitas,
         ]);
+    }
+
+    public function feedback(Request $request, $id_magang, $id_log_aktivitas)
+    {
+        $request->validate([
+            'komentar' => 'required|string|max:100',
+        ]);
+
+        $logAktivitas = LogAktivitasModel::where('id_magang', $id_magang)
+            ->where('id_log_aktivitas', $id_log_aktivitas)
+            ->firstOrFail();
+
+        $logAktivitas->feedback_dospem = $request->komentar;
+        $logAktivitas->status_feedback = 'sudah_ada';
+        $logAktivitas->save();
+
+        return redirect()->back()->with('success', 'Feedback berhasil dikirim.');
     }
 }
