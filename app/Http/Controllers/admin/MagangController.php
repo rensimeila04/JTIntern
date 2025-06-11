@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MagangModel;
 use App\Models\LowonganModel;
-use App\Models\DosenPembimbingModel;
-use App\Models\NotifikasiModel; // Add this import
+use App\Models\DosenPembimbingModel; // Add this import
+use App\Models\NotifikasiModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -236,7 +236,7 @@ class MagangController extends Controller
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Kelola Magang',  'url' => route('admin.kelola-magang')],
+            ['label' => 'Kelola Magang', 'url' => '#'],
             ['label' => 'Permohonan Magang', 'url' => '#'],
         ];
 
@@ -292,7 +292,7 @@ class MagangController extends Controller
     {
         $breadcrumb = [
             ['label' => 'Home', 'url' => route('landing')],
-            ['label' => 'Kelola Magang',  'url' => route('admin.kelola-magang')],
+            ['label' => 'Kelola Magang', 'url' => '#'],
             ['label' => 'Magang Aktif', 'url' => '#'],
         ];
 
@@ -597,6 +597,37 @@ class MagangController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        try {
+            $magang = MagangModel::with([
+                'mahasiswa.user',
+                'lowongan.perusahaanMitra',
+                'dosenPembimbing.user'
+            ])->findOrFail($id);
+
+            // Get all dosen pembimbing for dropdown
+            $dosenList = DosenPembimbingModel::with('user')->get();
+
+            return response()->json([
+                'success' => true,
+                'magang' => $magang,
+                'dosenList' => $dosenList
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching magang data for edit', [
+                'magang_id' => $id,
+                'error' => $e->getMessage(),
+                'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data magang'
+            ], 500);
+        }
+    }
+
     /**
      * Update magang data
      */
@@ -693,66 +724,6 @@ class MagangController extends Controller
                 // Reload relationships
                 $magang->load('mahasiswa.user', 'lowongan.perusahaanMitra', 'dosenPembimbing.user');
 
-                // Create notification if status changed to diterima or ditolak
-                if ($oldStatus !== $request->status_magang) {
-                    try {
-                        if ($request->status_magang === 'diterima') {
-                            $dosenName = $magang->dosenPembimbing ? $magang->dosenPembimbing->user->name : 'Belum ditentukan';
-                            NotifikasiModel::create([
-                                'id_user' => $magang->mahasiswa->id_user,
-                                'judul_notifikasi' => 'Status Magang Diperbarui - Diterima',
-                                'pesan' => "Status magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah diperbarui menjadi DITERIMA. Dosen pembimbing: {$dosenName}",
-                                'is_read' => false,
-                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
-                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
-                            ]);
-                        } elseif ($request->status_magang === 'ditolak') {
-                            NotifikasiModel::create([
-                                'id_user' => $magang->mahasiswa->id_user,
-                                'judul_notifikasi' => 'Status Magang Diperbarui - Ditolak',
-                                'pesan' => "Status magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah diperbarui menjadi DITOLAK.",
-                                'is_read' => false,
-                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
-                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
-                            ]);
-                        } elseif ($request->status_magang === 'magang') {
-                            NotifikasiModel::create([
-                                'id_user' => $magang->mahasiswa->id_user,
-                                'judul_notifikasi' => 'Status Magang Diperbarui - Sedang Magang',
-                                'pesan' => "Status magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah diperbarui menjadi SEDANG MAGANG. Selamat memulai magang!",
-                                'is_read' => false,
-                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
-                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
-                            ]);
-                        } elseif ($request->status_magang === 'selesai') {
-                            NotifikasiModel::create([
-                                'id_user' => $magang->mahasiswa->id_user,
-                                'judul_notifikasi' => 'Status Magang Diperbarui - Selesai',
-                                'pesan' => "Selamat! Magang Anda untuk posisi {$magang->lowongan->judul_lowongan} di {$magang->lowongan->perusahaanMitra->nama_perusahaan_mitra} telah SELESAI. Terima kasih atas dedikasi Anda!",
-                                'is_read' => false,
-                                'created_at' => \Carbon\Carbon::now('Asia/Jakarta'),
-                                'updated_at' => \Carbon\Carbon::now('Asia/Jakarta')
-                            ]);
-                        }
-
-                        Log::info('Notification created for status change', [
-                            'magang_id' => $id,
-                            'user_id' => $magang->mahasiswa->id_user,
-                            'old_status' => $oldStatus,
-                            'new_status' => $request->status_magang,
-                            'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
-                        ]);
-                    } catch (\Exception $notifError) {
-                        Log::error('Failed to create notification for status change', [
-                            'magang_id' => $id,
-                            'user_id' => $magang->mahasiswa->id_user,
-                            'error' => $notifError->getMessage(),
-                            'timestamp_wib' => \Carbon\Carbon::now('Asia/Jakarta')->format('d M Y H:i:s') . ' WIB'
-                        ]);
-                        // Continue process even if notification fails
-                    }
-                }
-
                 DB::commit();
 
                 // Log the successful action
@@ -770,7 +741,6 @@ class MagangController extends Controller
                 $message = 'Data magang berhasil diperbarui';
                 if ($oldStatus !== $request->status_magang) {
                     $message .= '. Status berubah dari ' . ucfirst($oldStatus) . ' menjadi ' . ucfirst($request->status_magang);
-                    $message .= '. Notifikasi telah dikirim ke mahasiswa';
                 }
                 if ($oldDosenId !== $magang->id_dosen_pembimbing) {
                     if ($magang->dosenPembimbing) {
@@ -892,427 +862,6 @@ class MagangController extends Controller
         if (!$magang->path_sertifikat || !Storage::disk('public')->exists($magang->path_sertifikat)) {
             abort(404, 'Sertifikat tidak ditemukan');
         }
-        return response()->download(storage_path('app/public/' . $magang->path_sertifikat), 'Sertifikat-Magang-' . $magang->mahasiswa->user->name . '.pdf');
-    }
-
-    public function export(Request $request)
-    {
-        // Query builder untuk magang dengan semua relasi yang diperlukan
-        $query = MagangModel::with([
-            'mahasiswa.user',
-            'mahasiswa.programStudi',
-            'lowongan.perusahaanMitra',
-            'dosenPembimbing.user'
-        ]);
-
-        // Filter berdasarkan status
-        if ($request->filled('status') && $request->status != 'all') {
-            $query->where('status_magang', $request->status);
-        }
-
-        // Filter berdasarkan lowongan
-        if ($request->filled('lowongan_id') && $request->lowongan_id != 'all') {
-            $query->where('id_lowongan', $request->lowongan_id);
-        }
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->whereHas('mahasiswa.user', function ($q) use ($searchTerm) {
-                    $q->where('name', 'LIKE', "%{$searchTerm}%");
-                })
-                    ->orWhereHas('lowongan', function ($q) use ($searchTerm) {
-                        $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%");
-                    })
-                    ->orWhereHas('lowongan.perusahaanMitra', function ($q) use ($searchTerm) {
-                        $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
-                    });
-            });
-        }
-
-        $magang = $query->get();
-
-        try {
-            // Hitung statistik berdasarkan status
-            $statuses = [
-                'menunggu' => ['label' => 'Menunggu', 'count' => 0, 'color' => '#FFA000'],
-                'diterima' => ['label' => 'Diterima', 'count' => 0, 'color' => '#1E88E5'],
-                'magang' => ['label' => 'Sedang Magang', 'count' => 0, 'color' => '#43A047'],
-                'selesai' => ['label' => 'Selesai', 'count' => 0, 'color' => '#8E24AA'],
-                'ditolak' => ['label' => 'Ditolak', 'count' => 0, 'color' => '#E53935']
-            ];
-
-            // Hitung jumlah tiap status
-            foreach ($magang as $item) {
-                if (isset($statuses[$item->status_magang])) {
-                    $statuses[$item->status_magang]['count']++;
-                }
-            }
-
-            // Hitung persentase
-            $totalMagang = $magang->count();
-            foreach ($statuses as $key => $value) {
-                $statuses[$key]['percentage'] = $totalMagang > 0 ?
-                    round(($value['count'] / $totalMagang) * 100, 2) : 0;
-            }
-
-            // Generate file name
-            $fileName = 'data_magang_' . date('Y-m-d_H-i-s') . '.pdf';
-
-            // Get view content
-            $html = view('admin.export_kelola_magang', [
-                'magang' => $magang,
-                'totalMagang' => $totalMagang,
-                'statuses' => $statuses,
-                'filterStatus' => $request->status ?? 'all',
-            ])->render();
-
-            // Set options and generate PDF
-            $options = new \Dompdf\Options();
-            $options->set('isHtml5ParserEnabled', true);
-            $options->set('isRemoteEnabled', true);
-
-            $dompdf = new \Dompdf\Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'landscape');
-            $dompdf->render();
-
-            // Output PDF (inline view)
-            return response($dompdf->output())
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename=\"$fileName\"");
-        } catch (\Exception $e) {
-            Log::error('PDF export error: ' . $e->getMessage());
-            return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Export permohonan magang (status menunggu) ke PDF
-     */
-    public function exportPermohonanMagang(Request $request)
-    {
-        // Query untuk permohonan magang dengan status menunggu
-        $query = MagangModel::with([
-            'mahasiswa.user',
-            'mahasiswa.programStudi',
-            'lowongan.perusahaanMitra'
-        ])->where('status_magang', 'menunggu');
-
-        // Filter berdasarkan lowongan
-        if ($request->filled('lowongan_id') && $request->lowongan_id != 'all') {
-            $query->where('id_lowongan', $request->lowongan_id);
-        }
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->whereHas('mahasiswa.user', function ($q) use ($searchTerm) {
-                    $q->where('name', 'LIKE', "%{$searchTerm}%");
-                })
-                    ->orWhereHas('lowongan', function ($q) use ($searchTerm) {
-                        $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%");
-                    })
-                    ->orWhereHas('lowongan.perusahaanMitra', function ($q) use ($searchTerm) {
-                        $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
-                    });
-            });
-        }
-
-        $permohonan = $query->get();
-        $totalPermohonan = $permohonan->count();
-
-        try {
-            // Hitung statistik berdasarkan lowongan
-            $lowonganStats = [];
-            $lowonganCounts = $permohonan->groupBy('id_lowongan')
-                ->map(function ($items, $lowonganId) use ($totalPermohonan) {
-                    $lowongan = $items->first()->lowongan;
-                    return [
-                        'judul_lowongan' => $lowongan->judul_lowongan,
-                        'nama_perusahaan' => $lowongan->perusahaanMitra->nama_perusahaan_mitra,
-                        'count' => $items->count(),
-                        'percentage' => $totalPermohonan > 0 ? round(($items->count() / $totalPermohonan) * 100, 2) : 0
-                    ];
-                })->sortByDesc('count')->values()->all();
-
-            // Generate file name
-            $fileName = 'permohonan_magang_' . date('Y-m-d_H-i-s') . '.pdf';
-
-            // Get view content
-            $html = view('admin.export_permohonan_magang', [
-                'permohonan' => $permohonan,
-                'totalPermohonan' => $totalPermohonan,
-                'lowonganStats' => $lowonganCounts
-            ])->render();
-
-            // Set options and generate PDF
-            $options = new \Dompdf\Options();
-            $options->set('isHtml5ParserEnabled', true);
-            $options->set('isRemoteEnabled', true);
-
-            $dompdf = new \Dompdf\Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'landscape');
-            $dompdf->render();
-
-            // Output PDF (inline view)
-            return response($dompdf->output())
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename=\"$fileName\"");
-        } catch (\Exception $e) {
-            Log::error('PDF export error: ' . $e->getMessage());
-            return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Export data magang aktif (status diterima dan magang) ke PDF
-     */
-    public function exportMagangAktif(Request $request)
-    {
-        // Query untuk magang aktif (status diterima atau magang)
-        $query = MagangModel::with([
-            'mahasiswa.user',
-            'mahasiswa.programStudi',
-            'lowongan.perusahaanMitra',
-            'dosenPembimbing.user'
-        ])->whereIn('status_magang', ['diterima', 'magang']);
-        
-        // Filter by status if specified
-        if ($request->filled('status') && in_array($request->status, ['magang', 'diterima'])) {
-            $query->where('status_magang', $request->status);
-        }
-
-        // Filter by pembimbing status
-        if ($request->filled('pembimbing')) {
-            if ($request->pembimbing === 'dengan') {
-                $query->whereNotNull('id_dosen_pembimbing');
-            } elseif ($request->pembimbing === 'tanpa') {
-                $query->whereNull('id_dosen_pembimbing');
-            }
-        }
-        
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->whereHas('mahasiswa.user', function($q) use ($searchTerm) {
-                    $q->where('name', 'LIKE', "%{$searchTerm}%");
-                })
-                ->orWhereHas('lowongan', function($q) use ($searchTerm) {
-                    $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%");
-                })
-                ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($searchTerm) {
-                    $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
-                });
-            });
-        }
-
-        $magang = $query->get();
-        $totalMagang = $magang->count();
-
-        try {
-            // Hitung statistik berdasarkan status
-            $statusStats = [
-                'diterima' => [
-                    'count' => $magang->where('status_magang', 'diterima')->count(),
-                    'percentage' => 0
-                ],
-                'magang' => [
-                    'count' => $magang->where('status_magang', 'magang')->count(),
-                    'percentage' => 0
-                ]
-            ];
-            
-            // Hitung persentase untuk status
-            if ($totalMagang > 0) {
-                $statusStats['diterima']['percentage'] = round(($statusStats['diterima']['count'] / $totalMagang) * 100, 2);
-                $statusStats['magang']['percentage'] = round(($statusStats['magang']['count'] / $totalMagang) * 100, 2);
-            }
-            
-            // Hitung statistik berdasarkan ketersediaan pembimbing
-            $pembimbingStats = [
-                'dengan' => [
-                    'count' => $magang->whereNotNull('id_dosen_pembimbing')->count(),
-                    'percentage' => 0
-                ],
-                'tanpa' => [
-                    'count' => $magang->whereNull('id_dosen_pembimbing')->count(),
-                    'percentage' => 0
-                ]
-            ];
-            
-            // Hitung persentase untuk pembimbing
-            if ($totalMagang > 0) {
-                $pembimbingStats['dengan']['percentage'] = round(($pembimbingStats['dengan']['count'] / $totalMagang) * 100, 2);
-                $pembimbingStats['tanpa']['percentage'] = round(($pembimbingStats['tanpa']['count'] / $totalMagang) * 100, 2);
-            }
-
-            // Generate file name
-            $fileName = 'magang_aktif_' . date('Y-m-d_H-i-s') . '.pdf';
-
-            // Get view content
-            $html = view('admin.export_magang_aktif', [
-                'magang' => $magang,
-                'totalMagang' => $totalMagang,
-                'statusStats' => $statusStats,
-                'pembimbingStats' => $pembimbingStats,
-                'filterStatus' => $request->status ?? 'all'
-            ])->render();
-
-            // Set options and generate PDF
-            $options = new \Dompdf\Options();
-            $options->set('isHtml5ParserEnabled', true);
-            $options->set('isRemoteEnabled', true);
-
-            $dompdf = new \Dompdf\Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'landscape');
-            $dompdf->render();
-
-            // Output PDF (inline view)
-            return response($dompdf->output())
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename=\"$fileName\"");
-        } catch (\Exception $e) {
-            Log::error('PDF export error: ' . $e->getMessage());
-            return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Export data pengajuan ditolak ke PDF
-     */
-    public function exportPengajuanDitolak(Request $request)
-    {
-        // Query untuk pengajuan ditolak
-        $query = MagangModel::with([
-            'mahasiswa.user',
-            'mahasiswa.programStudi',
-            'lowongan.perusahaanMitra'
-        ])->where('status_magang', 'ditolak');
-        
-        // Filter berdasarkan lowongan
-        if ($request->filled('lowongan_id') && $request->lowongan_id != 'all') {
-            $query->where('id_lowongan', $request->lowongan_id);
-        }
-        
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->whereHas('mahasiswa.user', function($q) use ($searchTerm) {
-                    $q->where('name', 'LIKE', "%{$searchTerm}%");
-                })
-                ->orWhereHas('lowongan', function($q) use ($searchTerm) {
-                    $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%");
-                })
-                ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($searchTerm) {
-                    $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
-                });
-            });
-        }
-
-        $ditolak = $query->get();
-        $totalDitolak = $ditolak->count();
-
-        try {
-            // Generate file name
-            $fileName = 'pengajuan_ditolak_' . date('Y-m-d_H-i-s') . '.pdf';
-
-            // Get view content
-            $html = view('admin.export_pengajuan_ditolak', [
-                'ditolak' => $ditolak,
-                'totalDitolak' => $totalDitolak,
-            ])->render();
-
-            // Set options and generate PDF
-            $options = new \Dompdf\Options();
-            $options->set('isHtml5ParserEnabled', true);
-            $options->set('isRemoteEnabled', true);
-
-            $dompdf = new \Dompdf\Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'landscape');
-            $dompdf->render();
-
-            // Output PDF (inline view)
-            return response($dompdf->output())
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename=\"$fileName\"");
-        } catch (\Exception $e) {
-            Log::error('PDF export error: ' . $e->getMessage());
-            return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Export data riwayat magang (status selesai) ke PDF
-     */
-    public function exportRiwayatMagang(Request $request)
-    {
-        // Query untuk riwayat magang (status selesai)
-        $query = MagangModel::with([
-            'mahasiswa.user',
-            'mahasiswa.programStudi',
-            'lowongan.perusahaanMitra',
-            'dosenPembimbing.user'
-        ])->where('status_magang', 'selesai');
-        
-        // Filter berdasarkan lowongan
-        if ($request->filled('lowongan_id') && $request->lowongan_id != 'all') {
-            $query->where('id_lowongan', $request->lowongan_id);
-        }
-        
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->whereHas('mahasiswa.user', function($q) use ($searchTerm) {
-                    $q->where('name', 'LIKE', "%{$searchTerm}%");
-                })
-                ->orWhereHas('lowongan', function($q) use ($searchTerm) {
-                    $q->where('judul_lowongan', 'LIKE', "%{$searchTerm}%");
-                })
-                ->orWhereHas('lowongan.perusahaanMitra', function($q) use ($searchTerm) {
-                    $q->where('nama_perusahaan_mitra', 'LIKE', "%{$searchTerm}%");
-                });
-            });
-        }
-
-        $riwayat = $query->get();
-        $totalRiwayat = $riwayat->count();
-
-        try {
-            // Generate file name
-            $fileName = 'riwayat_magang_' . date('Y-m-d_H-i-s') . '.pdf';
-
-            // Get view content
-            $html = view('admin.export_riwayat_magang', [
-                'riwayat' => $riwayat,
-                'totalRiwayat' => $totalRiwayat,
-            ])->render();
-
-            // Set options and generate PDF
-            $options = new \Dompdf\Options();
-            $options->set('isHtml5ParserEnabled', true);
-            $options->set('isRemoteEnabled', true);
-
-            $dompdf = new \Dompdf\Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'landscape');
-            $dompdf->render();
-
-            // Output PDF (inline view)
-            return response($dompdf->output())
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename=\"$fileName\"");
-        } catch (\Exception $e) {
-            Log::error('PDF export error: ' . $e->getMessage());
-            return back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
-        }
+        return response()->download(storage_path('app/public/' . $magang->path_sertifikat), 'Sertifikat-Magang-'.$magang->mahasiswa->user->name.'.pdf');
     }
 }
